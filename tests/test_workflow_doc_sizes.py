@@ -1,10 +1,14 @@
 import importlib.util
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "check_workflow_docs.py"
+SKILL = Path(__file__).resolve().parents[1] / "workflow-document-check"
+SCRIPT = SKILL / "scripts" / "check_workflow_docs.py"
 SPEC = importlib.util.spec_from_file_location("check_workflow_docs", SCRIPT)
 assert SPEC and SPEC.loader
 CHECKER = importlib.util.module_from_spec(SPEC)
@@ -33,6 +37,32 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
             self.assertTrue(any("Direction" in item for item in findings))
             self.assertTrue(any("PDR" in item for item in findings))
             self.assertTrue(any("ADR" in item for item in findings))
+
+    def test_installed_checker_enforces_feature_brief_limit(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            installed = root / "installed-checker"
+            project = root / "project"
+            brief = project / ".workflow" / "features" / "B-0001" / "brief.md"
+            second = project / ".workflow" / "features" / "B-0002" / "brief.md"
+            shutil.copytree(SKILL, installed)
+            brief.parent.mkdir(parents=True)
+            second.parent.mkdir(parents=True)
+            brief.write_text("word " * 1500)
+            second.write_text("word " * 1500)
+            command = [sys.executable, installed / "scripts" / "check_workflow_docs.py", project]
+            passed = subprocess.run(command, capture_output=True, text=True, check=False)
+            self.assertEqual(passed.returncode, 0, passed.stdout)
+
+            brief.write_text("word " * 1501)
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("Feature Brief", result.stdout)
 
     def test_record_limit_and_whole_file_limit(self):
         with tempfile.TemporaryDirectory() as temporary:

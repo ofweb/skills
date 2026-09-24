@@ -8,6 +8,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -15,6 +16,16 @@ from pathlib import Path
 CONFIG = Path(__file__).resolve().with_name(".vale.ini")
 GLOSSARY = Path(__file__).resolve().with_name("shared-terms.yaml")
 SOURCEPOS = re.compile(r"^(\d+):(\d+)-(\d+):(\d+)$")
+
+
+def project_root(name: str, explicit: Path | None) -> Path | None:
+    if explicit is not None:
+        return explicit.resolve()
+    start = Path.cwd() if name == "-" else Path(name).resolve().parent
+    for parent in (start, *start.parents):
+        if (parent / ".workflow" / "context.md").is_file():
+            return parent
+    return None
 
 
 def prose_only(markdown: str) -> str:
@@ -79,8 +90,12 @@ def run_check(command: list[str], content: str | None = None) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--project-root", type=Path, help="Project root for Context terms")
     parser.add_argument("files", nargs="*", metavar="FILE", help="Markdown files or - for stdin")
     args = parser.parse_args()
+
+    if args.project_root is not None and not args.project_root.is_dir():
+        parser.error(f"not a directory: {args.project_root}")
 
     missing = [name for name in ("cmark", "vale", "ste100") if shutil.which(name) is None]
     if missing:
@@ -97,7 +112,25 @@ def main() -> int:
             continue
 
         print(f"== {name}: STE100 ==", flush=True)
-        ste_status = run_check(["ste100", "check", "--glossary", str(GLOSSARY)], prose)
+        with tempfile.TemporaryDirectory(prefix="prose-check-") as temporary:
+            glossary = GLOSSARY
+            root = project_root(name, args.project_root)
+            context = root / ".workflow" / "context.md" if root else None
+            if context and context.is_file():
+                try:
+                    import yaml
+
+                    sys.path.insert(0, str(Path(__file__).resolve().parent))
+                    from context_glossary import combined_glossary
+
+                    merged = combined_glossary(GLOSSARY, context)
+                    glossary = Path(temporary) / "glossary.yaml"
+                    glossary.write_text(yaml.safe_dump(merged, sort_keys=False), encoding="utf-8")
+                except Exception as exc:
+                    print(f"prose-check: {name}: Context vocabulary: {exc}", file=sys.stderr)
+                    status = 2
+                    continue
+            ste_status = run_check(["ste100", "check", "--glossary", str(glossary)], prose)
         if ste_status:
             status = max(status, 1 if ste_status == 1 else 2)
             continue

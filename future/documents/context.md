@@ -15,8 +15,9 @@ and code where relevant.
 - Store it at `.workflow/context.md` from the project root.
 - Use one document unless the project has genuinely separate domain languages.
 - The collaborative workflow step that resolves or changes a term updates it.
-- The user agrees each concept, canonical term, meaning, and STE vocabulary
-  definition.
+- The user agrees each concept, canonical term, meaning, important distinction,
+  misleading synonym, and semantically important form.
+- The document skill derives the STE class from the agreed concept and usage.
 - Autonomous work must not invent or redefine project terminology silently.
 - Repository and document scans may find candidate terms, but discovery does
   not authorize adding them.
@@ -37,16 +38,23 @@ words for one concept and overloaded words for different concepts to the
 collaborative workflow. That workflow resolves the meaning with the user;
 Context records the agreed result.
 
-Each concept also provides the vocabulary information needed by prose checks:
+Each agreed concept provides the vocabulary information needed by prose checks:
 
 - its canonical spelling;
-- its ASD-STE100 classification as a technical name or technical verb;
+- a tool-derived ASD-STE100 classification as a technical name or verb;
 - approved forms when plurals, tense, or another form could be ambiguous; and
 - a short STE-compatible definition that gives the term one project meaning.
 
 The Context document is the canonical source for this vocabulary.
-`prose-check` may derive checker input from its entries but must not maintain a
-separate project glossary.
+`prose-check` derives project vocabulary from agreed entries and combines it
+with its separate shared vocabulary for each check. It does not maintain a
+second project glossary. Malformed entries fail derivation rather than silently
+granting or omitting approval.
+
+The STE class is tool-facing metadata. The document skill derives it from the
+agreed concept and usage; the user decides the term's meaning, distinctions,
+misleading synonyms, and semantically important forms. Context contains no
+unresolved candidate entries.
 
 ## Concept qualification
 
@@ -82,10 +90,9 @@ It does not add the term merely to make prose validation pass.
 Context is authoritative only for terminology. Code, Feature Briefs, and
 decision records link to it when a term's precise meaning matters.
 
-The future `context-document` skill applies the concept-qualification
-rules, asks the user to establish the canonical meaning, and writes the Context
-entry. Prose validation reads approved entries but cannot create or change
-them.
+The `context-document` skill applies the concept-qualification rules. The
+collaborative workflow resolves meaning with the user, and the skill records
+it. Prose validation reads entries but cannot create or change them.
 
 Update a definition when the project meaning changes. If that change also
 changes product behaviour, record a PDR. If it changes architecture, record an

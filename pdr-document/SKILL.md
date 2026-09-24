@@ -56,12 +56,13 @@ on the decision. Do not copy their content into the PDR.
 
 Tell the owning workflow which affected Feature Briefs must link to the PDR.
 
-The PDR directory contains current decisions, not a decision archive. When a
-decision no longer applies, delete its PDR if nothing current depends on it.
-When a new decision replaces it, write the current record and remove the old
-one. Update affected links. If part remains valid, rewrite or replace the PDR
-so it states the current constraint. Git preserves earlier decisions. Surface
-conflicts with other current PDRs rather than silently choosing one.
+The PDR directory contains current decisions, not a decision archive. Revise
+the same PDR when the answer changes within its durable question and scope.
+Keep its ID and inbound links. Create a new PDR for a different or independent
+decision. Delete an obsolete PDR when nothing current depends on it. Update
+affected links when a record is removed or its scope changes. Git preserves
+earlier answers. Surface conflicts with other current PDRs rather than silently
+choosing one.
 
 Aim for 150–300 words; the hard limit is 500 words. Near that limit, remove
 stale context, repeated material, and optional sections that add no useful
@@ -70,7 +71,6 @@ rationale solely for history.
 
 Do not include discussion transcripts, option matrices, full feature
 requirements, implementation plans, or status tracking. Use `concise-prose`
-and `prose-check` when available. Run
-`python scripts/check_workflow_docs.py <project-root>` from this skills
-repository. Prune or restructure after a hard-limit failure. Check the ID,
+and `prose-check` when available. Use `workflow-document-check` after the edit.
+Prune or restructure after a hard-limit failure. Check the ID,
 status, scope, and links before finishing.

@@ -22,10 +22,17 @@ The model also receives STE100 warnings and uses its judgment to fix valid
 findings. Checker or setup failures cannot pass as clean checks.
 
 The existing Vale configuration remains the style source. STE100 uses its own
-rules, built-in vocabulary, and a small shared software vocabulary. The user
-adds shared terms manually when a recurring technical concept needs a stable
-name. The model may suggest a term but cannot add one itself. Context-derived
-project terms are a separate change.
+rules, built-in vocabulary, and the small shared software vocabulary beside
+`prose-check`. The user adds shared terms manually when a recurring technical
+concept needs a stable name. Project-specific terms come only from agreed
+entries in `.workflow/context.md`.
+
+For each input, find the project root from an explicit `--project-root` option
+or by walking up from the file or current directory. Parse Context entries and
+derive a temporary glossary that combines their terms with the shared terms.
+Do not maintain a second project glossary. Fail the check when Context is malformed
+or conflicts with shared vocabulary. Without Context, use shared terms alone.
+The derivation uses PyYAML in the Python environment that runs `prose-check`.
 
 Use `cmark` to select Markdown text nodes. Replace non-prose characters with
 spaces while preserving newlines and character offsets. Pass the masked text

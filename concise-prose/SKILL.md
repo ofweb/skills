@@ -27,6 +27,11 @@ prose on standard input. It checks STE100 first and then applies Vale's project
 style rules if STE100 passes. Fix findings without changing technical meaning;
 report a conflict if no safe correction exists.
 
+For project files, `prose-check` derives approved technical terms from
+`.workflow/context.md` and combines them with its separate shared vocabulary.
+Use `--project-root` for standard input or files outside the project tree.
+The Python environment that runs `prose-check` needs PyYAML for this derivation.
+
 Do not add glossary entries merely to silence findings.
 When fixing an error, make the smallest useful change.
 Do not expand text only to satisfy a linter.

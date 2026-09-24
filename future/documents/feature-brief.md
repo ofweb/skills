@@ -91,3 +91,18 @@ stories and acceptance criteria cover the agreed behaviour, its scope and
 non-goals are intentional, material assumptions are resolved or safely
 deferred, required shared documents are linked, and no open question can
 materially change the feature.
+
+## Size and maintenance
+
+Aim for 500–900 words per Feature Brief. The hard limit is 1,500 words per
+file. The limit is a pruning trigger, not a size target. The
+`workflow-document-check` skill checks each Feature Brief separately.
+
+Keep each story to a few concise sentences. Keep each acceptance criterion to
+one concise observable statement when possible. Split independent behaviours
+into separate criteria instead of a long paragraph.
+
+Near the limit, remove duplicated Direction, PDR, ADR, and Context material and
+link to its canonical home. Remove conversation history and implementation
+detail. Tighten repeated acceptance wording. Move unrelated behaviour into
+another feature and check whether the feature boundary is too large.

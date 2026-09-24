@@ -40,8 +40,12 @@ class CommandTests(unittest.TestCase):
         checker = self.directory / "ste100"
         checker.write_text(
             "#!/usr/bin/env python3\n"
-            "import sys\n"
+            "import os, sys\n"
+            "from pathlib import Path\n"
             "text = sys.stdin.read()\n"
+            "if os.environ.get('PRINT_GLOSSARY'):\n"
+            "    path = Path(sys.argv[sys.argv.index('--glossary') + 1])\n"
+            "    print('GLOSSARY:', path.read_text())\n"
             "print('STE text:', repr(text))\n"
             "sys.exit(1 if 'BAD' in text else 0)\n",
             encoding="utf-8",
@@ -58,9 +62,11 @@ class CommandTests(unittest.TestCase):
         vale.chmod(0o755)
         self.env = dict(os.environ, PATH=f"{self.directory}:{os.environ['PATH']}")
 
-    def run_tool(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
+    def run_tool(
+        self, *args: str, input_text: str | None = None, skill_dir: Path = SKILL_DIR
+    ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            [str(SKILL_DIR / "prose-check"), *args],
+            [str(skill_dir / "prose-check"), *args],
             input=input_text,
             text=True,
             capture_output=True,
@@ -108,6 +114,71 @@ class CommandTests(unittest.TestCase):
         self.assertIn(f"== {second}: STE100 ==", result.stdout)
         self.assertIn(f"== {second}: Vale ==", result.stdout)
         self.assertLess(result.stdout.index(f"== {first}: STE100 =="), result.stdout.index(f"== {second}: Vale =="))
+
+    def test_project_context_adds_noun_and_verb_to_shared_vocabulary(self) -> None:
+        project = self.directory / "project"
+        context = project / ".workflow" / "context.md"
+        source = project / "docs" / "guide.md"
+        context.parent.mkdir(parents=True)
+        source.parent.mkdir(parents=True)
+        context.write_text(
+            "# Context\n\n"
+            "## Signal\n\n- Meaning: A project event that informs a decision.\n"
+            "- STE class: Technical name\n- Forms: Signals\n\n"
+            "## Escrow\n\n- Meaning: To hold a project amount until release.\n"
+            "- STE class: Technical verb\n- Forms: Escrows, Escrowed\n"
+        )
+        source.write_text("Use Signal and Escrow.\n")
+        self.env["PRINT_GLOSSARY"] = "1"
+
+        result = self.run_tool(str(source))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("technical_nouns:", result.stdout)
+        self.assertIn("technical_verbs:", result.stdout)
+        self.assertIn("word: Signal", result.stdout)
+        self.assertIn("word: Escrow", result.stdout)
+        self.assertIn("word: file", result.stdout)
+        self.assertFalse((project / ".workflow" / "glossary.yaml").exists())
+
+    def test_installed_prose_skill_keeps_context_derivation(self) -> None:
+        installed = self.directory / "installed-prose"
+        shutil.copytree(SKILL_DIR, installed)
+        project = self.directory / "project"
+        context = project / ".workflow" / "context.md"
+        context.parent.mkdir(parents=True)
+        context.write_text(
+            "# Context\n\n## Signal\n- Meaning: A project event.\n"
+            "- STE class: Technical name\n"
+        )
+        self.env["PRINT_GLOSSARY"] = "1"
+        result = self.run_tool(
+            "--project-root", str(project), input_text="Use Signal.\n", skill_dir=installed
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("word: Signal", result.stdout)
+
+    def test_explicit_project_root_works_for_stdin(self) -> None:
+        project = self.directory / "project"
+        context = project / ".workflow" / "context.md"
+        context.parent.mkdir(parents=True)
+        context.write_text(
+            "# Context\n\n## Signal\n\n- Meaning: A project event.\n"
+            "- STE class: Technical name\n"
+        )
+        self.env["PRINT_GLOSSARY"] = "1"
+        result = self.run_tool("--project-root", str(project), input_text="Use Signal.\n")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("word: Signal", result.stdout)
+
+    def test_malformed_context_fails_before_ste_check(self) -> None:
+        project = self.directory / "project"
+        context = project / ".workflow" / "context.md"
+        context.parent.mkdir(parents=True)
+        context.write_text("# Context\n\n## Candidate\n\n- Meaning: A tentative idea.\n")
+        result = self.run_tool("--project-root", str(project), input_text="Use the file.\n")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Context vocabulary", result.stderr)
+        self.assertNotIn("STE text:", result.stdout)
 
     def test_missing_checker_is_a_tool_failure(self) -> None:
         without_checker = self.directory / "without-checker"

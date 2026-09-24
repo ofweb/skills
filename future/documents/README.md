@@ -74,10 +74,11 @@ migration before creating another copy.
 - Preserve links from every affected Feature Brief to shared Direction, PDR,
   ADR, or Context material needed to understand it.
 
-The shared `scripts/check_workflow_docs.py` checks hard limits for Direction,
-Backlog, Context, PDRs, and ADRs. Run it with the project root as its argument. It
-counts whitespace-separated words in Markdown source, including headings and
-link text. Future document skills can add their own limits to this check.
+The `workflow-document-check` skill owns hard limits for Direction, Backlog,
+Context, Feature Briefs, PDRs, and ADRs. Its installed script checks one project
+root. It counts whitespace-separated words in Markdown source, including
+headings and link text. Future document skills can add limits to this check.
+Install it with any document skill that writes these artifacts.
 
 Acceptance Reports are feature-specific evidence. Load only the reports needed
 for the active feature; they are not routine project orientation material.

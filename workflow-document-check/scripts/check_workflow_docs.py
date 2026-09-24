@@ -14,6 +14,7 @@ LIMITS = {
     "backlog_item": 80,
     "context": 1500,
     "context_entry": 80,
+    "feature_brief": 1500,
     "pdr": 500,
     "adr": 700,
 }
@@ -82,6 +83,8 @@ def check(root: Path) -> list[str]:
         findings.extend(check_file(path, LIMITS["pdr"], "PDR"))
     for path in sorted((workflow / "decisions" / "adr").glob("*.md")):
         findings.extend(check_file(path, LIMITS["adr"], "ADR"))
+    for path in sorted((workflow / "features").glob("*/brief.md")):
+        findings.extend(check_file(path, LIMITS["feature_brief"], "Feature Brief"))
     return findings
 
 

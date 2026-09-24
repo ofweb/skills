@@ -58,6 +58,7 @@ PDR.
 Aim for 150–300 words. The hard limit is 500 words. Omit sections that add no
 useful information. Keep `.workflow/decisions/pdr/` as the set of applicable
 decisions, not a decision archive. Delete an obsolete PDR when nothing current
-depends on it. Replace a changed decision and update links. If part of the old
-decision remains valid, rewrite or replace it so the current record states the
-current constraint. Git preserves earlier records and rationale.
+depends on it. Revise the existing PDR when the answer changes within the same
+durable question and scope. Keep its ID and inbound links. Create a new PDR for
+a different or independently addressable decision. Update links when a record
+is removed or its scope changes. Git preserves earlier answers and rationale.

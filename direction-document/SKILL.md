@@ -60,7 +60,6 @@ Link related Backlog items, PDRs, Context terms, or research when those links
 help a fresh reader. Keep one canonical home for each conclusion.
 
 Use `concise-prose` for writing when available. Run `prose-check` on the edited
-file when available. Run `python scripts/check_workflow_docs.py <project-root>`
-from this skills repository.
+file when available. Use `workflow-document-check` after the edit.
 Treat a hard-limit failure as a reason to prune or restructure. Before
 finishing, check that the file orients a fresh context without delivery detail.

@@ -1,6 +1,6 @@
 ---
 name: direction
-description: Discuss and maintain a project's intended end state. Use for broad project ideas, tensions, or learning that may change Direction or the Backlog, before feature shaping.
+description: Explore broad project ideas and intended direction through discussion, assumption checks, and research into prior art or adjacent solutions. Use when learning may change Direction or Backlog before feature shaping.
 ---
 
 # Direction

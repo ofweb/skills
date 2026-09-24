@@ -169,7 +169,7 @@ After delivery, examine what was learned:
 - change the Direction document only when delivery changes what the project
   should ultimately become;
 - update the Backlog when future work or relationships changed;
-- create, replace, or remove a PDR when a durable product choice changed; and
+- create, revise, or remove a PDR when a durable product choice changed; and
 - make no document change when the result only confirms current understanding.
 
 Feature completion alone is not a reason to edit the Direction document.

@@ -23,6 +23,8 @@ meaning across features, documents, code, or fresh contexts. Reject ordinary
 programming and framework vocabulary. Do not add a term only to satisfy an
 STE or prose check. Create `.workflow/context.md` when the first term qualifies.
 If a copy exists elsewhere, do not create a duplicate or migrate it here.
+Keep only terms whose canonical meaning the user has agreed. Leave candidate
+terms in the owning workflow until that agreement exists.
 
 ## Record the agreement
 
@@ -34,18 +36,21 @@ Use one short entry per concept:
 ## Canonical term
 
 - Meaning: One or two sentences that define the project concept.
-- STE class: Technical name.
-- Forms: Approved forms, when needed.
+- STE class: <Technical name or Technical verb>
+- Forms: <comma-separated approved forms, when needed>
 - Avoid: Misleading synonyms, when needed.
 - Distinguish from: Related concept and its difference, when needed.
 ```
 
 The heading gives the canonical spelling. Write one STE-compatible definition
 that gives the term one project meaning. Keep meaningful distinctions and
-approved forms explicit. Confirm the spelling, meaning, and STE class with the
-user through the owning workflow. Omit optional fields
-with no value. Link to related entries or records when a definition depends on
-them.
+approved forms explicit. The user agrees spelling, meaning, distinctions,
+misleading synonyms, and semantically important forms through the owning
+workflow. Derive the STE class from that agreed meaning and usage. Use
+`Technical name` for a concept used as a noun and `Technical verb` for a named
+action. Do not ask the user to classify the term. List approved forms as
+comma-separated spellings. Omit optional fields with no value. Link related
+entries or records when a definition depends on them.
 
 Revise a definition when the user changes the agreed meaning. Check affected
 uses in project documents and code. Route a behavioural change to a PDR or
@@ -60,7 +65,7 @@ need a project-specific definition, duplicate concepts, distinctions that can
 be simpler, and implementation vocabulary. Do not split Context just to meet
 the limit; growth may mean it has become general project memory.
 
-Use `concise-prose` and `prose-check` when available. Run
-`python scripts/check_workflow_docs.py <project-root>` from this skills
-repository. Prune or restructure after a hard-limit
-failure. Check each entry for user-agreed meaning and unresolved ambiguity.
+Use `concise-prose` and `prose-check` when available. `prose-check` derives its
+project vocabulary from agreed Context entries. Use `workflow-document-check`
+after the edit. Prune or restructure after a hard-limit failure. Check each
+entry for user-agreed meaning and unresolved ambiguity.
