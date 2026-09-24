@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run Vale and STE100 on Markdown prose."""
+"""Run STE100, then Vale, on Markdown prose."""
 
 from __future__ import annotations
 
@@ -86,7 +86,7 @@ def main() -> int:
     if missing:
         parser.exit(2, f"prose-check: missing command: {', '.join(missing)}\n")
 
-    failed = False
+    inputs = []
     for name in args.files or ["-"]:
         try:
             markdown = sys.stdin.read() if name == "-" else Path(name).read_text(encoding="utf-8")
@@ -94,7 +94,21 @@ def main() -> int:
         except (OSError, RuntimeError, ET.ParseError, IndexError) as exc:
             print(f"prose-check: {name}: {exc}", file=sys.stderr)
             return 2
+        inputs.append((name, markdown, prose))
 
+    ste_failed = False
+    for name, _, prose in inputs:
+        print(f"== {name}: STE100 ==", flush=True)
+        ste_status = run_check(["ste100", "check", "--glossary", str(GLOSSARY)], prose)
+        if ste_status > 1:
+            return 2
+        ste_failed |= bool(ste_status)
+
+    if ste_failed:
+        return 1
+
+    vale_failed = False
+    for name, markdown, _ in inputs:
         print(f"== {name}: Vale ==", flush=True)
         vale_cmd = ["vale", "--config", str(CONFIG)]
         if name == "-":
@@ -102,15 +116,11 @@ def main() -> int:
             vale_status = run_check(vale_cmd, markdown)
         else:
             vale_status = run_check(vale_cmd + [name])
-
-        print(f"== {name}: STE100 ==", flush=True)
-        ste_status = run_check(["ste100", "check", "--glossary", str(GLOSSARY)], prose)
-
-        if vale_status > 1 or ste_status > 1:
+        if vale_status > 1:
             return 2
-        failed |= bool(vale_status or ste_status)
+        vale_failed |= bool(vale_status)
 
-    return 1 if failed else 0
+    return 1 if vale_failed else 0
 
 
 if __name__ == "__main__":

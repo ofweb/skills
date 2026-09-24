@@ -1,6 +1,6 @@
 ---
 name: ste100
-description: Write or review technical text in STE100 style when the user requests Simplified Technical English. Use this self-contained guide before running prose-check.
+description: The STE100 language foundation for concise-prose and other prose-writing skills. Use it to draft or review all model-authored prose.
 ---
 
 # Write in STE100
@@ -41,7 +41,3 @@ Technical meaning, requirements, conditions, obligations, and established termin
 - Identify the applicable risk level.
 - Start with a clear command or condition. State the risk or possible result clearly.
 - Keep the safety instruction direct and specific.
-
-## Check the result
-
-When `prose-check` is available, run it on the completed text or containing file. Fix STE100 and Vale findings without changing the intended technical meaning. If a finding cannot be fixed safely, report the conflict instead of changing the meaning. `prose-check` is the deterministic authority for vocabulary and mechanically checkable rules; this skill guides generation before that check.

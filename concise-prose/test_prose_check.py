@@ -31,7 +31,7 @@ class MarkdownProseTests(unittest.TestCase):
             self.assertNotIn(hidden, prose)
 
 
-@unittest.skipUnless(shutil.which("cmark") and shutil.which("vale"), "Vale and cmark are required")
+@unittest.skipUnless(shutil.which("cmark"), "cmark is required")
 class CommandTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
@@ -47,6 +47,15 @@ class CommandTests(unittest.TestCase):
             encoding="utf-8",
         )
         checker.chmod(0o755)
+        vale = self.directory / "vale"
+        vale.write_text(
+            "#!/usr/bin/env python3\n"
+            "import os, sys\n"
+            "print('VALE RAN')\n"
+            "sys.exit(int(os.environ.get('FAKE_VALE_STATUS', '0')))\n",
+            encoding="utf-8",
+        )
+        vale.chmod(0o755)
         self.env = dict(os.environ, PATH=f"{self.directory}:{os.environ['PATH']}")
 
     def run_tool(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
@@ -63,9 +72,17 @@ class CommandTests(unittest.TestCase):
         passed = self.run_tool(input_text="Use the file.\n\n```text\nBAD\n```\n")
         self.assertEqual(passed.returncode, 0, passed.stderr)
         self.assertNotIn("BAD", passed.stdout)
+        self.assertLess(passed.stdout.index("STE100 =="), passed.stdout.index("Vale =="))
 
         failed = self.run_tool(input_text="BAD prose.\n")
         self.assertEqual(failed.returncode, 1, failed.stderr)
+        self.assertNotIn("Vale ==", failed.stdout)
+
+    def test_vale_failure_after_ste100_passes(self) -> None:
+        self.env["FAKE_VALE_STATUS"] = "1"
+        result = self.run_tool(input_text="Use the file.\n")
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertLess(result.stdout.index("STE100 =="), result.stdout.index("Vale =="))
 
     def test_multiple_files_return_failure_if_one_fails(self) -> None:
         first = self.directory / "first.md"
@@ -77,12 +94,13 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn(f"== {first}: STE100 ==", result.stdout)
         self.assertIn(f"== {second}: STE100 ==", result.stdout)
+        self.assertNotIn("Vale ==", result.stdout)
 
     def test_missing_checker_is_a_tool_failure(self) -> None:
         without_checker = self.directory / "without-checker"
         without_checker.mkdir()
-        for name in ("cmark", "vale"):
-            (without_checker / name).symlink_to(shutil.which(name))
+        (without_checker / "cmark").symlink_to(shutil.which("cmark"))
+        (without_checker / "vale").symlink_to(self.directory / "vale")
         (without_checker / "python3").symlink_to("/usr/bin/python3")
         self.env["PATH"] = str(without_checker)
 
