@@ -32,7 +32,8 @@ or by walking up from the file or current directory. Parse Context entries and
 derive a temporary glossary that combines their terms with the shared terms.
 Do not maintain a second project glossary. Fail the check when Context is malformed
 or conflicts with shared vocabulary. Without Context, use shared terms alone.
-The derivation uses PyYAML in the Python environment that runs `prose-check`.
+The shared vocabulary and temporary merged glossary use JSON, a YAML-compatible
+format accepted by STE100. Derivation needs only the Python standard library.
 
 Use `cmark` to select Markdown text nodes. Replace non-prose characters with
 spaces while preserving newlines and character offsets. Pass the masked text

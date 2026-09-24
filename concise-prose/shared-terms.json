@@ -1,0 +1,86 @@
+{
+  "name": "shared-software-prose",
+  "technical_nouns": [
+    {
+      "word": "file",
+      "approved_meaning": "A named unit of data stored by a computer.",
+      "inflections": [
+        "files"
+      ]
+    },
+    {
+      "word": "repository",
+      "approved_meaning": "A version-controlled collection of files and their change history.",
+      "inflections": [
+        "repositories"
+      ]
+    },
+    {
+      "word": "feature",
+      "approved_meaning": "A product capability with observable behavior.",
+      "inflections": [
+        "features"
+      ]
+    },
+    {
+      "word": "context",
+      "approved_meaning": "Information needed to understand a subject or task.",
+      "inflections": [
+        "contexts"
+      ]
+    },
+    {
+      "word": "workflow",
+      "approved_meaning": "A defined way to coordinate work and decisions toward an outcome.",
+      "inflections": [
+        "workflows"
+      ]
+    },
+    {
+      "word": "backlog",
+      "approved_meaning": "A maintained list of candidate work that is not complete.",
+      "inflections": [
+        "backlogs"
+      ]
+    },
+    {
+      "word": "schema",
+      "approved_meaning": "A definition of the form and allowed content of structured data.",
+      "inflections": [
+        "schemas"
+      ]
+    },
+    {
+      "word": "Markdown",
+      "approved_meaning": "The markup format used for text documents."
+    },
+    {
+      "word": "parser",
+      "approved_meaning": "A program component that reads structured input.",
+      "inflections": [
+        "parsers"
+      ]
+    },
+    {
+      "word": "document",
+      "approved_meaning": "A written file that gives information or instructions.",
+      "inflections": [
+        "documents"
+      ]
+    },
+    {
+      "word": "command",
+      "approved_meaning": "An instruction entered in a command-line interface.",
+      "inflections": [
+        "commands"
+      ]
+    },
+    {
+      "word": "project",
+      "approved_meaning": "A related set of work and its files.",
+      "inflections": [
+        "projects"
+      ]
+    }
+  ]
+}

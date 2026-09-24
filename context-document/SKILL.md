@@ -42,7 +42,9 @@ Use one short entry per concept:
 - Distinguish from: Related concept and its difference, when needed.
 ```
 
-The heading gives the canonical spelling. Write one STE-compatible definition
+The heading gives the canonical spelling. `STE class` is document-skill-derived
+metadata consumed by `prose-check`; it is not a user decision. Write one
+STE-compatible definition
 that gives the term one project meaning. Keep meaningful distinctions and
 approved forms explicit. The user agrees spelling, meaning, distinctions,
 misleading synonyms, and semantically important forms through the owning
@@ -66,6 +68,7 @@ be simpler, and implementation vocabulary. Do not split Context just to meet
 the limit; growth may mean it has become general project memory.
 
 Use `concise-prose` and `prose-check` when available. `prose-check` derives its
-project vocabulary from agreed Context entries. Use `workflow-document-check`
-after the edit. Prune or restructure after a hard-limit failure. Check each
+project vocabulary from agreed Context entries. `workflow-document-check` must
+be installed alongside this skill; use it after the edit. Prune or restructure
+after a hard-limit failure. Check each
 entry for user-agreed meaning and unresolved ambiguity.

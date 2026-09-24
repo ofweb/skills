@@ -71,6 +71,7 @@ rationale solely for history.
 
 Do not include discussion transcripts, option matrices, full feature
 requirements, implementation plans, or status tracking. Use `concise-prose`
-and `prose-check` when available. Use `workflow-document-check` after the edit.
+and `prose-check` when available. `workflow-document-check` must be installed
+alongside this skill; use it after the edit.
 Prune or restructure after a hard-limit failure. Check the ID,
 status, scope, and links before finishing.

@@ -22,7 +22,7 @@ class ContextGlossaryTests(unittest.TestCase):
                 "## Escrow\n- Meaning: To hold an amount.\n"
                 "- STE class: Technical verb\n- Forms: Escrows, Escrowed\n"
             )
-            glossary = MODULE.combined_glossary(SKILL / "shared-terms.yaml", context)
+            glossary = MODULE.combined_glossary(SKILL / "shared-terms.json", context)
             nouns = {entry["word"] for entry in glossary["technical_nouns"]}
             verbs = {entry["word"] for entry in glossary["technical_verbs"]}
             self.assertIn("file", nouns)
@@ -37,7 +37,7 @@ class ContextGlossaryTests(unittest.TestCase):
                 "- STE class: Technical name\n"
             )
             with self.assertRaisesRegex(ValueError, "conflicts"):
-                MODULE.combined_glossary(SKILL / "shared-terms.yaml", context)
+                MODULE.combined_glossary(SKILL / "shared-terms.json", context)
 
     def test_candidate_status_cannot_approve_vocabulary(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -48,7 +48,7 @@ class ContextGlossaryTests(unittest.TestCase):
                 "- STE class: Technical name\n"
             )
             with self.assertRaisesRegex(ValueError, "not agreed"):
-                MODULE.combined_glossary(SKILL / "shared-terms.yaml", context)
+                MODULE.combined_glossary(SKILL / "shared-terms.json", context)
 
 
 if __name__ == "__main__":

@@ -30,7 +30,8 @@ report a conflict if no safe correction exists.
 For project files, `prose-check` derives approved technical terms from
 `.workflow/context.md` and combines them with its separate shared vocabulary.
 Use `--project-root` for standard input or files outside the project tree.
-The Python environment that runs `prose-check` needs PyYAML for this derivation.
+The shared vocabulary is stored as JSON, which STE100 accepts as YAML. The
+derivation uses only the Python standard library.
 
 Do not add glossary entries merely to silence findings.
 When fixing an error, make the smallest useful change.

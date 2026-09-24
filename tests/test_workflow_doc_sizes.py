@@ -78,6 +78,22 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
             self.assertTrue(any("Context; hard limit 1500" in item for item in findings))
             self.assertFalse(any("Context entry" in item for item in findings))
 
+    def test_acceptance_reports_have_independent_limits(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            feature = root / ".workflow" / "features" / "B-0001"
+            feature.mkdir(parents=True)
+            first = feature / "acceptance-2026-09-24-abcdef0.md"
+            second = feature / "acceptance-2026-09-25-abcdef1.md"
+            first.write_text("word " * 800)
+            second.write_text("word " * 800)
+            self.assertEqual(CHECKER.check(root), [])
+
+            second.write_text("word " * 801)
+            findings = CHECKER.check(root)
+            self.assertEqual(len(findings), 1)
+            self.assertIn("Acceptance Report", findings[0])
+
 
 if __name__ == "__main__":
     unittest.main()

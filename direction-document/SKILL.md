@@ -60,6 +60,7 @@ Link related Backlog items, PDRs, Context terms, or research when those links
 help a fresh reader. Keep one canonical home for each conclusion.
 
 Use `concise-prose` for writing when available. Run `prose-check` on the edited
-file when available. Use `workflow-document-check` after the edit.
+file when available. `workflow-document-check` must be installed alongside this
+skill; use it after the edit.
 Treat a hard-limit failure as a reason to prune or restructure. Before
 finishing, check that the file orients a fresh context without delivery detail.

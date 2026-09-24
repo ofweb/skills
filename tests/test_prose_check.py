@@ -133,16 +133,22 @@ class CommandTests(unittest.TestCase):
 
         result = self.run_tool(str(source))
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("technical_nouns:", result.stdout)
-        self.assertIn("technical_verbs:", result.stdout)
-        self.assertIn("word: Signal", result.stdout)
-        self.assertIn("word: Escrow", result.stdout)
-        self.assertIn("word: file", result.stdout)
+        self.assertIn('"technical_nouns":', result.stdout)
+        self.assertIn('"technical_verbs":', result.stdout)
+        self.assertIn('"word": "Signal"', result.stdout)
+        self.assertIn('"word": "Escrow"', result.stdout)
+        self.assertIn('"word": "file"', result.stdout)
         self.assertFalse((project / ".workflow" / "glossary.yaml").exists())
 
     def test_installed_prose_skill_keeps_context_derivation(self) -> None:
         installed = self.directory / "installed-prose"
         shutil.copytree(SKILL_DIR, installed)
+        isolated = self.directory / "isolated-python"
+        isolated.mkdir()
+        python = isolated / "python3"
+        python.write_text("#!/bin/sh\nexec /usr/bin/python3 -S \"$@\"\n")
+        python.chmod(0o755)
+        self.env["PATH"] = f"{isolated}:{self.env['PATH']}"
         project = self.directory / "project"
         context = project / ".workflow" / "context.md"
         context.parent.mkdir(parents=True)
@@ -155,7 +161,7 @@ class CommandTests(unittest.TestCase):
             "--project-root", str(project), input_text="Use Signal.\n", skill_dir=installed
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("word: Signal", result.stdout)
+        self.assertIn('"word": "Signal"', result.stdout)
 
     def test_explicit_project_root_works_for_stdin(self) -> None:
         project = self.directory / "project"
@@ -168,7 +174,7 @@ class CommandTests(unittest.TestCase):
         self.env["PRINT_GLOSSARY"] = "1"
         result = self.run_tool("--project-root", str(project), input_text="Use Signal.\n")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("word: Signal", result.stdout)
+        self.assertIn('"word": "Signal"', result.stdout)
 
     def test_malformed_context_fails_before_ste_check(self) -> None:
         project = self.directory / "project"

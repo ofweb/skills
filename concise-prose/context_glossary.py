@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 from pathlib import Path
-
-import yaml
 
 
 CLASSES = {
@@ -65,7 +64,7 @@ def context_entries(markdown: str) -> list[tuple[str, str, str, list[str]]]:
 def combined_glossary(shared_path: Path, context_path: Path) -> dict:
     """Merge shared vocabulary and agreed Context terms in memory."""
     with shared_path.open(encoding="utf-8") as source:
-        shared = yaml.safe_load(source)
+        shared = json.load(source)
     if not isinstance(shared, dict):
         raise ValueError("Shared STE vocabulary is not a mapping")
     glossary = deepcopy(shared)

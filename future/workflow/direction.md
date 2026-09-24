@@ -4,10 +4,10 @@ Status: Draft
 
 ## Purpose
 
-Direction is the ongoing discussion that turns ideas and project learning into
-one cohesive understanding of what the project should become. It maintains a
-short [Direction document](../documents/direction.md) and shares stewardship of
-the [Backlog](../documents/backlog.md) with Shape.
+Direction is an iterative discussion that helps the user develop a more
+coherent understanding of what the project should become. Its short
+[Direction document](../documents/direction.md) preserves the current result;
+Direction shares stewardship of the [Backlog](../documents/backlog.md) with Shape.
 
 Direction is never complete. Individual sessions end, but new ideas, research,
 experiments, and delivered features may change the intended end state.
@@ -16,7 +16,7 @@ experiments, and delivered features may change the intended end state.
 
 Direction:
 
-- receives and examines ideas with the user;
+- receives rough ideas, problems, doubts, examples, and learning with the user;
 - maintains a unified intended end state without forcing false certainty;
 - exposes tensions, contradictions, assumptions, and unanswered end-state
   questions;
@@ -68,10 +68,10 @@ the full repository or research tree merely because it exists.
 
 ## Operating model
 
-Direction is collaborative, question-led, and non-recommending. Mike contributes
-evidence, challenges assumptions, and raises one important question or tension
-at a time. The user supplies judgement and decides how the intended direction
-changes.
+Direction is collaborative and non-recommending. Mike contributes evidence,
+challenges assumptions, and raises one important question or tension at a time.
+The user supplies judgement and decides how the intended direction changes.
+The stages below are activities to revisit, not a sequence of gates.
 
 ### 1. Orient
 
@@ -81,23 +81,31 @@ they can change the discussion.
 
 ### 2. Establish the question
 
-Identify how the idea or new evidence relates to the intended end state. Make
-the uncertainty concrete without converting it into a feature or proposed
-solution prematurely.
+Identify the need beneath a proposed solution and how a rough thought or new
+evidence relates to the intended end state. Organize incomplete thoughts
+without converting them into a feature prematurely.
 
 ### 3. Investigate and discuss
 
 Examine the goal, affected users or systems, long-term consequences, tensions
 with existing direction, and assumptions required for the idea to make sense.
 
-Ask what must be true for the idea to make sense. Verify checkable premises
-against project knowledge, repository behaviour, or external evidence.
+Find hidden assumptions, contradictions, implied requirements, coupled
+capabilities, unnecessary constraints, and consequences that could change the
+direction. Explain the reason for each challenge. Verify checkable premises
+against project knowledge, repository behaviour, or external evidence; separate
+facts from experiments, design choices, and user judgements.
 
-Look for existing, related, or adjacent solutions when they could reveal
-alternatives, common failures, useful patterns, or simpler boundaries. Bring
-the useful discoveries into the discussion and test them against the project's
-goal. Do not treat external implementations as authority or produce a large
-research report by default.
+Proactively look for existing, related, or adjacent solutions when they could
+reveal alternatives, common failures, useful patterns, or simpler boundaries.
+Bring relevant discoveries into the discussion and test them against the
+project's goal. Do not treat external implementations as authority or produce
+a large research report by default.
+
+As the user revises, rejects, or expands an idea, revisit the question,
+assumptions, and evidence. Reason and investigate before asking for the next
+consequential user judgement. A clearer unresolved question can end a useful
+session without a document edit.
 
 Direction may request deeper research, an experiment, or future feature work
 when a bounded question cannot be answered in the current discussion.

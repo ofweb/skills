@@ -1,13 +1,15 @@
 ---
 name: direction
-description: Explore broad project ideas and intended direction through discussion, assumption checks, and research into prior art or adjacent solutions. Use when learning may change Direction or Backlog before feature shaping.
+description: Help a user think through vague ideas, problems, or doubts about where a project should go. Iteratively challenge assumptions and investigate prior art or adjacent solutions when learning may change Direction or Backlog.
 ---
 
 # Direction
 
-Use Direction to develop one cohesive view of what the project should become.
-The user decides consequential changes to that view. Direction remains open as
-the project learns. A session can end after its durable results are saved.
+Use Direction as an iterative discussion that helps the user understand what
+the project should become. A vague idea, observed problem, concern, example,
+or lesson from implementation is enough to begin. Help organize incomplete
+thoughts without turning them into feature requirements. The document is a
+durable result of the discussion, not its goal.
 
 ## Orient
 
@@ -21,29 +23,34 @@ On a new project, discuss the first intended end state with the user. When
 agreed, create `.workflow/direction.md` through `direction-document` and
 initialize `.workflow/backlog.md` through `backlog-document`, even if empty.
 
-## Establish the question
+## Explore and refine
 
-Identify the question behind the idea and its relation to the intended end state.
-Ask what must be true for the idea to make sense. Test checkable assumptions
-against project knowledge, repository behaviour, or external evidence.
+Find the need beneath a proposed solution and connect it to existing Direction.
+Look for consequential hidden assumptions, contradictions, implied requirements,
+coupled capabilities, unnecessary constraints, and trade-offs between goals.
+Explain the premise or evidence behind a challenge; do not manufacture objections.
+Check material assumptions against the repository or external evidence when
+possible. Distinguish facts, experiments, design choices, and user judgments.
 
 ## Investigate prior art
 
-Look for existing, related, or adjacent solutions when they could improve the
-discussion. Use prior art to expose alternatives, common failures, useful
-patterns, and ways to avoid inventing an unnecessary solution. Research can
-expand the question; it need not only verify a factual premise. Bring useful
-findings into the conversation with their limits. Do not dump a research report
-or treat an external implementation as authority. If investigation is blocked,
-state what remains unknown rather than inventing a premise.
+Proactively look for existing, related, or adjacent solutions when they could
+change the discussion. Include relevant products, projects, standards, patterns,
+failures, and platform capabilities. Use discoveries to expose alternatives,
+trade-offs, vocabulary, or an already solved problem. Bring back only findings
+that matter, explain why, and state their limits. External work is evidence and
+inspiration, not authority. If investigation is blocked, preserve the unknown.
 
 ## Discuss
 
-Examine the goal, affected people or systems, long-term effects, and tensions
-with existing Direction. Keep one consequential topic active at a time; discuss
-tightly coupled questions together when separating them would distort the
-choice. Challenge assumptions without leading with a recommendation or option
-menu. The user judges how Direction changes. Keep genuine uncertainty visible.
+Move between understanding, investigation, challenge, and refinement as the
+user revises or rejects an idea. New evidence may change the question. Keep one
+consequential topic active; explore tightly coupled questions together when
+separating them hides a trade-off. Reason and investigate before asking for the
+next judgment the user must make. Avoid interrogation and option-menu
+recommendations. State supported factual conclusions clearly, challenge weak
+reasoning, and leave consequential project judgments to the user. A better
+question or bounded uncertainty can be a useful stopping point.
 
 Direction does not define Feature Briefs, acceptance criteria, architecture,
 technology, delivery order, or the next feature. The user starts Shape by
@@ -70,5 +77,7 @@ superseded text. Link related records instead of copying them. After delivered
 work, change Direction only when the intended end state changes. Confirming
 existing understanding needs no document edit.
 
-End a session when its useful results have a canonical home and important open
-questions remain visible. A session boundary does not mark Direction complete.
+End a session when any durable results have a canonical home and important open
+questions remain visible. No document change is required when the discussion
+has not changed durable knowledge. A session boundary does not mark Direction
+complete.

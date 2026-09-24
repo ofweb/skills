@@ -9,9 +9,8 @@ whether the feature is complete. It starts in a fresh context, independently
 assesses each candidate, and involves the user only for verified issues worth
 the user's attention.
 
-Acceptance creates a durable
-[Acceptance Report](../documents/acceptance-report.md) beside the Feature Brief
-for every pass.
+Acceptance keeps an [Acceptance Report](../documents/acceptance-report.md)
+beside the Feature Brief while verified findings need follow-up.
 
 ## Responsibilities
 
@@ -27,7 +26,7 @@ Acceptance:
 - organizes verified findings into underlying topics;
 - discusses major topics first when user guidance is needed;
 - records verified findings, user guidance, ownership, and current disposition
-  in its report;
+  in its report while findings require follow-up;
 - examines every candidate worth the time before ending the pass;
 - deletes the temporary Review report after transferring relevant evidence;
   and
@@ -55,15 +54,16 @@ Acceptance reads:
   [ADR](../documents/adr.md) material;
 - the temporary Review report;
 - code, tests, and mechanical results needed to evaluate its candidates; and
-- earlier Acceptance Reports when current work refers to their findings.
+- current Acceptance Reports when unresolved work refers to their findings.
 
 Acceptance does not inherit the Review or Implementation conversations.
 
 ## Outputs and authority
 
-Every Acceptance pass creates one Acceptance Report named with its date and
-reviewed Git revision. The report is durable but does not replace the Feature
-Brief or make a proposed change authoritative.
+An Acceptance pass creates an Acceptance Report when it retains findings that
+need follow-up. The report names its date and reviewed Git revision. It does
+not replace the Feature Brief or make a proposed change authoritative. A clean
+pass leaves no lasting report.
 
 Acceptance may:
 
@@ -108,10 +108,9 @@ The exact local and experimental verification methods remain open. Acceptance
 must not present a candidate as a defect merely because Review or a remote
 model reported it.
 
-### 4. Create the Acceptance Report
+### 4. Record retained findings
 
-Create a report for the current pass, including a clean pass with no retained
-findings. Use a filename such as:
+Create a report when the current pass retains findings. Use a filename such as:
 
 ```text
 acceptance-2026-09-22-a1b2c3d.md
@@ -121,8 +120,9 @@ Record the full Git SHA inside the report. Store it in the same feature folder
 as the Feature Brief.
 
 Transfer the evidence needed for retained findings, then delete the temporary
-Review report. Do not copy unresolved findings from earlier Acceptance Reports.
-They remain owned by their original reports.
+Review report. Do not copy unresolved findings from earlier current reports.
+They remain owned by their original reports. A clean pass can finish without
+an Acceptance Report.
 
 ### 5. Discuss verified topics
 
@@ -148,22 +148,24 @@ items at any time.
 ### 7. Determine feature status
 
 Mark the feature complete without user discussion when no verified issue
-deserves user attention.
+deserves user attention and no earlier current report still requires work.
+Remove earlier reports whose findings this pass resolved or invalidated.
 
 When the report contains required changes, the Acceptance pass ends but the
 feature remains unfinished. It may remain paused while the user prioritizes
 other work. The user may later decide that the remaining work is not important
 and mark the feature complete.
 
-## Report history
+## Report lifecycle
 
-Create a new report for every Acceptance pass. Keep older reports beside the
-Feature Brief and update them when their findings are worked on later.
+Keep only reports with findings that still constrain current work. Update them
+when their findings are worked on; remove them when the work is resolved,
+outdated, or no longer relevant. Git preserves earlier passes.
 
-A newer report does not replace an older report or carry its unresolved items
-forward. Date and Git SHA distinguish what each pass evaluated. Resolved items
-may remain with their outcome; the active workflow step and user may choose the
-status vocabulary needed for the work.
+A newer report does not carry older unresolved items forward. Date and Git SHA
+identify what each retained report evaluated. Remove obsolete findings and
+update affected links. Each report normally uses 250–500 words and must stay
+within 800 words. Keep findings concise; do not retain review transcripts.
 
 ## Completion
 
@@ -173,8 +175,8 @@ An Acceptance pass is complete when:
 - every selected candidate has been independently evaluated;
 - verified findings have been organized into topics;
 - every topic worth user attention has been discussed;
-- the dated Acceptance Report records the pass and its outcomes;
-- transferred Review evidence is preserved in that report;
+- any retained report records current findings and guidance;
+- evidence for retained findings is preserved in that report;
 - the temporary Review report is deleted; and
 - the feature is marked complete or its unfinished status and available return
   steps are explicit.
@@ -198,7 +200,7 @@ The workflow still needs to define:
 
 - the local and experimental verification methods available to Acceptance;
 - the report schema and permitted status vocabulary;
-- how a Feature Brief indexes several Acceptance Reports;
+- how a Feature Brief indexes several current Acceptance Reports;
 - filename collision handling for repeated passes on one revision and date;
 - how feature completion is represented in workflow state; and
 - the exact return transition from a report item to each owning step.

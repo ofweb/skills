@@ -16,8 +16,8 @@ the discussion rather than waiting until the feature is complete.
   in explicit Design acceptance.
 - Related features keep separate briefs even when Shape discusses them together.
 - Design receives exactly one ready Feature Brief at a time.
-- Every Acceptance Report is stored beside the Feature Brief for the feature it
-  evaluates.
+- Each retained Acceptance Report is stored beside the Feature Brief for the
+  feature it evaluates.
 
 ## Lifecycle and authority
 

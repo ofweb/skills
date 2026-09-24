@@ -154,13 +154,13 @@ investigating.
 
 Acceptance discusses verified findings with the user, starting with major
 topics that may resolve several findings. It records the user's guidance and
-routes needed work by owning workflow step. The resulting Acceptance report
-remains beside the Feature Brief so work can pause while the user prioritizes
-another concern.
+routes needed work by owning workflow step. A report remains beside the
+Feature Brief while its findings constrain current work.
 
-When no verified finding deserves user attention, Acceptance records a clean
-pass and marks the feature complete without starting a discussion. Required
-unresolved work leaves the feature unfinished unless the user closes it.
+When no verified finding deserves user attention and no earlier report still
+requires work, Acceptance marks the feature complete without starting a
+discussion or retaining a report. Required unresolved work leaves the feature
+unfinished unless the user closes it.
 
 ## Collaboration and autonomy
 

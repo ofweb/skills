@@ -1,6 +1,6 @@
 ---
 name: workflow-document-check
-description: Check hard word limits in a project's .workflow documents. Use after changing Direction, Backlog, Context, Feature Briefs, PDRs, or ADRs.
+description: Check hard word limits in a project's .workflow documents. Use after changing Direction, Backlog, Context, Feature Briefs, PDRs, ADRs, or Acceptance Reports.
 ---
 
 # Workflow document check

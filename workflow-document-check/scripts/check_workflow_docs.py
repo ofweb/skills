@@ -15,6 +15,7 @@ LIMITS = {
     "context": 1500,
     "context_entry": 80,
     "feature_brief": 1500,
+    "acceptance_report": 800,
     "pdr": 500,
     "adr": 700,
 }
@@ -85,6 +86,8 @@ def check(root: Path) -> list[str]:
         findings.extend(check_file(path, LIMITS["adr"], "ADR"))
     for path in sorted((workflow / "features").glob("*/brief.md")):
         findings.extend(check_file(path, LIMITS["feature_brief"], "Feature Brief"))
+    for path in sorted((workflow / "features").glob("*/acceptance-*.md")):
+        findings.extend(check_file(path, LIMITS["acceptance_report"], "Acceptance Report"))
     return findings
 
 

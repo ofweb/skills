@@ -15,7 +15,7 @@ They describe ownership, authority, lifecycle, required content, and exclusions.
 | [Context](context.md) | `context-document` | Optional singleton | The collaborative step that resolves a stable term | Project terminology |
 | [PDR](pdr.md) | `pdr-document` | Repeatable and created only when needed | Direction and Shape | Product or behavioural decision within its stated scope |
 | [ADR](adr.md) | `adr-document` | Repeatable and created only when needed | Shape and Design | Architectural decision within its stated scope |
-| [Acceptance Report](acceptance-report.md) | `acceptance-report-document` | One per Acceptance pass | Acceptance, then the responsible workflow steps and user | Evaluated findings, user guidance, and their current disposition |
+| [Acceptance Report](acceptance-report.md) | `acceptance-report-document` | One per pass with current findings | Acceptance, then the responsible workflow steps and user | Verified findings and current disposition |
 
 ## Document skills
 
@@ -75,13 +75,21 @@ migration before creating another copy.
   ADR, or Context material needed to understand it.
 
 The `workflow-document-check` skill owns hard limits for Direction, Backlog,
-Context, Feature Briefs, PDRs, and ADRs. Its installed script checks one project
-root. It counts whitespace-separated words in Markdown source, including
-headings and link text. Future document skills can add limits to this check.
-Install it with any document skill that writes these artifacts.
+Context, Feature Briefs, PDRs, ADRs, and Acceptance Reports. Its installed
+script checks one project root. It counts whitespace-separated words in
+Markdown source, including headings and link text. Future document skills can
+add limits to this check. The standard skill installer copies only named skill
+paths; it does not install referenced skills automatically. Install
+`workflow-document-check` in the same multi-path install command as any
+document skill that uses it. For example, give the Codex skill installer these
+paths:
 
-Acceptance Reports are feature-specific evidence. Load only the reports needed
-for the active feature; they are not routine project orientation material.
+```text
+--repo ofweb/skills --path direction-document workflow-document-check
+```
+
+Acceptance Reports are feature-specific current evidence. Load only reports
+needed for active unresolved work; remove them when they no longer help.
 
 ## Outside this taxonomy
 

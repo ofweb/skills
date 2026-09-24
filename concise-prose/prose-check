@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -14,7 +15,7 @@ from pathlib import Path
 
 
 CONFIG = Path(__file__).resolve().with_name(".vale.ini")
-GLOSSARY = Path(__file__).resolve().with_name("shared-terms.yaml")
+GLOSSARY = Path(__file__).resolve().with_name("shared-terms.json")
 SOURCEPOS = re.compile(r"^(\d+):(\d+)-(\d+):(\d+)$")
 
 
@@ -118,14 +119,12 @@ def main() -> int:
             context = root / ".workflow" / "context.md" if root else None
             if context and context.is_file():
                 try:
-                    import yaml
-
                     sys.path.insert(0, str(Path(__file__).resolve().parent))
                     from context_glossary import combined_glossary
 
                     merged = combined_glossary(GLOSSARY, context)
-                    glossary = Path(temporary) / "glossary.yaml"
-                    glossary.write_text(yaml.safe_dump(merged, sort_keys=False), encoding="utf-8")
+                    glossary = Path(temporary) / "glossary.json"
+                    glossary.write_text(json.dumps(merged, ensure_ascii=False), encoding="utf-8")
                 except Exception as exc:
                     print(f"prose-check: {name}: Context vocabulary: {exc}", file=sys.stderr)
                     status = 2

@@ -41,7 +41,7 @@ Context records the agreed result.
 Each agreed concept provides the vocabulary information needed by prose checks:
 
 - its canonical spelling;
-- a tool-derived ASD-STE100 classification as a technical name or verb;
+- a document-skill-derived ASD-STE100 classification as a technical name or verb;
 - approved forms when plurals, tense, or another form could be ambiguous; and
 - a short STE-compatible definition that gives the term one project meaning.
 
@@ -51,7 +51,7 @@ with its separate shared vocabulary for each check. It does not maintain a
 second project glossary. Malformed entries fail derivation rather than silently
 granting or omitting approval.
 
-The STE class is tool-facing metadata. The document skill derives it from the
+The STE class is document-skill-derived metadata. The document skill derives it from the
 agreed concept and usage; the user decides the term's meaning, distinctions,
 misleading synonyms, and semantically important forms. Context contains no
 unresolved candidate entries.

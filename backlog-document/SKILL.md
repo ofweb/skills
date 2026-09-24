@@ -70,6 +70,7 @@ or discussion transcripts into an item. Create a draft Feature Brief when
 durable behavioural detail no longer fits a compact Backlog item.
 
 Use `concise-prose` for writing when available. Run `prose-check` on the edited
-file when available. Use `workflow-document-check` after the edit.
+file when available. `workflow-document-check` must be installed alongside this
+skill; use it after the edit.
 Prune or restructure after a hard-limit failure. Check that every item has a
 stable ID, one maturity marker, and a recognizable value or problem.
