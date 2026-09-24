@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""Run Vale and STE100 on Markdown prose."""
+
+from __future__ import annotations
+
+import argparse
+import re
+import shutil
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+
+CONFIG = Path(__file__).resolve().with_name(".vale.ini")
+GLOSSARY = Path(__file__).resolve().with_name("shared-terms.yaml")
+SOURCEPOS = re.compile(r"^(\d+):(\d+)-(\d+):(\d+)$")
+
+
+def prose_only(markdown: str) -> str:
+    parsed = subprocess.run(
+        ["cmark", "--to", "xml", "--sourcepos"],
+        input=markdown,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if parsed.returncode:
+        raise RuntimeError(parsed.stderr.strip() or "cmark failed")
+
+    root = ET.fromstring(parsed.stdout)
+    lines = markdown.splitlines(keepends=True)
+    line_bytes = []
+    offset = 0
+    for line in lines:
+        line_bytes.append(offset)
+        offset += len(line.encode("utf-8"))
+
+    byte_to_char = []
+    for index, char in enumerate(markdown):
+        byte_to_char.extend([index] * len(char.encode("utf-8")))
+    byte_to_char.append(len(markdown))
+
+    keep = [False] * len(markdown)
+    for node in root.iter():
+        if node.tag.rsplit("}", 1)[-1] != "text":
+            continue
+        match = SOURCEPOS.fullmatch(node.attrib.get("sourcepos", ""))
+        if not match:
+            raise RuntimeError("cmark text node has no source position")
+        start_line, start_column, end_line, end_column = map(int, match.groups())
+        start_byte = line_bytes[start_line - 1] + start_column - 1
+        end_byte = line_bytes[end_line - 1] + end_column
+        for index in range(byte_to_char[start_byte], byte_to_char[end_byte]):
+            keep[index] = True
+
+    return "".join(
+        char if selected or char in "\r\n" else " "
+        for char, selected in zip(markdown, keep)
+    )
+
+
+def run_check(command: list[str], content: str | None = None) -> int:
+    result = subprocess.run(
+        command,
+        input=content,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.stdout:
+        sys.stdout.write(result.stdout)
+        if not result.stdout.endswith("\n"):
+            sys.stdout.write("\n")
+    if result.stderr:
+        sys.stderr.write(result.stderr)
+    return result.returncode
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("files", nargs="*", metavar="FILE", help="Markdown files or - for stdin")
+    args = parser.parse_args()
+
+    missing = [name for name in ("cmark", "vale", "ste100") if shutil.which(name) is None]
+    if missing:
+        parser.exit(2, f"prose-check: missing command: {', '.join(missing)}\n")
+
+    failed = False
+    for name in args.files or ["-"]:
+        try:
+            markdown = sys.stdin.read() if name == "-" else Path(name).read_text(encoding="utf-8")
+            prose = prose_only(markdown)
+        except (OSError, RuntimeError, ET.ParseError, IndexError) as exc:
+            print(f"prose-check: {name}: {exc}", file=sys.stderr)
+            return 2
+
+        print(f"== {name}: Vale ==", flush=True)
+        vale_cmd = ["vale", "--config", str(CONFIG)]
+        if name == "-":
+            vale_cmd += ["--ext=.md", "--path=stdin.md", "-"]
+            vale_status = run_check(vale_cmd, markdown)
+        else:
+            vale_status = run_check(vale_cmd + [name])
+
+        print(f"== {name}: STE100 ==", flush=True)
+        ste_status = run_check(["ste100", "check", "--glossary", str(GLOSSARY)], prose)
+
+        if vale_status > 1 or ste_status > 1:
+            return 2
+        failed |= bool(vale_status or ste_status)
+
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
