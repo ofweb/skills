@@ -33,6 +33,7 @@ Each document skill defines:
 - its links to related documents;
 - its directory and file-naming rules;
 - how to handle obsolete information; and
+- normal and hard size limits, with pruning rules for each record or document;
 - the writing and validation skills to use.
 
 The workflow skill remains responsible for the work and for deciding why the
@@ -67,11 +68,19 @@ migration before creating another copy.
 - Distinguish draft working material from accepted content.
 - Rewrite current-state documents as understanding changes; do not append a
   conversation history.
-- Keep decision records as historical records. Supersede them explicitly rather
-  than rewriting why an earlier decision was made.
-- Keep documents short enough for a fresh context to load selectively.
+- Remove obsolete knowledge and stale links. Git provides history.
+- Keep documents small enough for a fresh context to load selectively.
+- Treat hard limits as pruning triggers, not size targets.
 - Preserve links from every affected Feature Brief to shared Direction, PDR,
   ADR, or Context material needed to understand it.
+
+The shared `scripts/check_workflow_docs.py` checks hard limits for Direction,
+Backlog, Context, PDRs, and ADRs. Run it with the project root as its argument. It
+counts whitespace-separated words in Markdown source, including headings and
+link text. Future document skills can add their own limits to this check.
+
+Acceptance Reports are feature-specific evidence. Load only the reports needed
+for the active feature; they are not routine project orientation material.
 
 ## Outside this taxonomy
 

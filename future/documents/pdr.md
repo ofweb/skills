@@ -28,7 +28,7 @@ Brief. Small reversible choices need no record.
 
 ## Contains
 
-- a concise title and status;
+- a concise title and Accepted status;
 - a stable ID;
 - the product question or constraint;
 - the decision and why it was made;
@@ -45,17 +45,19 @@ Brief. Small reversible choices need no record.
 - architecture or implementation design;
 - speculative possibilities with no decision;
 - routine scope choices local to one Feature Brief; or
-- a running history of every product discussion.
+- a running history of every product discussion; or
+- decisions that no longer apply.
 
 ## Authority and maintenance
 
-A PDR is authoritative within its stated scope. Every Feature Brief affected by
-a shared product rule must link to it.
+A PDR is authoritative within its stated scope after the user makes the
+decision. Keep unresolved candidates in Direction, Backlog, or discussion.
+Every Feature Brief affected by a shared product rule must link to its current
+PDR.
 
-Use Proposed for a durable candidate awaiting the user's decision. Use Accepted
-only after the user agrees to the choice. A Proposed PDR is not authority for
-product behaviour.
-
-Do not rewrite the original rationale when the decision changes. Mark the record
-as superseded and link to the replacement so later readers can follow the
-history.
+Aim for 150–300 words. The hard limit is 500 words. Omit sections that add no
+useful information. Keep `.workflow/decisions/pdr/` as the set of applicable
+decisions, not a decision archive. Delete an obsolete PDR when nothing current
+depends on it. Replace a changed decision and update links. If part of the old
+decision remains valid, rewrite or replace it so the current record states the
+current constraint. Git preserves earlier records and rationale.

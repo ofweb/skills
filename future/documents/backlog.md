@@ -63,5 +63,11 @@ Keep items compact. Once an item needs durable behavioural detail, create a
 draft Feature Brief and link it. Update or replace stale items as understanding
 changes instead of preserving the Backlog as a history log.
 
+Aim for 20–50 words per item. The hard limit is 80 words per item. Keep the
+whole file below 1,800 words. Near a limit, remove stale, duplicate, delivered,
+or overly detailed work first. Delete items that are no longer plausible.
+Merge or replace duplicates and update their links. Do not create an archive
+for removed items; Git preserves their history.
+
 The item lifecycle beyond understanding maturity remains to be defined with
 the Direction and Shape guides.

@@ -50,9 +50,17 @@ require a revision. Rewrite affected sections as current understanding, not a
 chronological record. Remove superseded wording. Keep a genuine unresolved
 question visible without weakening statements that remain settled.
 
+Aim for 300–500 words; the hard limit is 800 words. Near that limit, first
+remove resolved questions, superseded direction, feature detail, copied PDR
+rationale, and research detail. Link to the canonical material when needed.
+Prune stale links and compress wording without losing meaning. Git preserves
+earlier states; do not use this document as a history log.
+
 Link related Backlog items, PDRs, Context terms, or research when those links
 help a fresh reader. Keep one canonical home for each conclusion.
 
 Use `concise-prose` for writing when available. Run `prose-check` on the edited
-file when available. Before finishing, check that the file is short enough to
-orient a fresh context and contains no delivery detail.
+file when available. Run `python scripts/check_workflow_docs.py <project-root>`
+from this skills repository.
+Treat a hard-limit failure as a reason to prune or restructure. Before
+finishing, check that the file orients a fresh context without delivery detail.

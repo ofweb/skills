@@ -5,18 +5,19 @@ description: Create or update a product decision record when Direction or Shape 
 
 # Product decision record
 
-A PDR records a product or behavioural choice and its rationale. Direction or
-Shape decides when the choice needs a record. Use one PDR per durable decision
-when future contributors need its reasoning to apply, challenge, or reconsider
-it. A local feature requirement belongs in its Feature Brief. Architecture
-belongs in an ADR. Small reversible choices need no PDR.
+A PDR records an applicable product or behavioural choice and its rationale.
+Direction or Shape decides when the choice needs a record. Create it only after
+the user makes a durable decision whose reasoning matters beyond one local
+Feature Brief. Architecture belongs in an ADR. Small reversible choices need
+no PDR. Keep unresolved candidates in Direction, Backlog, or discussion.
 
 ## Create or update
 
 Read related PDRs and Direction, Backlog, and Feature Brief material that bears
 on the decision. Check for an existing record before creating one. Store PDRs in
 `.workflow/decisions/pdr/`. Give each record the next unused `PDR-0001` style
-ID and name its file `0001-short-title.md`. Keep the ID and filename stable.
+ID and name its file `0001-short-title.md`. Do not reuse a deleted ID; check
+Git history when needed. Keep the ID and filename stable while the record applies.
 If the decision already has a record elsewhere, do not create a duplicate or
 migrate it in this skill.
 
@@ -26,7 +27,7 @@ reader understand or revisit the choice.
 ```markdown
 # PDR-0001: Short title
 
-Status: Proposed
+Status: Accepted
 
 ## Context
 
@@ -45,7 +46,7 @@ Status: Proposed
 ## Related records
 ```
 
-Select one status. Omit optional sections with no useful content.
+Omit optional sections with no useful content.
 
 State the question or constraint in Context. State the choice in Decision and
 the reasons in Rationale. Bound its authority in Scope. Record consequences,
@@ -55,14 +56,21 @@ on the decision. Do not copy their content into the PDR.
 
 Tell the owning workflow which affected Feature Briefs must link to the PDR.
 
-`Proposed` preserves a durable candidate awaiting the user's judgment. It is
-not accepted product behaviour. Use `Accepted` only after the user agrees to
-the choice. When an accepted decision changes, create a replacement PDR. Mark
-the old one `Superseded by PDR-NNNN` and link both records. Preserve the old
-rationale; do not rewrite history. Surface conflicts with existing accepted
-records rather than silently choosing one.
+The PDR directory contains current decisions, not a decision archive. When a
+decision no longer applies, delete its PDR if nothing current depends on it.
+When a new decision replaces it, write the current record and remove the old
+one. Update affected links. If part remains valid, rewrite or replace the PDR
+so it states the current constraint. Git preserves earlier decisions. Surface
+conflicts with other current PDRs rather than silently choosing one.
+
+Aim for 150–300 words; the hard limit is 500 words. Near that limit, remove
+stale context, repeated material, and optional sections that add no useful
+information. Prefer links to canonical sources. Do not retain old status or
+rationale solely for history.
 
 Do not include discussion transcripts, option matrices, full feature
 requirements, implementation plans, or status tracking. Use `concise-prose`
-and `prose-check` when available. Check the ID, status, scope, and links before
-finishing.
+and `prose-check` when available. Run
+`python scripts/check_workflow_docs.py <project-root>` from this skills
+repository. Prune or restructure after a hard-limit failure. Check the ID,
+status, scope, and links before finishing.

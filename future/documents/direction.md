@@ -50,6 +50,11 @@ uncertainty is clearly bounded.
 Keep it short enough to orient a fresh context before selecting deeper material.
 Move candidate work to the Backlog and durable product reasoning to PDRs.
 
+Aim for 300–500 words. The hard limit is 800 words. Near that limit, remove
+resolved questions, superseded direction, feature detail, copied PDR rationale,
+and research detail before shortening the remaining meaning. Git preserves
+earlier versions; this document describes the current destination.
+
 ## Relationships
 
 Direction creates and maintains the Backlog with Shape. Backlog items should

@@ -169,7 +169,7 @@ After delivery, examine what was learned:
 - change the Direction document only when delivery changes what the project
   should ultimately become;
 - update the Backlog when future work or relationships changed;
-- create or supersede a PDR when a durable product choice changed; and
+- create, replace, or remove a PDR when a durable product choice changed; and
 - make no document change when the result only confirms current understanding.
 
 Feature completion alone is not a reason to edit the Direction document.
@@ -180,7 +180,7 @@ A Direction session may produce any combination of:
 
 - a revised Direction document;
 - added, changed, related, or removed Backlog items;
-- a new or superseding PDR;
+- a new, revised, or removed PDR;
 - updated Context terminology;
 - focused research or an evidence-gathering Backlog item; or
 - no document change when the discussion does not alter durable knowledge.

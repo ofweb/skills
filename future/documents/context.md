@@ -90,3 +90,9 @@ them.
 Update a definition when the project meaning changes. If that change also
 changes product behaviour, record a PDR. If it changes architecture, record an
 ADR. Do not hide either decision inside the glossary.
+
+Aim for 20–50 words per concept, with a hard limit of 80 words. Keep the whole
+file below 1,500 words. Near a limit, remove entries that no longer need a
+project-specific definition, merge duplicates, simplify distinctions, and
+remove implementation vocabulary. Do not split Context just to satisfy the
+limit. Git preserves earlier definitions.

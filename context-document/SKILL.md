@@ -50,7 +50,17 @@ them.
 Revise a definition when the user changes the agreed meaning. Check affected
 uses in project documents and code. Route a behavioural change to a PDR or
 Feature Brief, and an architectural change to an ADR; do not hide either in
-Context. Do not add conversation history or generic project documentation.
+Context. Remove obsolete entries, duplicate terms, stale links, and repeated
+explanations. Git preserves earlier definitions. Do not add conversation
+history or generic project documentation.
 
-Use `concise-prose` and `prose-check` when available. Check that each entry has
-user-agreed meaning and no unresolved synonym or overloaded use.
+Aim for 20–50 words per concept. The hard limit is 80 words per concept and
+1,500 words for the whole file. Near a limit, look for terms that no longer
+need a project-specific definition, duplicate concepts, distinctions that can
+be simpler, and implementation vocabulary. Do not split Context just to meet
+the limit; growth may mean it has become general project memory.
+
+Use `concise-prose` and `prose-check` when available. Run
+`python scripts/check_workflow_docs.py <project-root>` from this skills
+repository. Prune or restructure after a hard-limit
+failure. Check each entry for user-agreed meaning and unresolved ambiguity.

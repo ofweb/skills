@@ -56,5 +56,8 @@ An ADR may be only a short paragraph when that captures the complete decision.
 An ADR is authoritative within its stated architectural scope. Affected Feature
 Briefs link to it when it constrains their behaviour or feasibility.
 
-Do not rewrite the original rationale when the architecture changes. Mark the
-record as superseded and link to the replacement.
+Aim for 200–400 words. The hard limit is 700 words. Omit sections that do not
+help future reasoning. Keep only applicable architectural decisions. Delete
+an obsolete ADR when nothing current depends on it. Replace or revise a
+changed decision so its current constraint is clear, and update affected
+links. Git preserves earlier rationale; `.workflow/` is not an archive.
