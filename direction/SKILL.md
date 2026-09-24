@@ -19,9 +19,10 @@ when they can affect the current question. If a canonical file is absent,
 check for an existing copy elsewhere before creating it. Do not create a
 duplicate or migrate a file in this skill.
 
-On a new project, discuss the first intended end state with the user. When
-agreed, create `.workflow/direction.md` through `direction-document` and
-initialize `.workflow/backlog.md` through `backlog-document`, even if empty.
+On a new project, explore the idea until there is enough shared understanding
+to state a useful initial intended end state. Then create
+`.workflow/direction.md` through `direction-document` and initialize
+`.workflow/backlog.md` through `backlog-document`, even if empty.
 
 ## Explore and refine
 
@@ -47,10 +48,12 @@ Move between understanding, investigation, challenge, and refinement as the
 user revises or rejects an idea. New evidence may change the question. Keep one
 consequential topic active; explore tightly coupled questions together when
 separating them hides a trade-off. Reason and investigate before asking for the
-next judgment the user must make. Avoid interrogation and option-menu
-recommendations. State supported factual conclusions clearly, challenge weak
-reasoning, and leave consequential project judgments to the user. A better
-question or bounded uncertainty can be a useful stopping point.
+next judgment the user must make. Do not default to interrogation, generated
+option menus, or recommendations. Compare distinct approaches when evidence
+or prior art makes the comparison useful. State supported factual conclusions
+clearly, challenge weak reasoning, and leave consequential project judgments
+to the user. A better question or bounded uncertainty can be a useful stopping
+point.
 
 Direction does not define Feature Briefs, acceptance criteria, architecture,
 technology, delivery order, or the next feature. The user starts Shape by
