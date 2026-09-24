@@ -82,6 +82,15 @@ The next context reconstructs its task from repository state and minimal
 controller state. It does not inherit the preceding conversation or a generated
 summary of that conversation.
 
+Until the controller is available, the user performs the context clear after
+the active step completes its checks and declares the transition. The step
+gives the user the next responsibility and the canonical artifact ID or path.
+Before Design, the user establishes a clean working tree, including committing
+agreed Shape documents. The user runs `/clear` and starts that responsibility
+in a new session. The model does not invoke `/clear` or carry a conversation
+summary across the boundary. The receiving step still checks its entry
+requirements.
+
 ## Minimal workflow state
 
 Controller state contains only what is needed to restore responsibility and

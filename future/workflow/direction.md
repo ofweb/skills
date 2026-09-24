@@ -105,7 +105,13 @@ a large research report by default.
 As the user revises, rejects, or expands an idea, revisit the question,
 assumptions, and evidence. Reason and investigate before asking for the next
 consequential user judgement. A clearer unresolved question can end a useful
-session without a document edit.
+session. Record it when it must survive the session.
+
+Update canonical documents during the discussion when a meaningful part of the
+shared understanding is settled or an important question becomes clear. Make the
+edit before moving to another consequential topic. Do not edit for every
+exploratory turn or defer all durable results until the session ends. Keep
+tentative ideas out of authoritative statements.
 
 Direction may request deeper research, an experiment, or future feature work
 when a bounded question cannot be answered in the current discussion.
@@ -117,7 +123,7 @@ question exists.
 
 ### 4. Route what was learned
 
-Place each durable result in one canonical home:
+As each durable result emerges, place it in one canonical home:
 
 - changed understanding of the intended end state → Direction document;
 - possible future work or evidence-gathering work → Backlog;

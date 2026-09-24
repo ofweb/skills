@@ -61,6 +61,13 @@ naming the work to discuss. Active selection belongs to workflow state.
 
 ## Preserve results
 
+Update canonical documents during the discussion when a meaningful part of the
+shared understanding is settled or an important question becomes clear. Make the
+edit before moving to another consequential topic, then continue the
+discussion. Do not edit after every exploratory turn or defer all durable
+results until the session ends. Keep tentative ideas out of authoritative
+statements.
+
 Place each durable result in one home:
 
 - Changed understanding of the intended end state or an unresolved end-state

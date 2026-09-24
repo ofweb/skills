@@ -60,7 +60,8 @@ different feature behaviour must return to Shape before the brief changes.
 - open questions and assumptions while the brief is a draft.
 
 Each story identifies an actor, situation, intent or action, and observable
-result. Stories do not require rigid "As a user" wording.
+result. Stories do not require rigid "As a user" wording. Do not invent a
+system actor to make engineering work appear to be an independent feature.
 
 ## Acceptance criteria
 
@@ -96,8 +97,9 @@ materially change the feature.
 
 ## Size and maintenance
 
-Aim for 500–900 words per Feature Brief. The hard limit is 1,500 words per
-file. The limit is a pruning trigger, not a size target. The
+Aim for 300–600 words per Feature Brief. A simple feature can need only 250
+words. The hard limit is 1,000 words per file. The limit is a pruning trigger,
+not a size target. The
 `workflow-document-check` skill checks each Feature Brief separately.
 
 Keep each story to a few concise sentences. Keep each acceptance criterion to
@@ -106,5 +108,5 @@ into separate criteria instead of a long paragraph.
 
 Near the limit, remove duplicated Direction, PDR, ADR, and Context material and
 link to its canonical home. Remove conversation history and implementation
-detail. Tighten repeated acceptance wording. Move unrelated behaviour into
-another feature and check whether the feature boundary is too large.
+detail. Tighten repeated acceptance wording. Question whether the brief hides
+separate features. Move unrelated behaviour into another feature.

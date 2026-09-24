@@ -14,7 +14,7 @@ LIMITS = {
     "backlog_item": 80,
     "context": 1500,
     "context_entry": 80,
-    "feature_brief": 1500,
+    "feature_brief": 1000,
     "acceptance_report": 800,
     "pdr": 500,
     "adr": 700,

@@ -79,7 +79,8 @@ promote their wording into accepted feature behaviour.
 
 Shape does not maintain a separate Shape Context. Draft Feature Briefs are its
 normal persistent working memory. Stable relationships between future work
-belong in the Backlog.
+belong in the Backlog. Conversation is disposable. Do not create separate Shape
+notes, context dumps, or handoff documents.
 
 ## Feature Brief lifecycle
 
@@ -97,6 +98,12 @@ A Feature Brief may exist long before it is ready. Shape updates every touched
 brief throughout the discussion so important knowledge does not depend on model
 memory or chat history.
 
+Update the affected brief when a behaviour, boundary, or important question
+becomes clear enough to preserve. Make the edit before moving to another
+consequential issue. Do not edit after every exploratory turn or defer all
+updates until the end. Keep partial understanding in Draft and mark tentative
+parts clearly.
+
 A draft records the current best understanding rather than a chronological
 transcript. It must distinguish tentative material, open questions, and
 unverified assumptions from settled content.
@@ -111,11 +118,23 @@ the brief to Shape and set `Status: Draft` before changing that contract.
 
 ## Operating model
 
-Shape is a collaborative discussion between the user and Mike. Either may ask
-questions, challenge assumptions, test whether boundaries can be simpler,
-investigate evidence, or revise earlier conclusions. Mike contributes evidence
-and focused questions without recommending an answer or presenting an option
-menu.
+Shape is a collaborative discussion between the user and Mike. Build a current
+understanding of each feature, expose inconsistencies and hidden assumptions,
+and revise that understanding as the discussion progresses. Keep one
+consequential issue active. Explore tightly coupled questions together when
+separating them hides a trade-off. Do not walk through behaviour categories as
+a questionnaire.
+
+Reason before asking for the next product judgment. Investigate when evidence
+can settle a question. State supported factual conclusions clearly. Compare
+genuinely different approaches when evidence makes the comparison useful.
+Challenge weak reasoning and explain the premise behind a challenge. Leave
+consequential product judgments to the user. Do not lead with a recommendation
+or an option menu. Synthesize what is settled and name the remaining judgment
+before asking.
+
+The activities below can recur as understanding changes. Their order is not a
+question sequence.
 
 ### 1. Orient
 
@@ -189,9 +208,10 @@ group of features.
 
 ## Stories and acceptance criteria
 
-Every feature has at least one durable user or system story. If no convincing
-story demonstrates observable value, classify the work as an engineering task
-rather than a feature.
+Every feature has at least one durable user or system story that expresses an
+independently observable outcome. Do not invent an actor or a system story to
+satisfy the document structure. If the work has no independent observable
+outcome, classify it as engineering work that supports another feature.
 
 A story identifies:
 
@@ -253,6 +273,13 @@ Shape is complete for a feature when:
 Transition to Design additionally requires exactly one ready Feature Brief to be
 selected. Shape may complete several related briefs while transitioning only
 one of them.
+
+Until the workflow controller can clear context, use a manual transition. Save
+and check the durable documents, then state the selected feature ID, Ready
+brief, and completed checks. If Shape left repository changes, tell the user to
+commit them before Design. Then tell the user to run `/clear` and start Design
+for that feature. Do not continue Design in the Shape context. The new Design
+context checks its repository entry gate before work starts.
 
 ## Failure and interruption behaviour
 

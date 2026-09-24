@@ -58,6 +58,6 @@ Do not include internal APIs, modules, schemas, classes, libraries, implementati
 
 ## Size and validation
 
-Aim for 500–900 words. The hard limit is 1,500 words per brief. Near that limit, remove copied decisions, history, and implementation detail. Split unrelated behaviour into another feature and update the Backlog relationship.
+Aim for 300–600 words. A simple brief can need only 250 words. The hard limit is 1,000 words per brief. Near that limit, remove copied decisions, history, and implementation detail. Question whether separate features are hidden in the brief. Split unrelated behaviour and update the Backlog relationship.
 
 Use `concise-prose` and run `prose-check` when available. Install `workflow-document-check` alongside this skill and run it after edits. Check status, feature identity, story coverage, criterion trace, links, and unresolved material questions before finishing.

@@ -209,6 +209,8 @@ Route durable results by meaning:
 
 Each major change of responsibility starts in a fresh model context. The
 workflow controller, not the model invoking `/clear`, owns the transition.
+Until that controller is available, the user runs `/clear` after the active
+step declares the transition. The next step reads canonical repository state.
 
 See [Workflow transitions and state](transitions.md) for the shared boundary,
 confirmation, routing, and failure requirements.

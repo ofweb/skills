@@ -15,15 +15,26 @@ Identify the candidate feature or small related group under discussion. Shape re
 
 ## Explore behaviour
 
-Work with the user to identify the actor, situation, intent, and observable value for each feature. Use concrete stories to examine successful behaviour, important failures, and boundaries. Cover permissions, persistence, lifecycle, compatibility, and safety when users or other systems can observe them. State scope and non-goals. Test material assumptions against repository or external evidence when possible.
+Build a current understanding of the feature with the user. Find inconsistencies, hidden assumptions, implied behaviour, and boundaries that may be simpler. Revise that understanding as the discussion changes. Keep one consequential issue active. Explore tightly coupled issues together when separating them hides a trade-off. Do not ask through a requirements checklist.
 
-Ask focused questions and explain evidence that challenges an assumption. Do not present an option menu or lead with a preferred answer for a consequential product choice. Keep uncertain behaviour in Draft until the user resolves, verifies, removes, or safely defers it.
+Reason before asking for the next product judgment. Investigate repository behaviour or prior art when evidence can settle a question. State supported factual conclusions clearly. Compare genuinely different approaches when useful. Challenge weak reasoning and explain the premise behind the challenge. Synthesize what is settled and name the remaining judgment before asking. Leave consequential product judgments to the user. Do not lead with a recommendation or an option menu.
 
-Prefer the smallest coherent feature that delivers observable value. If no story demonstrates that value, classify the work as an engineering task in the Backlog. Do not use Shape to choose internal APIs, modules, data structures, libraries, implementation plans, or test code.
+Use concrete stories to examine the actor, situation, intent, and observable outcome. Examine successful behaviour, failures, permissions, persistence, lifecycle, compatibility, and safety when relevant. Use these as lenses, not a fixed question sequence. State scope and non-goals as understanding improves. Keep uncertain behaviour in Draft until the user resolves, verifies, removes, or safely defers it.
+
+Prefer the smallest coherent feature with an independently observable outcome. Do not invent a system actor or story to make engineering work appear to be a feature. Put work without independent value in the Backlog as engineering work supporting another feature. Do not use Shape to choose internal APIs, modules, data structures, libraries, implementation plans, or test code.
 
 ## Maintain durable records
 
+Update the affected documents during the discussion when a behaviour,
+boundary, relationship, or important question becomes clear enough to
+preserve. Make the edit before moving to another consequential issue, then
+continue the discussion. Do not edit after every exploratory turn or defer all
+updates until the end. Keep partial understanding in Draft and mark tentative
+parts clearly.
+
 Use `backlog-document` when candidate work, maturity, or durable relationships change. Create a Backlog item for a Direction idea before it needs a Feature Brief. A compact item is enough until stories, behaviour, boundaries, or open questions need a durable working record. Use `feature-brief-document` to create and update every Feature Brief touched during the discussion. Keep each draft current and mark tentative content and unverified assumptions.
+
+Draft Feature Briefs are Shape's persistent working memory. Conversation is disposable. Do not create separate Shape notes, context dumps, or handoff documents. Keep stable relationships between future work in the Backlog.
 
 Use `context-document` for agreed project terms and `pdr-document` for durable product decisions whose rationale matters beyond one feature. Use `adr-document` only when an architectural choice must be settled to establish feasibility, observable behaviour, or feature boundaries. Link each affected Feature Brief to shared decisions and constraints. If evidence challenges Direction or an existing decision, return the question to its owning workflow instead of silently changing it.
 
@@ -36,3 +47,5 @@ Review each brief for one coherent feature, agreed behaviour, explicit scope and
 If later evidence requires a material change to behaviour, scope, stories, or acceptance criteria, return the brief to Shape. Set `Status: Draft` before changing that contract. Update the Backlog with the resulting boundaries and durable relationships. Ready briefs that are not selected remain available for later work.
 
 Select no more than one Ready brief as the next Design input. Do not send a Draft brief to Design to resolve a product question. A Shape session may end with only Backlog or Draft brief progress.
+
+Until a workflow controller can clear context, use a manual transition. Save and check the durable documents. State the selected feature ID, Ready brief, and completed checks. If Shape left repository changes, tell the user to commit them before Design's clean-tree entry gate. Then tell the user to run `/clear` and start Design for that feature ID. Do not continue Design in the Shape context.

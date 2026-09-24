@@ -48,13 +48,13 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
             shutil.copytree(SKILL, installed)
             brief.parent.mkdir(parents=True)
             second.parent.mkdir(parents=True)
-            brief.write_text("word " * 1500)
-            second.write_text("word " * 1500)
+            brief.write_text("word " * 1000)
+            second.write_text("word " * 1000)
             command = [sys.executable, installed / "scripts" / "check_workflow_docs.py", project]
             passed = subprocess.run(command, capture_output=True, text=True, check=False)
             self.assertEqual(passed.returncode, 0, passed.stdout)
 
-            brief.write_text("word " * 1501)
+            brief.write_text("word " * 1001)
             result = subprocess.run(
                 command,
                 capture_output=True,
