@@ -73,7 +73,7 @@ It does not add the term merely to make prose validation pass.
 Context is authoritative only for terminology. Code, Feature Briefs, and
 decision records link to it when a term's precise meaning matters.
 
-The future `context-documentation` skill applies the concept-qualification
+The future `context-document` skill applies the concept-qualification
 rules, asks the user to establish the canonical meaning, and writes the Context
 entry. Prose validation reads approved entries but cannot create or change
 them.

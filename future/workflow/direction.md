@@ -203,7 +203,7 @@ This is a persistence boundary, not a completion gate.
 
 The workflow still needs to define:
 
-- exact Backlog maturity markers and item lifecycle;
+- the Backlog item lifecycle beyond understanding maturity;
 - how evidence-gathering work is represented in the Backlog;
 - the progression trigger after a feature reaches Done; and
 - the workflow-state representation for the user's active Shape selection.

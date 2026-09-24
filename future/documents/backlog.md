@@ -11,6 +11,7 @@ turning ideas into accepted requirements.
 ## Ownership and cardinality
 
 - One Backlog exists per project.
+- Store it at `.workflow/backlog.md` from the project root.
 - Direction creates and maintains it with Shape.
 - Direction adds or revises work implied by the intended end state.
 - Shape clarifies, splits, combines, replaces, and relates items as feature
@@ -23,7 +24,7 @@ the work:
 
 - a stable identity and concise title;
 - a short statement of the possible value or problem;
-- its current maturity;
+- its current understanding maturity;
 - a link to its draft or ready Feature Brief when one exists;
 - dependencies, ordering, overlap, or grouping that affects future shaping; and
 - a link to the motivating Direction material or durable decision when useful.
@@ -43,6 +44,18 @@ the work:
 The Backlog is authoritative about the inventory and relationships of possible
 work. It is not authoritative about feature behaviour.
 
+Maturity describes how well the idea is understood. It does not describe
+delivery status or commitment:
+
+| Maturity | Meaning |
+| --- | --- |
+| Unclear | The possible value or problem still needs framing. |
+| Framed | The value or problem is clear, but consequential questions remain. |
+| Understood | Enough is known to decide how to handle the idea in Shape. This is not an accepted requirement. |
+
+New evidence may move an item to an earlier maturity. A Feature Brief link
+shows its relationship to later workflow stages.
+
 Ordering records durable dependencies or sequencing constraints, not the next
 item selected by the user. Active selection belongs to workflow state.
 
@@ -50,5 +63,5 @@ Keep items compact. Once an item needs durable behavioural detail, create a
 draft Feature Brief and link it. Update or replace stale items as understanding
 changes instead of preserving the Backlog as a history log.
 
-The item lifecycle and exact maturity markers remain to be defined with the
-Direction and Shape guides.
+The item lifecycle beyond understanding maturity remains to be defined with
+the Direction and Shape guides.

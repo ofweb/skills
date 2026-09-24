@@ -11,6 +11,7 @@ the project and completed work changes what is understood.
 ## Ownership and cardinality
 
 - One Direction document exists per project.
+- Store it at `.workflow/direction.md` from the project root.
 - Direction creates and maintains it with the user.
 - Shape reads it but does not silently redefine it.
 - Evidence from later work may trigger a new Direction discussion.

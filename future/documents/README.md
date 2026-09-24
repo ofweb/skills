@@ -9,13 +9,13 @@ They describe ownership, authority, lifecycle, required content, and exclusions.
 
 | Document | Skill | Kind | Created or maintained by | Authority |
 | --- | --- | --- | --- | --- |
-| [Direction](direction.md) | `direction-documentation` | Required singleton | Direction | Intended project end state |
-| [Backlog](backlog.md) | `backlog-documentation` | Required singleton | Direction and Shape | Candidate work and relationships, not requirements |
-| [Feature Brief](feature-brief.md) | `feature-brief-documentation` | Repeatable | Shape | Accepted feature behaviour only when ready |
-| [Context](context.md) | `context-documentation` | Optional singleton | The collaborative step that resolves a stable term | Project terminology |
-| [PDR](pdr.md) | `pdr-documentation` | Repeatable and created only when needed | Direction and Shape | Product or behavioural decision within its stated scope |
-| [ADR](adr.md) | `adr-documentation` | Repeatable and created only when needed | Shape and Design | Architectural decision within its stated scope |
-| [Acceptance Report](acceptance-report.md) | `acceptance-report-documentation` | One per Acceptance pass | Acceptance, then the responsible workflow steps and user | Evaluated findings, user guidance, and their current disposition |
+| [Direction](direction.md) | `direction-document` | Required singleton | Direction | Intended project end state |
+| [Backlog](backlog.md) | `backlog-document` | Required singleton | Direction and Shape | Candidate work and relationships, not requirements |
+| [Feature Brief](feature-brief.md) | `feature-brief-document` | Repeatable | Shape | Accepted feature behaviour only when ready |
+| [Context](context.md) | `context-document` | Optional singleton | The collaborative step that resolves a stable term | Project terminology |
+| [PDR](pdr.md) | `pdr-document` | Repeatable and created only when needed | Direction and Shape | Product or behavioural decision within its stated scope |
+| [ADR](adr.md) | `adr-document` | Repeatable and created only when needed | Shape and Design | Architectural decision within its stated scope |
+| [Acceptance Report](acceptance-report.md) | `acceptance-report-document` | One per Acceptance pass | Acceptance, then the responsible workflow steps and user | Evaluated findings, user guidance, and their current disposition |
 
 ## Document skills
 
@@ -37,6 +37,28 @@ Each document skill defines:
 
 The workflow skill remains responsible for the work and for deciding why the
 document must change. The document skill governs how to make that change.
+
+## Project document locations
+
+Store durable workflow documents under `.workflow/` at the project root.
+This directory contains project knowledge, not the workflow controller's
+runtime state.
+
+| Document | Location |
+| --- | --- |
+| Direction | `.workflow/direction.md` |
+| Backlog | `.workflow/backlog.md` |
+| Context | `.workflow/context.md` |
+| Feature Brief | `.workflow/features/<feature-id>/brief.md` |
+| Acceptance Report | Beside its Feature Brief, with its date and short Git SHA in the filename |
+| PDR | `.workflow/decisions/pdr/` |
+| ADR | `.workflow/decisions/adr/` |
+
+Each document skill defines the filename rules for its repeatable documents.
+Use one stable feature ID for the Backlog item and its Feature Brief folder.
+The skills do not migrate documents from other locations. If a document exists
+outside `.workflow/` and the canonical file is absent, ask for a separate
+migration before creating another copy.
 
 ## Common rules
 

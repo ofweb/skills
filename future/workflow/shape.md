@@ -275,7 +275,7 @@ available for the active session.
 
 The workflow still needs to define:
 
-- exact Backlog maturity markers and item lifecycle;
+- the Backlog item lifecycle beyond understanding maturity;
 - the exact representation of Feature Brief readiness;
 - how a ready Feature Brief returns to draft when later evidence invalidates it;
   and
