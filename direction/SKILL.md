@@ -11,24 +11,39 @@ the project learns. A session can end after its durable results are saved.
 
 ## Orient
 
-Read `.workflow/direction.md` and the related parts of `.workflow/backlog.md`.
-Follow links to decisions, definitions, research, Feature Briefs, or code only
-when they can affect the current question. If either canonical file is absent,
-check for an existing copy elsewhere. Do not create a second copy or migrate it
-within this skill. Tell the user when a separate migration is needed.
+Read `.workflow/direction.md` and relevant Backlog items when they exist.
+Follow related PDRs, Context entries, research, Feature Briefs, or code only
+when they can affect the current question. If a canonical file is absent,
+check for an existing copy elsewhere before creating it. Do not create a
+duplicate or migrate a file in this skill.
+
+On a new project, discuss the first intended end state with the user. When
+agreed, create `.workflow/direction.md` through `direction-document` and
+initialize `.workflow/backlog.md` through `backlog-document`, even if empty.
+
+## Establish the question
+
+Identify the question behind the idea and its relation to the intended end state.
+Ask what must be true for the idea to make sense. Test checkable assumptions
+against project knowledge, repository behaviour, or external evidence.
+
+## Investigate prior art
+
+Look for existing, related, or adjacent solutions when they could improve the
+discussion. Use prior art to expose alternatives, common failures, useful
+patterns, and ways to avoid inventing an unnecessary solution. Research can
+expand the question; it need not only verify a factual premise. Bring useful
+findings into the conversation with their limits. Do not dump a research report
+or treat an external implementation as authority. If investigation is blocked,
+state what remains unknown rather than inventing a premise.
 
 ## Discuss
 
-Identify how the idea or evidence relates to the intended end state. Make the
-important uncertainty concrete before turning it into possible work. Examine
-the goal, affected people or systems, long-term effects, assumptions, and
-tensions with existing Direction. Check repository or external evidence when it
-can settle a premise.
-
-Work with the user through one consequential question or tension at a time.
-Contribute evidence and challenge assumptions. Do not lead with a recommendation
-or an option menu. Do not promote an idea or research result into Direction
-without the user's judgment. Keep genuine uncertainty visible.
+Examine the goal, affected people or systems, long-term effects, and tensions
+with existing Direction. Keep one consequential topic active at a time; discuss
+tightly coupled questions together when separating them would distort the
+choice. Challenge assumptions without leading with a recommendation or option
+menu. The user judges how Direction changes. Keep genuine uncertainty visible.
 
 Direction does not define Feature Briefs, acceptance criteria, architecture,
 technology, delivery order, or the next feature. The user starts Shape by
@@ -45,11 +60,10 @@ Place each durable result in one home:
 - Stable project term: Context.
 - Detailed supporting evidence: research material.
 
-Use `direction-document` for every Direction document change. Use
-`backlog-document` for every Backlog change, including small edits. Use the
-matching document skill for a PDR or Context entry when that skill is available.
-If it is unavailable, identify the result that still needs its canonical
-record. Do not hide it in another document or claim that persistence is complete.
+Use `direction-document` for each Direction change and `backlog-document` for
+each Backlog change. Use `pdr-document` for a durable product decision and
+`context-document` for an agreed project term. Do not hide a missing record in
+another document or claim that persistence is complete.
 
 Rewrite affected Direction sections to show current understanding. Remove
 superseded text. Link related records instead of copying them. After delivered

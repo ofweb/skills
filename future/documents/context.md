@@ -4,18 +4,22 @@ Status: Draft
 
 ## Purpose
 
-The Context document defines stable project-specific terminology so users and
-fresh agent contexts use the same concepts consistently.
+The Context document records the project's agreed language. It defines stable
+project-specific concepts for the user, fresh agent contexts, documentation,
+and code where relevant.
 
 ## Ownership and cardinality
 
 - Context is optional and created lazily when the first durable term needs a
   canonical definition.
+- Store it at `.workflow/context.md` from the project root.
 - Use one document unless the project has genuinely separate domain languages.
 - The collaborative workflow step that resolves or changes a term updates it.
 - The user agrees each concept, canonical term, meaning, and STE vocabulary
   definition.
 - Autonomous work must not invent or redefine project terminology silently.
+- Repository and document scans may find candidate terms, but discovery does
+  not authorize adding them.
 
 ## Contains
 
@@ -27,6 +31,11 @@ fresh agent contexts use the same concepts consistently.
 
 Definitions should state what a concept is in one or two sentences. Include
 only terms whose meaning is specific to the project.
+
+Read existing entries before adding or changing a term. Surface competing
+words for one concept and overloaded words for different concepts to the
+collaborative workflow. That workflow resolves the meaning with the user;
+Context records the agreed result.
 
 Each concept also provides the vocabulary information needed by prose checks:
 

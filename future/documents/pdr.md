@@ -12,6 +12,8 @@ choice whose consequences extend beyond one local feature detail.
 
 - Direction and Shape may create PDRs.
 - Create one record per durable decision.
+- Store records in `.workflow/decisions/pdr/` with a stable `PDR-0001` style ID
+  and a matching `0001-short-title.md` filename.
 - Decision discussions route product outcomes to Direction or Shape; the
   Decision mechanism does not create records merely because it ran.
 
@@ -27,10 +29,12 @@ Brief. Small reversible choices need no record.
 ## Contains
 
 - a concise title and status;
+- a stable ID;
 - the product question or constraint;
 - the decision and why it was made;
 - the scope in which it applies;
 - non-obvious consequences when useful;
+- assumptions or conditions for reconsideration when useful;
 - rejected alternatives only when their rejection matters later; and
 - links to affected Direction material, Backlog items, or Feature Briefs.
 
@@ -47,6 +51,10 @@ Brief. Small reversible choices need no record.
 
 A PDR is authoritative within its stated scope. Every Feature Brief affected by
 a shared product rule must link to it.
+
+Use Proposed for a durable candidate awaiting the user's decision. Use Accepted
+only after the user agrees to the choice. A Proposed PDR is not authority for
+product behaviour.
 
 Do not rewrite the original rationale when the decision changes. Mark the record
 as superseded and link to the replacement so later readers can follow the

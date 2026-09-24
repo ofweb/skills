@@ -23,6 +23,8 @@ Direction:
 - keeps the Direction document concise and internally understandable;
 - creates and maintains Backlog items with Shape;
 - uses delivered work and targeted experiments as evidence;
+- investigates relevant prior art and adjacent solutions to test assumptions
+  and expand the discussion;
 - creates a [PDR](../documents/pdr.md) when durable product reasoning must
   survive the discussion;
 - updates [Context](../documents/context.md) when stable project terminology is
@@ -83,14 +85,22 @@ Identify how the idea or new evidence relates to the intended end state. Make
 the uncertainty concrete without converting it into a feature or proposed
 solution prematurely.
 
-### 3. Discuss and investigate
+### 3. Investigate and discuss
 
 Examine the goal, affected users or systems, long-term consequences, tensions
 with existing direction, and assumptions required for the idea to make sense.
 
-Inspect repository or external evidence when it can settle a premise. Direction
-may request research, an experiment, or future feature work when discussion
-alone cannot answer the question.
+Ask what must be true for the idea to make sense. Verify checkable premises
+against project knowledge, repository behaviour, or external evidence.
+
+Look for existing, related, or adjacent solutions when they could reveal
+alternatives, common failures, useful patterns, or simpler boundaries. Bring
+the useful discoveries into the discussion and test them against the project's
+goal. Do not treat external implementations as authority or produce a large
+research report by default.
+
+Direction may request deeper research, an experiment, or future feature work
+when a bounded question cannot be answered in the current discussion.
 
 Ordinary uncertainty stays inside Direction. [Decision](decision.md) remains
 available when a high-impact question must formally interrupt Direction and use
