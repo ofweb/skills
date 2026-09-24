@@ -18,11 +18,11 @@ names where rewriting would be incorrect.
 Optimize for information density.
 Prefer deleting redundant or unnecessary text over rewriting it. Preserve useful
 technical information and its intended meaning.
-Do not repeat information already apparent from code, headings, examples, or nearby text.
+Avoid repeating information already stated in nearby prose.
 State behavior directly.
 Avoid introductory prose, summaries of the immediately preceding text, and conversational filler.
 
-After writing, run `prose-check` on edited Markdown files or pass other authored
+After writing or substantially editing prose, run `prose-check` on edited Markdown files or pass other authored
 prose on standard input. It checks STE100 first and then applies Vale's project
 style rules if STE100 passes. Fix findings without changing technical meaning;
 report a conflict if no safe correction exists.

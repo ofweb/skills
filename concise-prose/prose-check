@@ -86,41 +86,33 @@ def main() -> int:
     if missing:
         parser.exit(2, f"prose-check: missing command: {', '.join(missing)}\n")
 
-    inputs = []
+    status = 0
     for name in args.files or ["-"]:
         try:
             markdown = sys.stdin.read() if name == "-" else Path(name).read_text(encoding="utf-8")
             prose = prose_only(markdown)
         except (OSError, RuntimeError, ET.ParseError, IndexError) as exc:
             print(f"prose-check: {name}: {exc}", file=sys.stderr)
-            return 2
-        inputs.append((name, markdown, prose))
+            status = 2
+            continue
 
-    ste_failed = False
-    for name, _, prose in inputs:
         print(f"== {name}: STE100 ==", flush=True)
         ste_status = run_check(["ste100", "check", "--glossary", str(GLOSSARY)], prose)
-        if ste_status > 1:
-            return 2
-        ste_failed |= bool(ste_status)
+        if ste_status:
+            status = max(status, 1 if ste_status == 1 else 2)
+            continue
 
-    if ste_failed:
-        return 1
-
-    vale_failed = False
-    for name, markdown, _ in inputs:
         print(f"== {name}: Vale ==", flush=True)
         vale_cmd = ["vale", "--config", str(CONFIG)]
         if name == "-":
-            vale_cmd += ["--ext=.md", "--path=stdin.md", "-"]
+            vale_cmd += ["--ext=.md", "--path=stdin.md"]
             vale_status = run_check(vale_cmd, markdown)
         else:
             vale_status = run_check(vale_cmd + [name])
-        if vale_status > 1:
-            return 2
-        vale_failed |= bool(vale_status)
+        if vale_status:
+            status = max(status, 1 if vale_status == 1 else 2)
 
-    return 1 if vale_failed else 0
+    return status
 
 
 if __name__ == "__main__":

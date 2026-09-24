@@ -11,7 +11,7 @@ import unittest
 from pathlib import Path
 
 
-SKILL_DIR = Path(__file__).resolve().parent
+SKILL_DIR = Path(__file__).resolve().parent.parent / "concise-prose"
 MODULE = runpy.run_path(str(SKILL_DIR / "prose-check"), run_name="prose_check_test")
 
 
@@ -84,17 +84,30 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertLess(result.stdout.index("STE100 =="), result.stdout.index("Vale =="))
 
+    @unittest.skipUnless(shutil.which("vale"), "Vale is required")
+    def test_real_vale_checks_stdin_after_ste100_passes(self) -> None:
+        tools_dir = self.directory / "real-vale"
+        tools_dir.mkdir()
+        (tools_dir / "ste100").symlink_to(self.directory / "ste100")
+        self.env["PATH"] = f"{tools_dir}:{os.environ['PATH']}"
+
+        result = self.run_tool(input_text="Use the relevant file.\n")
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("Empty qualifier", result.stdout)
+
     def test_multiple_files_return_failure_if_one_fails(self) -> None:
         first = self.directory / "first.md"
         second = self.directory / "second.md"
-        first.write_text("Use the file.\n", encoding="utf-8")
-        second.write_text("BAD prose.\n", encoding="utf-8")
+        first.write_text("BAD prose.\n", encoding="utf-8")
+        second.write_text("Use the file.\n", encoding="utf-8")
 
         result = self.run_tool(str(first), str(second))
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn(f"== {first}: STE100 ==", result.stdout)
+        self.assertNotIn(f"== {first}: Vale ==", result.stdout)
         self.assertIn(f"== {second}: STE100 ==", result.stdout)
-        self.assertNotIn("Vale ==", result.stdout)
+        self.assertIn(f"== {second}: Vale ==", result.stdout)
+        self.assertLess(result.stdout.index(f"== {first}: STE100 =="), result.stdout.index(f"== {second}: Vale =="))
 
     def test_missing_checker_is_a_tool_failure(self) -> None:
         without_checker = self.directory / "without-checker"
