@@ -104,6 +104,10 @@ unverified assumptions from settled content.
 Only explicit readiness agreement changes a draft into an authoritative Design
 input. The presence of a file, detailed prose, or complete-looking sections
 does not imply readiness.
+Record that agreement as `Status: Ready` in the Feature Brief. Keep
+`Status: Draft` until the agreement occurs. If later evidence requires a
+material change to behaviour, scope, stories, or acceptance criteria, return
+the brief to Shape and set `Status: Draft` before changing that contract.
 
 ## Operating model
 
@@ -276,7 +280,4 @@ available for the active session.
 The workflow still needs to define:
 
 - the Backlog item lifecycle beyond understanding maturity;
-- the exact representation of Feature Brief readiness;
-- how a ready Feature Brief returns to draft when later evidence invalidates it;
-  and
 - whether readiness requires an independent cold review for every feature.

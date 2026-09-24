@@ -33,9 +33,11 @@ A ready brief is authoritative for the feature behaviour entering Design. File
 existence, length, or complete-looking sections do not establish readiness.
 Shape and the user must agree explicitly.
 
-If later evidence invalidates ready behaviour, the workflow must remove its
-ready status before changing the contract. The exact return transition remains
-to be defined.
+Record the agreed state near the title as `Status: Draft` or `Status: Ready`.
+Shape changes the status to Ready only after explicit user agreement. If later
+evidence requires a material change to behaviour, scope, stories, or acceptance
+criteria, return the brief to Shape. Set the status to Draft before changing
+that contract.
 
 Design returns the brief to Shape when behaviour, scope, stories, or acceptance
 criteria must change. Design may not hide such a change as clarification.

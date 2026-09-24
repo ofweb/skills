@@ -17,6 +17,8 @@ reinterpret.
 - Implementation does not make a new architectural decision autonomously. It
   returns the issue to Design.
 - Create one record per durable decision.
+- Store current records in `.workflow/decisions/adr/` with a stable `ADR-0001`
+  style ID and a matching `0001-short-title.md` filename.
 
 ## Create an ADR when
 

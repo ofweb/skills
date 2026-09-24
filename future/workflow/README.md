@@ -265,7 +265,6 @@ exclusion rules.
 The workflow still needs to define:
 
 - Backlog item lifecycle and dependency semantics;
-- how a ready Feature Brief returns to draft;
 - whether an independent Shape critique is mandatory; and
 - the workflow controller's exact state format, outcome identifiers, and
   validation interface.
