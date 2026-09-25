@@ -24,12 +24,12 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
             adr = workflow / "decisions" / "adr" / "0001-choice.md"
             pdr.parent.mkdir(parents=True)
             adr.parent.mkdir(parents=True)
-            (workflow / "direction.md").write_text("word " * 800)
+            (workflow / "direction.md").write_text("word " * 4000)
             pdr.write_text("word " * 500)
             adr.write_text("word " * 700)
             self.assertEqual(CHECKER.check(root), [])
 
-            (workflow / "direction.md").write_text("word " * 801)
+            (workflow / "direction.md").write_text("word " * 4001)
             pdr.write_text("word " * 501)
             adr.write_text("word " * 701)
             findings = CHECKER.check(root)
@@ -37,6 +37,24 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
             self.assertTrue(any("Direction" in item for item in findings))
             self.assertTrue(any("PDR" in item for item in findings))
             self.assertTrue(any("ADR" in item for item in findings))
+
+    def test_direction_topic_limits_are_independent(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            workflow = root / ".workflow"
+            topics = workflow / "direction"
+            topics.mkdir(parents=True)
+            (workflow / "direction.md").write_text("word " * 4000)
+            first = topics / "runtime.md"
+            second = topics / "device.md"
+            first.write_text("word " * 2000)
+            second.write_text("word " * 2000)
+            self.assertEqual(CHECKER.check(root), [])
+
+            second.write_text("word " * 2001)
+            findings = CHECKER.check(root)
+            self.assertEqual(len(findings), 1)
+            self.assertIn("Direction topic", findings[0])
 
     def test_installed_checker_enforces_feature_brief_limit(self):
         with tempfile.TemporaryDirectory() as temporary:

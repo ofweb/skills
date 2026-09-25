@@ -9,7 +9,8 @@ They describe ownership, authority, lifecycle, required content, and exclusions.
 
 | Document | Skill | Kind | Created or maintained by | Authority |
 | --- | --- | --- | --- | --- |
-| [Direction](direction.md) | `direction-document` | Required singleton | Direction | Intended project end state |
+| [Direction](direction.md) | `direction-document` | Required main document with optional topic documents | Direction | Intended project end state |
+| [External references](references.md) | `references-document` | Optional singleton | Direction | Source links and relevance, not product decisions |
 | [Backlog](backlog.md) | `backlog-document` | Required singleton | Direction and Shape | Candidate work and relationships, not requirements |
 | [Feature Brief](feature-brief.md) | `feature-brief-document` | Repeatable | Shape | Accepted feature behaviour only when ready |
 | [Context](context.md) | `context-document` | Optional singleton | The collaborative step that resolves a stable term | Project terminology |
@@ -33,7 +34,7 @@ Each document skill defines:
 - its links to related documents;
 - its directory and file-naming rules;
 - how to handle obsolete information; and
-- normal and hard size limits, with pruning rules for each record or document;
+- size guidance, applicable hard limits, and pruning rules;
 - the writing and validation skills to use.
 
 The workflow skill remains responsible for the work and for deciding why the
@@ -48,6 +49,8 @@ runtime state.
 | Document | Location |
 | --- | --- |
 | Direction | `.workflow/direction.md` |
+| Direction topic | `.workflow/direction/<topic>.md` |
+| External references | `.workflow/references.md` |
 | Backlog | `.workflow/backlog.md` |
 | Context | `.workflow/context.md` |
 | Feature Brief | `.workflow/features/<feature-id>/brief.md` |
@@ -93,7 +96,8 @@ needed for active unresolved work; remove them when they no longer help.
 
 ## Outside this taxonomy
 
-Research is supporting material, not one document type. Code and tests are
+Detailed research is supporting material, not one document type. References
+is a compact index of external links, not a research report. Code and tests are
 implementation artifacts. Workflow and pause state belong to the workflow
 controller. Conversations are disposable once durable knowledge reaches its
 canonical home.

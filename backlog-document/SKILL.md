@@ -63,6 +63,9 @@ words for the whole file. Near a limit, first remove stale, duplicate, or
 overly detailed items. Move feature behaviour to Feature Briefs. Remove stale
 links and repeated explanations. The limits are guardrails, not size targets.
 
+Link a relevant Direction topic document when it explains an item's source more
+precisely than the main document.
+
 Record only durable dependencies or sequence constraints. Do not record a
 transient priority order or the user's active Shape selection. Do not copy
 Feature Brief requirements, stories, acceptance criteria, implementation plans,

@@ -9,7 +9,7 @@ Shape is a collaborative discussion about feature behaviour and boundaries. The 
 
 ## Orient and bound the work
 
-Read the relevant `.workflow/direction.md` sections, Backlog items, Feature Briefs, and linked decisions. Inspect repository behaviour before relying on claims about the current system. Investigate prior art when it can change expected behaviour or feature boundaries. Read only context relevant to the active question.
+Read the relevant `.workflow/direction.md` sections, linked Direction topic documents, Backlog items, Feature Briefs, and decisions. Inspect repository behaviour before relying on claims about the current system. Investigate prior art when it can change expected behaviour or feature boundaries. Read only context relevant to the active question.
 
 Identify the candidate feature or small related group under discussion. Shape related candidates together only while their boundaries or order need joint reasoning. Leave independent candidates for later rounds. Direction and Backlog wording supplies ideas, not accepted requirements.
 
@@ -17,7 +17,11 @@ Identify the candidate feature or small related group under discussion. Shape re
 
 Build a current understanding of the feature with the user. Find inconsistencies, hidden assumptions, implied behaviour, and boundaries that may be simpler. Revise that understanding as the discussion changes. Keep one consequential issue active. Explore tightly coupled issues together when separating them hides a trade-off. Do not ask through a requirements checklist.
 
-Reason before asking for the next product judgment. Investigate repository behaviour or prior art when evidence can settle a question. State supported factual conclusions clearly. Compare genuinely different approaches when useful. Challenge weak reasoning and explain the premise behind the challenge. Synthesize what is settled and name the remaining judgment before asking. Leave consequential product judgments to the user. Do not lead with a recommendation or an option menu.
+Reason before asking for the next product judgment. Investigate repository behaviour or prior art when evidence can settle a question. State supported factual conclusions clearly. Synthesize what is settled and name the remaining judgment before asking. Do not give the user options, suggestions, or recommendations. Ask an open question that helps the user work out the desired behaviour.
+
+Before raising an objection, test it: "If this feature ships as currently described, Y happens because Z." Y is a concrete consequence. Z is the mechanism, supported by repository evidence, external evidence, or a specific unresolved choice. If either part cannot be named, drop the objection. Investigate an important unknown or keep it as an open question instead of calling it a defect. State what is verified, inferred, and still unknown. Name the evidence that could change the assessment. Investigate checkable uncertainty before asking the user to decide a product question.
+
+Discuss one consequential issue until it is understood, resolved, or safely deferred. A question, objection, or counterexample from the user continues that issue; it does not close it. Challenge weak reasoning and inconsistencies with evidence, then let the user make the product judgment. Record material open questions in the Draft Feature Brief.
 
 Use concrete stories to examine the actor, situation, intent, and observable outcome. Examine successful behaviour, failures, permissions, persistence, lifecycle, compatibility, and safety when relevant. Use these as lenses, not a fixed question sequence. State scope and non-goals as understanding improves. Keep uncertain behaviour in Draft until the user resolves, verifies, removes, or safely defers it.
 

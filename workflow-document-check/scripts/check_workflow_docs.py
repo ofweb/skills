@@ -9,7 +9,8 @@ from pathlib import Path
 
 
 LIMITS = {
-    "direction": 800,
+    "direction": 4000,
+    "direction_topic": 2000,
     "backlog": 1800,
     "backlog_item": 80,
     "context": 1500,
@@ -73,6 +74,8 @@ def check(root: Path) -> list[str]:
     workflow = root / ".workflow"
     findings = []
     findings.extend(check_file(workflow / "direction.md", LIMITS["direction"], "Direction"))
+    for path in sorted((workflow / "direction").glob("*.md")):
+        findings.extend(check_file(path, LIMITS["direction_topic"], "Direction topic"))
     for name, record_limit, record_label in (
         ("backlog", LIMITS["backlog_item"], "Backlog item"),
         ("context", LIMITS["context_entry"], "Context entry"),

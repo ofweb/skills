@@ -9,7 +9,7 @@ Shape owns one Feature Brief for each substantial feature. The brief is working 
 
 ## Create and locate
 
-Read the related Backlog item, nearby briefs, and applicable Direction, Context, PDR, and ADR material. If the feature has no Backlog item, create one through `backlog-document` first. Use that item's stable ID as the feature ID. Store the brief at `.workflow/features/<feature-id>/brief.md`, such as `.workflow/features/B-0001/brief.md`. Link it from the Backlog item through `backlog-document`.
+Read the related Backlog item, nearby briefs, and applicable main or topic Direction, Context, PDR, and ADR material. If the feature has no Backlog item, create one through `backlog-document` first. Use that item's stable ID as the feature ID. Store the brief at `.workflow/features/<feature-id>/brief.md`, such as `.workflow/features/B-0001/brief.md`. Link it from the Backlog item through `backlog-document`.
 
 Before creating the file, check whether a brief for the feature exists elsewhere. Do not create a duplicate or migrate it in this skill. Ask for a separate migration when an existing brief is outside the canonical location.
 

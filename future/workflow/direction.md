@@ -5,8 +5,8 @@ Status: Draft
 ## Purpose
 
 Direction is an iterative discussion that helps the user develop a more
-coherent understanding of what the project should become. Its short
-[Direction document](../documents/direction.md) preserves the current result;
+coherent understanding of what the project should become. Its
+[Direction documents](../documents/direction.md) preserve the current result;
 Direction shares stewardship of the [Backlog](../documents/backlog.md) with Shape.
 
 Direction is never complete. Individual sessions end, but new ideas, research,
@@ -20,7 +20,8 @@ Direction:
 - maintains a unified intended end state without forcing false certainty;
 - exposes tensions, contradictions, assumptions, and unanswered end-state
   questions;
-- keeps the Direction document concise and internally understandable;
+- keeps the main Direction document current across every topic;
+- creates or revises topic documents when a logical topic needs more depth;
 - creates and maintains Backlog items with Shape;
 - uses delivered work and targeted experiments as evidence;
 - investigates relevant prior art and adjacent solutions to test assumptions
@@ -28,8 +29,9 @@ Direction:
 - creates a [PDR](../documents/pdr.md) when durable product reasoning must
   survive the discussion;
 - updates [Context](../documents/context.md) when stable project terminology is
-  resolved; and
-- links deeper research without copying it into the Direction document.
+  resolved;
+- records useful external links in [References](../documents/references.md);
+- links deeper research without copying it into Direction documents.
 
 Direction does not:
 
@@ -45,9 +47,10 @@ Direction does not:
 Direction may use:
 
 - ideas and questions from the user;
-- the current Direction document;
+- the main Direction document and relevant topic documents;
 - the Backlog and existing [Feature Briefs](../documents/feature-brief.md);
 - PDRs and Context definitions;
+- the relevant external References entries;
 - current repository behaviour;
 - focused research, experiments, and external evidence; and
 - learning returned after delivered features.
@@ -59,10 +62,11 @@ the full repository or research tree merely because it exists.
 
 | Artifact | Use in Direction | Authority |
 | --- | --- | --- |
-| Direction document | Current cohesive understanding of the intended end state, including explicit tensions and open questions. | Intended destination, not feature requirements or design |
+| Direction documents | Main synthesis and current topic detail, including explicit tensions and open questions. | Intended destination, not feature requirements or design |
 | Backlog | Possible work and stable relationships discovered through Direction and Shape. | Inventory, not accepted behaviour or work order |
 | PDR | Durable product or behavioural decision and rationale. | Decision within its stated scope |
 | Context | Stable project-specific terminology. | Meaning of defined terms |
+| References | External source links and why they matter. | Evidence pointers, not product decisions |
 | Research | Evidence and prior art followed only when needed. | Supporting material, not policy |
 | Conversation | Exploration and reasoning with the user. | Disposable after durable knowledge is preserved |
 
@@ -75,9 +79,9 @@ The stages below are activities to revisit, not a sequence of gates.
 
 ### 1. Orient
 
-Read the current Direction document and the Backlog areas connected to the
-idea. Follow links to PDRs, Context, research, Feature Briefs, or code only when
-they can change the discussion.
+Read the main Direction document, relevant topic documents, and the Backlog
+areas connected to the idea. Follow links to PDRs, Context, research, Feature
+Briefs, or code only when they can change the discussion.
 
 ### 2. Establish the question
 
@@ -102,6 +106,12 @@ Bring relevant discoveries into the discussion and test them against the
 project's goal. Do not treat external implementations as authority or produce
 a large research report by default.
 
+When the user supplies a relevant external link or investigation finds one,
+record it in References with a short reason it matters. Do this during the
+discussion, even when its effect on Direction is still unknown. Mark claims
+that have not been verified. Do not rely on conversation history to retain
+the link.
+
 As the user revises, rejects, or expands an idea, revisit the question,
 assumptions, and evidence. Reason and investigate before asking for the next
 consequential user judgement. A clearer unresolved question can end a useful
@@ -125,11 +135,12 @@ question exists.
 
 As each durable result emerges, place it in one canonical home:
 
-- changed understanding of the intended end state → Direction document;
+- changed understanding of the intended end state → main or topic Direction document;
 - possible future work or evidence-gathering work → Backlog;
 - durable product or behavioural choice → PDR;
 - stable terminology → Context;
-- unresolved end-state question or tension → Direction document;
+- relevant external source and its context → References;
+- unresolved end-state question or tension → main or topic Direction document;
 - detailed supporting evidence → research; and
 - temporary reasoning with no future value → nowhere.
 
@@ -141,10 +152,13 @@ canonical source when another artifact depends on it.
 Rewrite affected Direction sections so they express the current understanding
 rather than the history of the discussion. Keep a question or tension visible
 when it remains important; cohesion does not require pretending it is resolved.
+Keep every topic represented in the main document. When topic detail moves or
+changes, update the main synthesis and links. Rebalance content between the
+main and topic documents as topic boundaries change.
 
 Remove superseded wording. Move delivery ideas to the Backlog and detailed
-rationale to PDRs or research before the Direction document becomes long enough
-to obscure the intended destination.
+rationale to PDRs or research before Direction documents obscure the intended
+destination.
 
 ### 6. End the session
 
@@ -192,10 +206,11 @@ Feature completion alone is not a reason to edit the Direction document.
 
 A Direction session may produce any combination of:
 
-- a revised Direction document;
+- revised main or topic Direction documents;
 - added, changed, related, or removed Backlog items;
 - a new, revised, or removed PDR;
 - updated Context terminology;
+- added or revised external References entries;
 - focused research or an evidence-gathering Backlog item; or
 - no document change when the discussion does not alter durable knowledge.
 

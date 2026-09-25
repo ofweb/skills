@@ -62,13 +62,14 @@ checks are activities used within the workflow. They are not delivery stages.
 ### Direction
 
 [Direction](direction.md) takes ideas, evidence, and learning from delivered work. Through
-discussion with the user, it maintains one short, cohesive
-[Direction document](../documents/direction.md) describing the project's
+discussion with the user, it maintains a cohesive
+[Direction document set](../documents/direction.md) describing the project's
 intended end state.
 
 Direction also creates and maintains the [Backlog](../documents/backlog.md) with
 Shape. It may create a [PDR](../documents/pdr.md) when a durable product or
 behavioural decision needs rationale beyond one feature.
+It records relevant external links in [References](../documents/references.md).
 
 Direction is ongoing project steering rather than the first step of every
 feature. It does not turn the Direction document into a roadmap or progress
@@ -239,6 +240,7 @@ document.
 | Artifact | Created or maintained by |
 | --- | --- |
 | Direction document | Direction |
+| External references | Direction |
 | Backlog | Direction and Shape |
 | Feature Brief | Shape |
 | PDR | Direction and Shape |

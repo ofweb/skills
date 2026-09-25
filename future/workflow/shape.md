@@ -126,20 +126,34 @@ separating them hides a trade-off. Do not walk through behaviour categories as
 a questionnaire.
 
 Reason before asking for the next product judgment. Investigate when evidence
-can settle a question. State supported factual conclusions clearly. Compare
-genuinely different approaches when evidence makes the comparison useful.
-Challenge weak reasoning and explain the premise behind a challenge. Leave
-consequential product judgments to the user. Do not lead with a recommendation
-or an option menu. Synthesize what is settled and name the remaining judgment
-before asking.
+can settle a question. State supported factual conclusions clearly. Synthesize
+what is settled and name the remaining judgment before asking. Do not give the
+user options, suggestions, or recommendations. Ask an open question that helps
+the user work out the desired behaviour.
+
+Before raising an objection, test it: "If this feature ships as currently
+described, Y happens because Z." Y is a concrete consequence. Z is the
+mechanism, supported by repository evidence, external evidence, or a specific
+unresolved choice. If either part cannot be named, drop the objection.
+Investigate an important unknown or keep it as an open question instead of
+calling it a defect. State what is verified, inferred, and still unknown. Name
+the evidence that could change the assessment. Investigate checkable
+uncertainty before asking the user to decide a product question.
+
+Discuss one consequential issue until it is understood, resolved, or safely
+deferred. A question, objection, or counterexample from the user continues that
+issue; it does not close it. Challenge weak reasoning and inconsistencies with
+evidence, then let the user make the product judgment. Record material open
+questions in the Draft Feature Brief.
 
 The activities below can recur as understanding changes. Their order is not a
 question sequence.
 
 ### 1. Orient
 
-Read the Direction sections that motivate the work, selected Backlog items,
-existing Feature Briefs, durable decisions, and current repository behaviour.
+Read the main Direction sections and linked topic documents that motivate the
+work, selected Backlog items, existing Feature Briefs, durable decisions, and
+current repository behaviour.
 Load deeper research only when it can affect the active question.
 
 ### 2. Establish the shaping scope
