@@ -38,3 +38,12 @@ Run compile or type checks, existing tests, formatting, lint, and prose checks a
 Review important types, valid states, errors, ownership, and effect boundaries with the user. Explain how they express the agreed behaviour. Present the code baseline, ADRs, check results, and remaining constraints for explicit acceptance. A change belongs back in Design when it would have mattered during this review.
 
 After acceptance and passing checks, commit the accepted Design state. Verify that the commit contains only accepted artifacts and record its SHA as the Implementation baseline. Do not hand off until the commit succeeds. The commit marks the implementation diff boundary; durable project decisions and the Feature Brief govern Review. Implementation starts in a fresh context from this commit. If implementation disproves a material design premise, reopen Design and accept a revised baseline before continuing.
+
+## End-of-step report
+
+After the commit succeeds, list the documents and code artifacts changed. State
+that Design is complete, name the checks that passed, and give the Design commit
+SHA. Name Implement as the next step for the feature ID. Give a copyable
+`/clear` command and a separate copyable prompt that invokes `$implement` with
+the feature ID and Design commit. Do not present this handoff before acceptance
+or when a required check or commit failed.

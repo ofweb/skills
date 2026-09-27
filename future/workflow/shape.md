@@ -288,12 +288,12 @@ Transition to Design additionally requires exactly one ready Feature Brief to be
 selected. Shape may complete several related briefs while transitioning only
 one of them.
 
-Until the workflow controller can clear context, use a manual transition. Save
-and check the durable documents, then state the selected feature ID, Ready
-brief, and completed checks. If Shape left repository changes, tell the user to
-commit them before Design. Then tell the user to run `/clear` and start Design
-for that feature. Do not continue Design in the Shape context. The new Design
-context checks its repository entry gate before work starts.
+Give the [final report](transitions.md#transition-declaration) with changed
+documents, brief status, selected feature, checks, and next step. Until the
+controller can clear context, use the manual `/clear` handoff in that guide. If
+Shape left repository changes, tell the user to commit them before Design. Do
+not continue Design in the Shape context. The new Design context checks its
+repository entry gate before work starts.
 
 ## Failure and interruption behaviour
 

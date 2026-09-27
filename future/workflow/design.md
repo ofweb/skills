@@ -231,6 +231,9 @@ Persist durable knowledge, record the Design commit, and request a
 controller-owned transition. Implementation starts in a fresh context from the
 committed baseline.
 
+Give the [final report](transitions.md#transition-declaration) with changed
+documents, code artifacts, passed checks, Design commit, and next step.
+
 Design and Implementation never continue in the same model context.
 
 ## Apply simple code in Design

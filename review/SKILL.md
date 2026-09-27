@@ -34,3 +34,12 @@ Each candidate identifies its specialist, exact location, expected and observed 
 ## Hand off to Acceptance
 
 Write one temporary report at `.workflow/review/<feature-id>-<revision>.md`. Include the reviewed snapshot, Design diff boundary, check results, specialist coverage, and retained candidates. Keep this directory out of Git. The report is workflow state, not permanent project documentation. Acceptance transfers relevant evidence and deletes it. Give the report path for a fresh Acceptance context; do not present unverified candidates directly to the user or continue into Acceptance here.
+
+## End-of-step report
+
+List the report path and any documents changed, or state that none changed.
+State that Review is complete, identify the reviewed revision, and summarize
+which checks passed, failed, or could not run. Name Acceptance as the next step
+for the feature ID. Give a copyable `/clear` command and a separate copyable
+prompt that asks for Acceptance using the report path. Do not expose candidate
+findings in this message; Acceptance evaluates them first.

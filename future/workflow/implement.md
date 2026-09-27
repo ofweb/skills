@@ -218,6 +218,9 @@ Record the Design commit and request a controller-owned transition. Review
 starts in a fresh context from the implementation, its tests, the Feature
 Brief, linked decisions, and workflow state. Review reruns mechanical checks.
 
+Give the [final report](transitions.md#transition-declaration) with changed
+documents, code and tests, passed checks, and next step.
+
 Implementation and Review never continue in the same model context.
 
 ## Autonomy boundaries

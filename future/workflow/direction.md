@@ -166,6 +166,10 @@ A Direction session may end after any useful update. Before leaving it, preserve
 durable knowledge, link affected artifacts, and make unresolved questions
 visible outside the conversation.
 
+Give the [final report](transitions.md#transition-declaration) with changed
+documents, the session result, and the next step. Name Shape only when the user
+has selected work to shape. Otherwise name Direction as the step to resume.
+
 Ending a session does not mark Direction complete. The user may later start
 Shape by naming the Backlog item, draft Feature Brief, or related features to
 work on. That active selection belongs to workflow state, not the Direction

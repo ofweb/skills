@@ -164,6 +164,9 @@ Write the report and request a controller-owned transition to Acceptance. If
 the controller is unavailable, give the report path for a fresh Acceptance
 context. Do not present the unverified candidate report directly to the user.
 
+Give the [final report](transitions.md#transition-declaration) with the report
+path, changed documents, reviewed revision, check status, and next step.
+
 Review is complete when required checks and specialists ran or are recorded as
 incomplete, the report is assembled, and every mutation workspace is gone.
 Do not transition when report assembly or cleanup fails.

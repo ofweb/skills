@@ -37,24 +37,37 @@ context.
 
 ## Transition declaration
 
-Before a context clear, Mike states:
+Before a context clear, Mike gives a short final report that states:
 
 - which workflow step is complete;
-- which documents, code, tests, reports, or other durable artifacts were
-  created or updated;
-- which completion checks passed;
+- which documents were created or updated, or that none changed;
+- which code, tests, reports, or other artifacts were created or updated;
+- which completion checks passed, failed, or could not run;
 - which step should run next; and
 - that continuing will clear the current context.
 
-The declaration should be concise and link to the affected artifacts. It is a
-request to change responsibility, not a conversation summary.
+Link to the affected artifacts. In the manual workflow, end with a copyable
+`/clear` command and a separate copyable prompt for the named next step. The
+prompt identifies the feature or work item and any path or revision that the
+next step needs. Run `/clear` first, then send that prompt in the new context.
+The report requests a change of responsibility; it is not a conversation
+summary.
 
 For example:
 
-> Design is complete. I updated the accepted code structure and ADR-004. The
-> repository compiles, and its existing tests, formatting, and lint checks
-> pass. I committed the accepted baseline as `<SHA>`. The next step is
-> Implementation. Continuing will clear this context.
+> Design is complete for `<feature-id>`. I updated the accepted code structure
+> and ADR-004. Compilation, tests, formatting, and lint checks passed. I
+> committed the accepted baseline as `<SHA>`. Next: Implement.
+
+```text
+/clear
+```
+
+Then send:
+
+```text
+Use $implement for <feature-id> from Design commit <SHA>.
+```
 
 ## Confirmation policy
 
@@ -84,7 +97,7 @@ controller state. It does not inherit the preceding conversation or a generated
 summary of that conversation.
 
 Until the controller is available, the user performs the context clear after
-the active step completes its checks and declares the transition. The step
+the active step completes its checks and gives the final report. The step
 gives the user the next responsibility and the canonical artifact ID or path.
 Before Design, the user establishes a clean working tree, including committing
 agreed Shape documents. The user runs `/clear` and starts that responsibility

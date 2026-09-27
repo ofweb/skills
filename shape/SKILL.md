@@ -52,4 +52,16 @@ If later evidence requires a material change to behaviour, scope, stories, or ac
 
 Select no more than one Ready brief as the next Design input. Do not send a Draft brief to Design to resolve a product question. A Shape session may end with only Backlog or Draft brief progress.
 
-Until a workflow controller can clear context, use a manual transition. Save and check the durable documents. State the selected feature ID, Ready brief, and completed checks. If Shape left repository changes, tell the user to commit them before Design's clean-tree entry gate. Then tell the user to run `/clear` and start Design for that feature ID. Do not continue Design in the Shape context.
+## End-of-step report
+
+In the final message, list each document changed, or state that none changed.
+State which briefs are Ready or Draft, which feature was selected, and which
+checks passed. Name the next workflow step. When a Ready brief is selected,
+name Design and its feature ID. Otherwise name the step that owns the remaining
+question. Give a copyable `/clear` command and a separate copyable prompt using
+`$design` or the skill that owns the remaining work.
+
+Until a workflow controller can clear context, use a manual transition. Save
+and check the durable documents. If Shape left repository changes, tell the
+user to commit them before Design's clean-tree entry gate. Do not continue
+Design in the Shape context.

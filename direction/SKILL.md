@@ -102,3 +102,12 @@ End a session when any durable results have a canonical home and important open
 questions remain visible. No document change is required when the discussion
 has not changed durable knowledge. A session boundary does not mark Direction
 complete.
+
+## End-of-session report
+
+In the final message, list each document changed, or state that none changed.
+State what this session resolved, what remains open, and the next workflow step.
+Name the Backlog item or feature when Shape is next. If no work is selected,
+name Direction as the step to resume. Give a copyable `/clear` command and a
+separate copyable prompt using `$shape` or `$direction` with the named work. Do not imply
+that Direction itself is complete.
