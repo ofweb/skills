@@ -13,7 +13,9 @@ Build complex software from simple parts. Code is simple when a reader can under
 - Prefer direct data flow and obvious control flow. Follow the principle of least surprise in names, behaviour, and structure.
 - Prefer straightforward code over clever machinery, generic frameworks, extra layers, and unnecessary indirection.
 - Add an abstraction for a concrete current need. Several real cases can reveal a shared concept; predicted reuse alone does not establish one.
+- Do not add interfaces, dependency injection layers, wrappers, or other abstractions only for hypothetical substitution or easier testing. Require a current responsibility that removes more reasoning than the abstraction adds.
 - Do not pursue DRY as a goal by itself. Duplication is reasonable when divergence cannot silently become wrong. The compiler or tests can make a missed corresponding change visible, while separate concepts may rightly change independently.
+- Parse weak or external input into meaningful domain types at system boundaries. Let internal code rely on established invariants instead of repeating validation.
 
 ## Visible effects
 

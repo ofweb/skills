@@ -48,6 +48,7 @@ feature:
 - the ready [Feature Brief](../documents/feature-brief.md), including its stories
   and acceptance criteria;
 - the accepted Design expressed in code;
+- the Design commit that marks the implementation diff boundary;
 - linked [Direction](../documents/direction.md),
   [Context](../documents/context.md), [PDR](../documents/pdr.md), and
   [ADR](../documents/adr.md) material;
@@ -64,7 +65,7 @@ contracts and knowledge required to continue.
 | --- | --- |
 | Implementation code | Completed behaviour inside the accepted Design |
 | Tests | Focused protection chosen for each chunk's purpose and risk |
-| Mechanical results | Evidence that the complete test, compile, lint, and formatting checks pass |
+| Mechanical checks | Local evidence that the complete test, compile, lint, and formatting checks pass |
 | Consultation record | Compact workflow instrumentation for any remote call and its result |
 | Workflow state | The active feature, completion result, and Review transition |
 
@@ -213,9 +214,9 @@ test adequacy. Review evaluates those independently.
 
 ### 8. Transition to Review
 
-Record the mechanical results and request a controller-owned transition.
-Review starts in a fresh context from the Feature Brief, accepted Design,
-implementation, tests, linked decisions, and workflow state.
+Record the Design commit and request a controller-owned transition. Review
+starts in a fresh context from the implementation, its tests, the Feature
+Brief, linked decisions, and workflow state. Review reruns mechanical checks.
 
 Implementation and Review never continue in the same model context.
 
@@ -251,9 +252,8 @@ Implementation is complete when:
 - no unresolved evidence requires a return to Shape or Design; and
 - the controller can start Review without the Implementation conversation.
 
-Review begins by determining whether the accepted Design and completed
-implementation actually provide the feature and whether the added tests are
-adequate.
+Review determines whether the completed implementation satisfies the durable
+project intent and whether the tests protect the feature.
 
 ## Failure and interruption behaviour
 

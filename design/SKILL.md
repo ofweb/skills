@@ -21,11 +21,11 @@ Before writing code, agree on the scope of design changes, the documentation req
 
 ## Choose reviewable structure
 
-Apply `simple-code` when choosing architecture, types, ownership, and effect boundaries. Be especially careful with abstractions that Implementation would have to build around. Prefer readability, then testability, then performance. Let measured latency, memory use, power use, protocol limits, or hardware limits justify a different order for a specific path.
+Read [simple-code](../simple-code/SKILL.md) before choosing the code structure. Apply it to the responsibilities of types and modules, dependency direction, and effect boundaries. Check each abstraction for a concrete current need because Implementation will build around the accepted structure. Prefer readability, then testability, then performance. Let measured latency, memory use, power use, protocol limits, or hardware limits justify a different order for a specific path.
 
 - Give important domain values distinct types when that prevents interchange or repeated explanation. Prefer the simplest type that rules out a meaningful mistake. Ask whether the type removes more concepts from the reader's head than it adds.
 - Use sum types for mutually exclusive states. Avoid booleans and optional fields that permit invalid combinations. Keep signatures honest about required inputs, outputs, and distinguishable errors.
-- Parse weak or external values into domain types at the trust boundary. Let internal code rely on those types instead of repeating validation.
+- Put parsed domain types in important signatures so Implementation can rely on their invariants.
 - Give important decisions callable, deterministic inputs and outputs where practical. Plan effect boundaries that expose I/O without forcing every function into a pure form.
 - Make the accepted surface explicit. Leave algorithms, private helpers, local types, and other internal choices to Implementation unless they change that surface.
 
@@ -35,4 +35,6 @@ Add only the modules, types, signatures, errors, effect boundaries, and selectiv
 
 Run compile or type checks, existing tests, formatting, lint, and prose checks after the design changes. Confirm that stubs are clear and that Design introduced no failing feature tests. Check that a fresh reader can locate the implementation target from the Feature Brief, code, and linked decisions.
 
-Review important types, valid states, errors, ownership, and effect boundaries with the user. Explain how they express the agreed behaviour. Present the code baseline, ADRs, check results, and remaining constraints for explicit acceptance. A change belongs back in Design when it would have mattered during this review. Implementation may start in a fresh context only after acceptance. If implementation later disproves a material design premise, reopen Design and accept the revised baseline before continuing.
+Review important types, valid states, errors, ownership, and effect boundaries with the user. Explain how they express the agreed behaviour. Present the code baseline, ADRs, check results, and remaining constraints for explicit acceptance. A change belongs back in Design when it would have mattered during this review.
+
+After acceptance and passing checks, commit the accepted Design state. Verify that the commit contains only accepted artifacts and record its SHA as the Implementation baseline. Do not hand off until the commit succeeds. The commit marks the implementation diff boundary; durable project decisions and the Feature Brief govern Review. Implementation starts in a fresh context from this commit. If implementation disproves a material design premise, reopen Design and accept a revised baseline before continuing.

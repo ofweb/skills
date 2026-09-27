@@ -48,12 +48,14 @@ Acceptance does not:
 Acceptance reads:
 
 - the ready [Feature Brief](../documents/feature-brief.md);
-- the reviewed implementation revision and accepted Design;
+- the reviewed implementation revision and Design commit that marks the diff
+  boundary;
 - linked [Direction](../documents/direction.md),
   [Context](../documents/context.md), [PDR](../documents/pdr.md), and
   [ADR](../documents/adr.md) material;
-- the temporary Review report;
-- code, tests, and mechanical results needed to evaluate its candidates; and
+- the temporary Review report in `.workflow/review/`;
+- code, tests, and Review's independently obtained mechanical results needed to
+  evaluate its candidates; and
 - current Acceptance Reports when unresolved work refers to their findings.
 
 Acceptance does not inherit the Review or Implementation conversations.
@@ -80,9 +82,10 @@ reads the report.
 
 ### 1. Reconstruct the acceptance target
 
-Read the Feature Brief, reviewed revision, accepted Design, linked decisions,
-and temporary Review report. Confirm that the report identifies the code
-revision it examined.
+Read the Feature Brief, reviewed revision, relevant durable decisions, Design
+commit, and temporary Review report. Use the commit to locate the
+implementation change, not as authority over its final structure. Confirm
+that the report identifies the code revision it examined.
 
 ### 2. Evaluate investigation value
 

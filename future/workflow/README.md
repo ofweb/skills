@@ -24,7 +24,7 @@ ideas, evidence, and completed work
                          Shape ↔ user
                            ↓ one selected ready Feature Brief
                          Design ↔ user
-                           ↓ accepted design
+                           ↓ accepted Design commit
                       Implement
                            ↓
                          Review
@@ -109,8 +109,10 @@ Design expresses implementation structure primarily through code: types,
 interfaces, module boundaries, function signatures, error shapes, selective
 stubs, and test seams. It may create ADRs for durable architectural decisions.
 
-The user explicitly accepts the design. That acceptance authorizes the
-autonomous delivery chain.
+The user explicitly accepts the design. Design commits that accepted baseline
+after its checks pass. The commit marks the Implementation diff boundary and
+authorizes the autonomous delivery chain; durable project artifacts remain the
+authority for Review.
 
 Independent remote critique is conditional rather than mandatory. Use it for
 large, complex, high-risk, cross-boundary, or materially uncertain designs. Ask
@@ -140,12 +142,15 @@ formatting checks pass.
 
 ### Review
 
-[Review](review.md) starts in a fresh context. It runs each behavioural,
-testing, correctness, integration, structural, comment, style, and type lens in
-a specialized sub-agent. Specialists focus on the current change but may trace
-its effects through the rest of the repository.
+[Review](review.md) starts in a fresh context. It judges the completed feature
+against the Feature Brief and relevant durable decisions, using the Design
+commit to locate the change. It independently reruns configured mechanical
+checks. Several focused subagents examine behaviour and tests, correctness and
+integration, types and boundaries, simple code, and prose and comments.
+Specialists may trace the change's effects through the rest of the repository.
 
-The Review coordinator curates candidate findings into one temporary report.
+The Review coordinator curates candidate findings into one temporary report in
+`.workflow/review/`.
 Each finding includes evidence and a preliminary impact and severity, but no
 recommendation or suggested solution. Acceptance evaluates and verifies the
 candidates independently.

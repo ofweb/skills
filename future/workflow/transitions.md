@@ -53,7 +53,8 @@ For example:
 
 > Design is complete. I updated the accepted code structure and ADR-004. The
 > repository compiles, and its existing tests, formatting, and lint checks
-> pass. The next step is Implementation. Continuing will clear this context.
+> pass. I committed the accepted baseline as `<SHA>`. The next step is
+> Implementation. Continuing will clear this context.
 
 ## Confirmation policy
 
@@ -100,7 +101,7 @@ locate canonical artifacts. Depending on the transition, this may include:
 - the completed and next workflow steps;
 - the transition outcome;
 - relevant document, code, test, and report locations;
-- the reviewed or implemented repository revision;
+- the Design commit and reviewed or implemented repository revision;
 - an interrupted step and return point; and
 - a Decision Request or other short-lived transition input.
 
@@ -188,6 +189,6 @@ The controller design still needs to define:
 - transition outcome identifiers and permitted route validation;
 - the transition request and confirmation interface;
 - how controller state locates unfinished work across features;
-- where short-lived Review reports and Decision Requests live;
+- where short-lived Decision Requests live;
 - how automatic transitions remain visible across session replacement; and
 - recovery after interruption during state persistence or session startup.

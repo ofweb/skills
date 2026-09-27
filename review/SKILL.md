@@ -1,41 +1,36 @@
 ---
 name: review
-description: Review one completed feature from a fresh context with independent specialist lenses, then prepare an evidence-based candidate report for Acceptance.
+description: Review one completed feature against durable project intent with focused specialists and independent checks, then prepare candidates for Acceptance.
 ---
 
 # Review
 
-Review one completed implementation from a fresh context. Read the ready Feature Brief, accepted Design in code, linked decisions, implementation diff, tests, and mechanical results. Do not use the Implementation conversation as evidence. Review reports candidate problems; Acceptance decides which candidates warrant verification and user attention.
+Review one completed feature in a fresh context. Reconstruct its intent from the Feature Brief, linked PDRs and ADRs, relevant Direction and Context documents, and current code. Use the Design commit only to locate the implementation diff. A difference from the Design code is not a finding unless it violates durable intent or causes a concrete problem. Do not use the Implementation conversation or its check reports as evidence.
 
-## Bound the review
+## Establish the reviewed snapshot
 
-Identify the feature, reviewed Git revision, and implementation change boundary. If implementation work is uncommitted, record the working-tree state as part of the reviewed snapshot. A Git SHA alone does not identify those changes. Follow affected callers, callees, types, state, and integration paths when they can reveal an effect of this change. Do not audit unrelated repository code.
+Record the feature ID, Design commit SHA, reviewed revision, and change boundary. If implementation work is uncommitted, record the working-tree state as part of the snapshot. Follow affected callers, callees, types, state, and integration paths when the change can affect them. Do not audit unrelated code.
 
-Use one specialized subagent for each applicable lens below. Give each the same feature and revision references and one narrow responsibility. Run agents in batches when capacity is limited. Each specialist inspects evidence and returns candidate findings without editing code or proposing fixes. Record a required lens as incomplete when it cannot run; do not interpret missing coverage as a clean result.
+Independently run the repository's configured compile or type check, complete test suite, lint, formatting check, and other relevant mechanical checks against this snapshot. Use check-only commands. If a check would modify the implementation tree, run it in isolation or record it as incomplete. Run prose checks on changed comments and documentation. Report failed or incomplete checks with their evidence; do not repair the feature.
 
-## Specialist lenses
+## Dispatch focused specialists
 
-- **Feature compliance:** Compare every story and acceptance criterion with the implementation. Find missing, changed, or extra behaviour.
-- **Test effectiveness:** Check feature paths, failures, edge cases, and integration paths. Identify the regression each important test detects. Check whether affected old tests still encode valid behaviour. Do not use test count or coverage percentage as proof.
-- **Correctness:** Check algorithms, conditions, state transitions, boundaries, cleanup, error propagation, and sibling paths.
-- **Integration and contracts:** Trace callers and callees for signature, data shape, effect, error, protocol, and compatibility drift.
-- **Simple code and structure:** Apply `simple-code`. Check responsibility, ownership, dependencies, hidden effects, unsafe duplication, unnecessary abstraction, and difficulty of future change. Require a concrete consequence, not a style preference.
-- **Comments:** Check changed comments against nearby code and durable decisions. Keep comments that preserve non-obvious intent. Check API contracts and links. Use a dedicated comment-review skill when available; otherwise give this lens to a specialist directly.
-- **Project style:** When a project style guide exists, cite its exact rule for each candidate. Record this lens as inapplicable when no guide exists. Do not substitute reviewer preference.
-- **Type safety:** Check unsafe casts or escape hatches, nullability, unchecked boundary values, and values used before invariants hold.
-- **Type design:** Check domain distinctions, valid states, ownership, canonical representations, and contradictory fields or flags.
-- **Parse at boundaries:** Check that weak input becomes a domain type at the boundary, constructors preserve invariants, and internal code avoids repeated validation.
+Use several narrow subagents. Give each the same feature, durable artifacts, snapshot, and change boundary, but only its own review responsibility. Run them in batches when capacity is limited. A specialist returns evidence-backed candidate findings and does not edit production code or propose fixes.
 
-Add separate security, concurrency and state, persistence and lifecycle, or compatibility specialists when this feature exposes those concerns. Keep each specialist within the feature's impact.
+1. **Feature behaviour and tests:** Compare stories and acceptance criteria with observed behaviour. Find missing or extra behaviour, weak tests, important failures, and edge cases. Identify the regression each important test detects. Recheck affected old tests.
+2. **Correctness and integration:** Check algorithms, conditions, state transitions, errors, cleanup, callers, callees, protocols, and compatibility.
+3. **Types and boundaries:** Check type safety, domain distinctions, invalid states, ownership, and parsing of weak input at trust boundaries. Check constructors that could bypass invariants.
+4. **Simple code:** Read [simple-code](../simple-code/SKILL.md) and give this exact path to the specialist. Apply it to the changed responsibilities, data and control flow, dependencies, effects, abstractions, duplication, and reasoning cost. Require a concrete consequence instead of a style preference.
+5. **Prose and comments:** Check changed documentation and comments against code and durable decisions. Find stale, misleading, redundant, or unclear prose. Preserve comments that explain non-obvious intent. Cite an applicable project style rule when one exists.
 
-## Gather evidence without changing the feature
+Add separate specialists for security, concurrency, persistence or lifecycle, protocol compatibility, or domain-specific risks when the feature exposes them. Keep each specialist within the feature's impact. Record missing required coverage as incomplete, not clean.
 
-Each candidate must identify its lens, exact location, expected and observed behaviour, supporting code or contract, plausible consequence, and preliminary impact and severity. A specialist's claim remains a candidate. Do not recommend a fix, change code, or decide feature acceptance.
+The test specialist may introduce a deliberate fault only when a critical test's effectiveness is unclear. Use an isolated disposable workspace, record the fault and result, and discard the workspace. Skip this check when isolation is unavailable.
 
-The test specialist may use a deliberate fault only when test effectiveness is genuinely unclear for a story or critical edge case. Use an isolated disposable workspace that cannot affect the implementation tree or other reviewers. Record the fault and observed test result, then discard that workspace. Skip the mutation when isolation is unavailable.
+## Curate candidates
 
-Merge duplicate candidates and omit those contradicted by evidence, unsupported, unrelated, or outside the feature's impact. Preserve supported uncertainty as a candidate. Do not turn curation into solution design or claim that retained findings are verified.
+Each candidate identifies its specialist, exact location, expected and observed behaviour, supporting code or durable contract, plausible consequence, and preliminary impact and severity. Mechanical failures also identify the check and result. Keep supported uncertainty visible. Merge duplicates and omit claims that are unsupported, contradicted, unrelated, or outside the feature's impact. Do not verify findings on Acceptance's behalf, recommend solutions, or decide that the feature is complete.
 
 ## Hand off to Acceptance
 
-Write one temporary report outside the implementation tree. Include the feature, reviewed snapshot, change scope, lenses run or missed, and retained candidates with evidence and preliminary impact and severity. Do not include recommendations. If no workflow controller exists, put the report in `/tmp` and provide its path for a fresh Acceptance context. Do not present unverified candidates directly to the user or continue into Acceptance in this context.
+Write one temporary report at `.workflow/review/<feature-id>-<revision>.md`. Include the reviewed snapshot, Design diff boundary, check results, specialist coverage, and retained candidates. Keep this directory out of Git. The report is workflow state, not permanent project documentation. Acceptance transfers relevant evidence and deletes it. Give the report path for a fresh Acceptance context; do not present unverified candidates directly to the user or continue into Acceptance here.

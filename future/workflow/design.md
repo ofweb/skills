@@ -75,6 +75,7 @@ only when their boundaries constrain the selected feature.
 | ADR | Durable architectural reasoning that code cannot preserve safely by itself |
 | Code comments and links | Local explanation of non-obvious constraints or deliberate choices |
 | Feature Brief clarification | Non-material wording or link correction that leaves behaviour, scope, stories, and acceptance criteria unchanged |
+| Design commit | Accepted code and decision state that marks the Implementation diff boundary |
 | Workflow state | Design acceptance, relevant artifacts, and the next responsibility |
 
 Implementation follows the accepted baseline. It may choose local implementation
@@ -216,11 +217,19 @@ constraints. The user must explicitly accept Design.
 Acceptance authorizes the autonomous Implement → Review → Acceptance chain. It
 does not authorize behaviour or architecture outside the accepted artifacts.
 
-### 10. Transition to Implementation
+### 10. Commit the accepted baseline
 
-Persist durable knowledge, run documentation and mechanical checks, and request
-a controller-owned transition. Implementation starts in a fresh context from
-repository state.
+After explicit acceptance and passing checks, commit the accepted Design state.
+Verify that the commit contains only accepted artifacts and record its SHA. Do
+not transition if the commit fails. This commit marks where Implementation
+starts. Review uses it to identify the change boundary, not as an authority for
+the final implementation.
+
+### 11. Transition to Implementation
+
+Persist durable knowledge, record the Design commit, and request a
+controller-owned transition. Implementation starts in a fresh context from the
+committed baseline.
 
 Design and Implementation never continue in the same model context.
 
@@ -279,6 +288,7 @@ Design is complete when:
 - existing tests pass;
 - formatting and configured static checks pass;
 - the user explicitly accepts the baseline;
+- the accepted Design state is committed and its SHA is recorded;
 - workflow state identifies the accepted artifacts; and
 - the controller can start Implementation without the Design conversation.
 
