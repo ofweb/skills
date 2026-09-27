@@ -26,7 +26,7 @@ ideas, evidence, and completed work
                          Design ↔ user
                            ↓ accepted Design commit
                       Implement
-                           ↓
+                           ↓ completed Implementation commit
                          Review
                            ↓
                        Acceptance
@@ -59,6 +59,13 @@ checks are activities used within the workflow. They are not delivery stages.
 
 [Simple code](../../simple-code/SKILL.md) defines shared code principles.
 Design, Implement, and Review each apply them within their own responsibility.
+
+## Project setup
+
+Each project that uses this workflow must keep `.workflow/review/` out of Git.
+Add that path to the project's `.gitignore` during project setup. Review checks
+the ignore rule before writing its temporary report and reports a missing rule
+as a setup problem. Review does not change project configuration.
 
 ## Project steering
 
@@ -138,15 +145,18 @@ to Shape.
 Implementation does not create a new ADR autonomously. It returns the
 architectural question to Design. It hands work to Review only after every
 designed stub is implemented and the complete test, compile, lint, and
-formatting checks pass.
+formatting checks pass. It commits the completed implementation, so Review
+evaluates one exact revision.
 
 ### Review
 
-[Review](review.md) starts in a fresh context. It judges the completed feature
-against the Feature Brief and relevant durable decisions, using the Design
-commit to locate the change. It independently reruns configured mechanical
-checks. Several focused subagents examine behaviour and tests, correctness and
-integration, types and boundaries, simple code, and prose and comments.
+[Review](review.md) starts in a fresh context. The Feature Brief, linked PDRs
+and ADRs, and relevant Direction and Context documents define its review
+intent. The Implementation commit, tests, and affected code provide evidence.
+The Design commit only locates the change boundary. Review independently reruns
+configured mechanical checks, including prose checks on changed source
+comments. Several focused subagents examine behaviour and tests, correctness
+and integration, types and boundaries, simple code, and prose and comments.
 Specialists may trace the change's effects through the rest of the repository.
 
 The Review coordinator curates candidate findings into one temporary report in

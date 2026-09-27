@@ -36,13 +36,16 @@ If evidence invalidates an accepted contract, stop that path and return the prob
 
 Implement every designed stub and target. Run the complete test suite, compile or type-check, and pass configured lint and formatting checks. Inspect the designed area for unfinished code. Passing mechanical checks establishes readiness for Review; it does not prove feature correctness or test adequacy.
 
-Record the Design commit SHA and identify the changed code and tests. Request the Implement to Review transition when a workflow controller is available. Otherwise tell the user to start Review in a fresh context from repository state. Do not carry a prose handoff or continue into Review in this context.
+Inspect the complete working tree. Confirm that it contains only the intended feature implementation, tests, and permitted artifacts. Commit the completed implementation after all required checks pass. Record the Implementation commit SHA. Do not transition if the commit fails or unrelated changes remain.
+
+Record both the Design and Implementation commit SHAs. Request the Implement to Review transition when a workflow controller is available. Otherwise tell the user to start Review in a fresh context from these commits and durable project artifacts. Do not carry a prose handoff or continue into Review in this context.
 
 ## End-of-step report
 
 List the documents, code, and tests changed, or state when no document changed.
-State that Implementation is complete and name the checks that passed. Name
-Review as the next step for the feature ID. Give a copyable `/clear` command
-and a separate copyable prompt that invokes `$review` with the feature ID and
-Design commit. Keep the report concise; Review reruns checks and reads the
-repository rather than trusting this report.
+State that Implementation is complete and name the checks that passed. Give
+both commit SHAs. Name Review as the next step for the feature ID. Give a
+copyable `/clear` command and a separate copyable prompt that invokes `$review`
+with the feature ID, Design commit, and Implementation commit. Keep the report
+concise; Review reruns checks and reads the repository rather than trusting
+this report.

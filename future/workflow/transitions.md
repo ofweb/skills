@@ -69,6 +69,18 @@ Then send:
 Use $implement for <feature-id> from Design commit <SHA>.
 ```
 
+At the Implement to Review boundary, include both revisions:
+
+```text
+/clear
+```
+
+Then send:
+
+```text
+Use $review for <feature-id>. Design commit: <design-sha>. Implementation commit: <implementation-sha>.
+```
+
 ## Confirmation policy
 
 Every transition produces a declaration. Direction, Shape, Design, Decision,
@@ -79,7 +91,8 @@ An explicit response that accepts Design may also confirm its transition when
 the preceding message identifies Implementation as the next step and warns
 about the context clear.
 
-Implementation may proceed directly to Review after a valid declaration.
+Implementation may proceed directly to Review after it commits the completed
+feature and makes a valid declaration.
 Review may proceed directly to Acceptance. These two transitions do not need
 another user response, which preserves unattended delivery after Design.
 
@@ -114,7 +127,7 @@ locate canonical artifacts. Depending on the transition, this may include:
 - the completed and next workflow steps;
 - the transition outcome;
 - relevant document, code, test, and report locations;
-- the Design commit and reviewed or implemented repository revision;
+- the Design commit and Implementation commit for the completed feature;
 - an interrupted step and return point; and
 - a Decision Request or other short-lived transition input.
 
@@ -140,7 +153,7 @@ Evidence may route work backward:
 - changed or ambiguous feature behaviour → Shape;
 - invalid accepted architecture → Design;
 - ordinary work within accepted behaviour and Design → Implementation; and
-- completed implementation → Review and then Acceptance.
+- committed implementation → Review and then Acceptance.
 
 Acceptance records follow-up work by likely owning step. The user selects which
 step to pick up, and that step determines dependencies when it reads the

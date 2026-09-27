@@ -48,8 +48,8 @@ Acceptance does not:
 Acceptance reads:
 
 - the ready [Feature Brief](../documents/feature-brief.md);
-- the reviewed implementation revision and Design commit that marks the diff
-  boundary;
+- the Implementation commit that Review evaluated and Design commit that marks
+  the diff boundary;
 - linked [Direction](../documents/direction.md),
   [Context](../documents/context.md), [PDR](../documents/pdr.md), and
   [ADR](../documents/adr.md) material;
@@ -82,10 +82,10 @@ reads the report.
 
 ### 1. Reconstruct the acceptance target
 
-Read the Feature Brief, reviewed revision, relevant durable decisions, Design
-commit, and temporary Review report. Use the commit to locate the
+Read the Feature Brief, Implementation commit, relevant durable decisions,
+Design commit, and temporary Review report. Use the Design commit to locate the
 implementation change, not as authority over its final structure. Confirm
-that the report identifies the code revision it examined.
+that the report identifies the Implementation commit it examined.
 
 ### 2. Evaluate investigation value
 

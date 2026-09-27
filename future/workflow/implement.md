@@ -29,7 +29,8 @@ Implementation:
 - uses remote consultation within its strict delegation limits when local
   investigation stops producing information;
 - returns invalid behaviour to Shape and invalid architecture to Design; and
-- hands a mechanically complete feature to Review in a fresh context.
+- commits the mechanically complete feature before Review starts in a fresh
+  context.
 
 Implementation does not:
 
@@ -66,6 +67,7 @@ contracts and knowledge required to continue.
 | Implementation code | Completed behaviour inside the accepted Design |
 | Tests | Focused protection chosen for each chunk's purpose and risk |
 | Mechanical checks | Local evidence that the complete test, compile, lint, and formatting checks pass |
+| Implementation commit | Exact completed implementation revision for Review |
 | Consultation record | Compact workflow instrumentation for any remote call and its result |
 | Workflow state | The active feature, completion result, and Review transition |
 
@@ -212,14 +214,24 @@ only on tests to reveal an unused stub.
 These checks establish implementation completion, not feature correctness or
 test adequacy. Review evaluates those independently.
 
-### 8. Transition to Review
+### 8. Commit the completed implementation
 
-Record the Design commit and request a controller-owned transition. Review
-starts in a fresh context from the implementation, its tests, the Feature
-Brief, linked decisions, and workflow state. Review reruns mechanical checks.
+After all required checks pass, inspect the complete working tree. Verify that
+it contains only the intended feature implementation, tests, and permitted
+artifacts. Commit those changes and record the Implementation commit SHA. Do
+not transition if unrelated changes remain or the commit fails.
+
+The Design commit marks where Implementation started. The Implementation
+commit identifies the exact completed revision that Review evaluates.
+
+### 9. Transition to Review
+
+Record both commit SHAs and request a controller-owned transition. Review
+starts in a fresh context from the Implementation commit, Feature Brief,
+linked decisions, and workflow state. Review reruns mechanical checks.
 
 Give the [final report](transitions.md#transition-declaration) with changed
-documents, code and tests, passed checks, and next step.
+documents, code and tests, passed checks, both commit SHAs, and next step.
 
 Implementation and Review never continue in the same model context.
 

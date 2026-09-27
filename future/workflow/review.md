@@ -8,10 +8,12 @@ Review evaluates one completed implementation in a fresh context. It checks
 the feature against durable project intent, reruns mechanical checks, and
 investigates whether the change made the system harder to understand or change.
 
-The Design commit identifies where Implementation started. It is a diff
-boundary, not a Review authority. A final implementation may differ from that
-code without producing a finding when it still satisfies the Feature Brief and
-durable decisions.
+The Feature Brief, linked PDRs and ADRs, and relevant Direction and Context
+documents define intent and constraints. The Implementation commit, tests, and
+affected surrounding code provide evidence to inspect. The Design commit
+identifies where Implementation started. It is a diff boundary, not Review
+authority. A final implementation may differ from that code without producing
+a finding when it still satisfies durable intent.
 
 Review uses several focused subagents and assembles their candidate findings
 into one temporary report for Acceptance.
@@ -20,8 +22,8 @@ into one temporary report for Acceptance.
 
 Review:
 
-- reconstructs the feature from durable repository state;
-- identifies the reviewed snapshot and the change since the Design commit;
+- reconstructs feature intent from durable project artifacts;
+- reviews the Implementation commit and the change since the Design commit;
 - independently runs relevant compile, test, lint, formatting, prose, and
   other configured checks;
 - traces the feature's effects beyond changed files when needed;
@@ -51,28 +53,34 @@ Review reads:
 - relevant [Direction](../documents/direction.md) for project intent and
   [Context](../documents/context.md) for terms and invariants;
 - the Design commit SHA to locate the implementation change boundary;
-- the completed code, tests, and affected callers and integration paths; and
+- the Implementation commit SHA as the exact reviewed revision;
+- tests, completed code, and affected callers, callees, and integration paths
+  as evidence; and
 - project check commands and style rules.
 
-Review does not inherit the Design or Implementation conversation. It does not
-use the Design commit as authority for a finding. A finding needs a durable
-contract or a concrete defect in the completed implementation.
+Review does not inherit the Design or Implementation conversation. Code and
+tests cannot define what the feature was supposed to do. The Design commit
+cannot authorize a finding by itself. A finding needs a durable contract or a
+concrete defect in the completed implementation.
 
 ## Report
 
 Write one temporary report at:
 
 ```text
-.workflow/review/<feature-id>-<revision>.md
+.workflow/review/<feature-id>-<implementation-sha>.md
 ```
 
-The report is workflow state and the directory is gitignored. It survives a
-context clear, process exit, or machine reboot. Acceptance transfers evidence
-for retained findings and deletes the temporary report. A future controller
-may change the transport without changing these responsibilities.
+Before writing, verify that the intended path in `.workflow/review/` is ignored
+by Git.
+If it does not, report the project setup problem. Do not edit `.gitignore` or
+write the report. The report is workflow state and survives a context clear,
+process exit, or machine reboot. Acceptance transfers evidence for retained
+findings and deletes the report. A future controller may change the transport
+without changing these responsibilities.
 
-The report identifies the feature, Design commit, reviewed revision and working
-tree state, change scope, mechanical checks and results, specialists that ran
+The report identifies the feature, Design commit, Implementation commit,
+change scope, mechanical checks and results, specialists that ran
 or were incomplete, and retained candidates. Each candidate gives its source
 specialist, exact location, expected and observed behaviour, supporting code
 or durable contract, plausible consequence, and preliminary impact and
@@ -84,17 +92,20 @@ Follow callers, callees, types, state, and integration paths through the
 repository when the feature can affect them. A problem without a causal or
 behavioural link to this feature is outside Review.
 
-First identify the exact snapshot. Record the Git revision and working tree
-state when implementation is uncommitted. A Git SHA alone does not identify
-uncommitted changes. Compare the feature against the Design commit to locate
-the implementation diff.
+Confirm that the checked-out revision matches the Implementation commit and
+the tracked working tree is clean, or use an isolated checkout. Review that
+immutable commit. Compare it with the Design commit to locate the
+implementation diff.
 
 Run the repository's relevant compile or type check, complete test suite,
 lint, formatting check, and other configured mechanical checks against the
-reviewed snapshot. Run prose checks on changed comments and documentation.
-Use check-only commands. If a check would modify the implementation tree, run
-it in isolation or record it as incomplete. Record failures and incomplete
-checks with evidence. Do not repair the feature during Review.
+reviewed commit. Run mechanical prose checks on changed documentation and
+comments embedded in source files. If the checker cannot inspect source
+comments directly, extract the changed comments and check that text. Record
+comment coverage as incomplete when neither method works. Use check-only
+commands. If a check would modify the implementation tree, run it in isolation
+or record it as incomplete. Record failures and incomplete checks with
+evidence. Do not repair the feature during Review.
 
 ## Focused specialists
 
@@ -134,11 +145,13 @@ Do not report a preference for fewer lines or a different style.
 
 ### 5. Prose and comments
 
-Check changed documentation and comments against code and durable decisions.
+Check changed documentation and source comments against code and durable
+decisions.
 Find stale, misleading, redundant, and unclear prose. Preserve comments that
 explain non-obvious intent. Check public API contracts and links. When a
 project style guide exists, cite its exact rule. Do not substitute reviewer
-preference for a missing rule.
+preference for a missing rule. This semantic review is separate from the
+mechanical prose check.
 
 Add separate security, concurrency and state, persistence and lifecycle,
 protocol compatibility, or domain specialists when the feature exposes those
@@ -165,7 +178,7 @@ the controller is unavailable, give the report path for a fresh Acceptance
 context. Do not present the unverified candidate report directly to the user.
 
 Give the [final report](transitions.md#transition-declaration) with the report
-path, changed documents, reviewed revision, check status, and next step.
+path, changed documents, Implementation commit, check status, and next step.
 
 Review is complete when required checks and specialists ran or are recorded as
 incomplete, the report is assembled, and every mutation workspace is gone.
