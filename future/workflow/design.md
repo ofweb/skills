@@ -8,6 +8,10 @@ Design turns one ready [Feature Brief](../documents/feature-brief.md) into a
 small, explicit implementation structure. It leaves a fresh Implementation
 context with clear code contracts and a mechanically sound repository.
 
+Design is an alignment checkpoint while the code surface is small. Review the
+important types and boundaries with the user to check understanding and catch
+structural mistakes before Implementation adds more code.
+
 When several designs satisfy the agreed behaviour, prefer the design that
 requires less unrelated repository context to understand and change safely.
 
@@ -204,8 +208,10 @@ when the revised design still meets the critique threshold.
 
 ### 9. Obtain user acceptance
 
-Present the resulting code baseline, linked ADRs, verified evaluation findings,
-and any remaining constraints. The user must explicitly accept Design.
+Walk through the important types, valid states, errors, ownership, and effect
+boundaries with the user. Show how they support the agreed behaviour. Present
+the code baseline, linked ADRs, verified evaluation findings, and remaining
+constraints. The user must explicitly accept Design.
 
 Acceptance authorizes the autonomous Implement → Review → Acceptance chain. It
 does not authorize behaviour or architecture outside the accepted artifacts.

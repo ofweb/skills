@@ -5,7 +5,7 @@ description: Design the code structure for one ready Feature Brief. Align techni
 
 # Design
 
-Design turns one ready Feature Brief into a small code baseline for Implementation. Its types, signatures, boundaries, and stubs give the user a reviewable surface before full implementation. Use agreed behaviour as the contract. Do not change feature scope or implement the complete feature during Design.
+Design is an alignment checkpoint for one ready Feature Brief. Express important types, signatures, boundaries, and stubs before full implementation. Keep this surface small so the user can check understanding and find structural mistakes while changes are cheap. Use agreed behaviour as the contract. Do not change feature scope or implement the complete feature during Design.
 
 ## Start from an agreed feature
 
@@ -35,4 +35,4 @@ Add only the modules, types, signatures, errors, effect boundaries, and selectiv
 
 Run compile or type checks, existing tests, formatting, lint, and prose checks after the design changes. Confirm that stubs are clear and that Design introduced no failing feature tests. Check that a fresh reader can locate the implementation target from the Feature Brief, code, and linked decisions.
 
-Present the code baseline, ADRs, check results, and remaining constraints for explicit user acceptance. A change belongs back in Design when it would have mattered while reviewing this baseline. Implementation may start in a fresh context only after acceptance. If implementation later disproves a material design premise, reopen Design and accept the revised baseline before continuing.
+Review important types, valid states, errors, ownership, and effect boundaries with the user. Explain how they express the agreed behaviour. Present the code baseline, ADRs, check results, and remaining constraints for explicit acceptance. A change belongs back in Design when it would have mattered during this review. Implementation may start in a fresh context only after acceptance. If implementation later disproves a material design premise, reopen Design and accept the revised baseline before continuing.

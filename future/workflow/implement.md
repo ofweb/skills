@@ -8,6 +8,10 @@ Implementation completes one accepted Design through small test-driven loops.
 It starts in a fresh context and normally runs unattended until the feature is
 mechanically ready for independent Review.
 
+Small behaviour chunks keep test, compiler, lint, and format feedback close to
+the reasoning behind each change. Fix that feedback before moving to another
+chunk.
+
 Design is already complete. Implementation fills in the accepted structure; it
 does not revisit behaviour or architecture while coding.
 
@@ -30,7 +34,7 @@ Implementation:
 Implementation does not:
 
 - change the accepted feature behaviour;
-- alter accepted design structure to make implementation easier;
+- alter the reviewed Design surface to make implementation easier;
 - create a new ADR or PDR;
 - ask the user to approve ordinary implementation choices or successful loops;
 - treat passing tests as proof that the feature is correct; or
@@ -68,8 +72,9 @@ Implementation may choose local details inside the accepted contracts. That
 includes private helpers and helper types, algorithms, local data structures,
 control flow, constants, test fixtures, and structure within an accepted
 component. That authority does not extend to new domain concepts or changes to
-designed signatures, ownership, component boundaries, data flow, errors,
-effect boundaries, persistence formats, protocols, or concurrency models.
+significant reviewed signatures, ownership, component boundaries, data flow,
+errors, effect boundaries, persistence formats, protocols, or concurrency
+models.
 
 ## Operating model
 
@@ -94,8 +99,8 @@ determine:
 - what observable failure it could introduce; and
 - which remaining feature behaviour it advances.
 
-The chunk should be small enough that compiler, test, and lint feedback points
-back to the current change.
+The chunk should be small enough that test, compiler, lint, and format feedback
+points back to the current change while its reasoning is still fresh.
 
 ### 3. Select tests by purpose
 
@@ -116,7 +121,7 @@ understand the next small behaviour
     ↓
 write or update the relevant test
     ↓
-confirm that it fails for the intended reason
+confirm the intended failure when practical
     ↓
 implement the smallest complete change
     ↓
@@ -126,6 +131,8 @@ compile or type-check
     ↓
 lint and format
     ↓
+fix feedback while the change is fresh
+    ↓
 perform small local cleanup
     ↓
 repeat
@@ -133,8 +140,8 @@ repeat
 
 Use the repository's configured tools. Run cheap checks immediately and broaden
 the test scope as implemented paths accumulate. Run broader integration tests
-at suitable checkpoints. Fix failed focused tests, compilation, or lint checks
-before starting another chunk. A test that passes before its implementation
+at suitable checkpoints. Fix failed focused tests, compilation, lint, or format
+checks before starting another chunk. A test that passes before its implementation
 must be corrected or justified before continuing.
 
 ### 5. Preserve the accepted Design
