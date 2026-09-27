@@ -57,6 +57,9 @@ resume the interrupted work or reroute to the responsible step
 Research, experiments, remote consultation, documentation, and mechanical
 checks are activities used within the workflow. They are not delivery stages.
 
+[Simple code](../../simple-code/SKILL.md) defines shared code principles.
+Design, Implement, and Review each apply them within their own responsibility.
+
 ## Project steering
 
 ### Direction
@@ -125,9 +128,10 @@ When local investigation stops producing information, it may make one
 authorized remote-consultation call for that problem. If the work remains
 blocked, it presents the evidence to the user for guidance.
 
-Implementation must not invent product behaviour or architecture. Evidence
-that invalidates the accepted behaviour returns to Shape. Evidence that
-invalidates the accepted architecture returns to Design.
+Implementation may change private helpers, local types, algorithms, and code
+inside an accepted component. A change that would have mattered during Design
+review returns to Design. Evidence that invalidates accepted behaviour returns
+to Shape.
 
 Implementation does not create a new ADR autonomously. It returns the
 architectural question to Design. It hands work to Review only after every

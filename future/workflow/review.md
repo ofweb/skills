@@ -48,6 +48,7 @@ Review reads:
   [ADR](../documents/adr.md) material;
 - the completed implementation and its change boundary;
 - the tests and mechanical results produced by Implementation;
+- [simple-code](../../simple-code/SKILL.md);
 - relevant callers, callees, types, data flows, and neighbouring code; and
 - the project's style guide, when one exists.
 
@@ -126,12 +127,14 @@ Trace the changed code through its callers and callees. Check signatures, data
 shapes, effects, error contracts, protocols, and neighbouring implementations
 for drift or incompatibility.
 
-### Structural and architectural impact
+### Simple code and structural impact
 
-Look for unclear ownership, responsibility drift, unexpected coupling,
-confused dependency direction, tangled logic and effects, hidden lifecycle or
-temporal coupling, duplicate concepts, semantic duplication, unnecessary
-abstraction, and increased context needed to understand the feature.
+Apply [simple-code](../../simple-code/SKILL.md) to the current change. Look for
+unclear responsibilities, unnecessary abstraction, surprising effects, unsafe
+duplication, hidden coupling, and control flow that makes future changes harder.
+Trace ownership and dependency direction when the change crosses components.
+Do not report a preference for fewer lines or an abstraction without a concrete
+consequence.
 
 This review identifies structural damage. It does not design a refactor.
 

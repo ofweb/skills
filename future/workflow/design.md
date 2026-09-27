@@ -74,7 +74,9 @@ only when their boundaries constrain the selected feature.
 | Workflow state | Design acceptance, relevant artifacts, and the next responsibility |
 
 Implementation follows the accepted baseline. It may choose local implementation
-details inside that baseline but must not silently redesign it.
+details inside that baseline, including private helpers, local types,
+algorithms, and structure within an accepted component. A change belongs back
+in Design when it would have mattered while reviewing the baseline.
 
 ## Collaboration model
 
@@ -216,33 +218,16 @@ repository state.
 
 Design and Implementation never continue in the same model context.
 
-## Design principles
+## Apply simple code in Design
 
-### Local comprehensibility
+Use [simple-code](../../simple-code/SKILL.md) when choosing ownership, types,
+boundaries, and effect structure. An abstraction added here becomes structure
+that Implementation must build around, so require a concrete current need.
 
-Prefer predictable ownership, explicit dependencies, canonical representations,
-small interfaces, and feature-local code. Minimize the unrelated context needed
-to modify one behaviour safely.
-
-### Logic and effects
-
-Keep meaningful decision logic independent of I/O when that separation reduces
-reasoning cost or improves testability. Keep networking, persistence, clocks,
-hardware, and other effects at explicit boundaries. Do not force every feature
-into a particular architectural pattern.
-
-### Types preserve knowledge
-
-Use validated or state-specific types when they prevent real ambiguity or
-invalid states. Do not add wrappers or lifecycle types merely to appear
-strongly typed.
-
-### High threshold for abstraction
-
-Treat duplication as evidence to investigate, not an instruction to abstract.
-Share code when it represents the same domain meaning, has an appropriate owner,
-and reduces context or drift. Small obvious duplication may remain when a shared
-abstraction would add more concepts than it removes.
+Prefer the smallest types and signatures that preserve important domain
+distinctions and make the agreed behaviour reviewable. Parse weak values at
+system boundaries. Give meaningful decisions direct inputs and outputs where
+practical. Keep effects visible without forcing one architectural pattern.
 
 ### Comments preserve non-obvious intent
 

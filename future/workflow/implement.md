@@ -47,7 +47,8 @@ feature:
 - linked [Direction](../documents/direction.md),
   [Context](../documents/context.md), [PDR](../documents/pdr.md), and
   [ADR](../documents/adr.md) material;
-- nearby implementation, callers, and tests; and
+- nearby implementation, callers, and tests;
+- [simple-code](../../simple-code/SKILL.md); and
 - repository build, test, lint, and formatting conventions.
 
 The Design conversation is not an input. Repository state must contain the
@@ -64,8 +65,11 @@ contracts and knowledge required to continue.
 | Workflow state | The active feature, completion result, and Review transition |
 
 Implementation may choose local details inside the accepted contracts. That
-authority does not extend to revising designed signatures, ownership,
-boundaries, errors, effects, or other accepted structure.
+includes private helpers and helper types, algorithms, local data structures,
+control flow, constants, test fixtures, and structure within an accepted
+component. That authority does not extend to new domain concepts or changes to
+designed signatures, ownership, component boundaries, data flow, errors,
+effect boundaries, persistence formats, protocols, or concurrency models.
 
 ## Operating model
 
@@ -81,7 +85,7 @@ reconstructed from repository state, route the missing contract to its owner.
 
 ### 2. Select a small coherent chunk
 
-Choose one function or a few closely related functions. Before writing a test,
+Choose one small, coherent piece of behaviour. Before writing a test,
 determine:
 
 - what purpose the chunk serves;
@@ -108,9 +112,9 @@ coverage as the accepted design becomes executable.
 For each chunk:
 
 ```text
-understand the chunk and its feature role
+understand the next small behaviour
     ↓
-write the smallest useful test
+write or update the relevant test
     ↓
 confirm that it fails for the intended reason
     ↓
@@ -122,25 +126,33 @@ compile or type-check
     ↓
 lint and format
     ↓
-run affected feature and integration tests
-    ↓
 perform small local cleanup
     ↓
 repeat
 ```
 
 Use the repository's configured tools. Run cheap checks immediately and broaden
-the test scope as implemented paths accumulate. A test that passes before its
-implementation must be corrected or justified before continuing.
+the test scope as implemented paths accumulate. Run broader integration tests
+at suitable checkpoints. Fix failed focused tests, compilation, or lint checks
+before starting another chunk. A test that passes before its implementation
+must be corrected or justified before continuing.
 
 ### 5. Preserve the accepted Design
 
-Prefer leaving all Design-created structure unchanged. Fill designed stubs and
-add only the private implementation needed to make their contracts real.
+Fill designed stubs and use [simple-code](../../simple-code/SKILL.md) to choose
+the clearest local implementation. Private helpers, local types, and internal
+restructuring are ordinary Implementation work when they preserve the reviewed
+surface. Do not grow a second architecture inside an accepted component.
 
-When implementation evidence shows that a designed signature, boundary,
-ownership rule, error shape, effect seam, or other accepted structure must
-change, stop and return to Design. Provide:
+Ask whether a change would have mattered when the user reviewed Design. If it
+would, return it to Design. A local type that supports an accepted component is
+ordinary implementation work. A type that introduces a domain concept, changes
+ownership or data flow, or crosses a component boundary belongs in Design.
+
+When implementation evidence shows that significant types, signatures,
+ownership, component boundaries, errors, effect boundaries, persistence
+formats, protocols, concurrency, or other accepted structure must change, stop
+and return to Design. Provide:
 
 - what the accepted Design implied;
 - what the repository or implementation revealed;
