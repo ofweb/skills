@@ -19,6 +19,8 @@ from pathlib import Path
 CONFIG = Path(__file__).resolve().with_name(".vale.ini")
 GLOSSARY = Path(__file__).resolve().with_name("shared-terms.json")
 SOURCEPOS = re.compile(r"^(\d+):(\d+)-(\d+):(\d+)$")
+# Guard common 's contractions without parsing English grammar.
+CONTRACTION_BASES = {"it", "that", "there", "what", "who", "he", "she", "let"}
 
 
 def project_root(name: str, explicit: Path | None) -> Path | None:
@@ -90,21 +92,27 @@ def prose_only(markdown: str) -> str:
 
 
 def is_possessive_suffix(finding: dict, prose: str) -> bool:
-    """Ignore STE100's false unknown word for a possessive suffix."""
+    """Filter the pinned checker's false unknown word for a possessive suffix."""
+    # STE100 permits owner's. The pinned asd-ste100-checker revision
+    # e193ecdd66b09ce81b7c611f1c841efd8ba84cc7 tokenizes 's as unknown.
+    # This compatibility filter is not an STE100 rule. Contractions still fail.
     if finding.get("rule_id") != "STE-VOCAB-UNAPPROVED":
         return False
-    if finding.get("evidence", {}).get("word") not in ("'s", "’s"):
+    evidence = finding.get("evidence")
+    if not isinstance(evidence, dict) or evidence.get("word") not in ("'s", "’s"):
         return False
     start = finding.get("start")
-    if not isinstance(start, int) or start <= 0:
+    end = finding.get("end")
+    if not isinstance(start, int) or not isinstance(end, int) or start <= 0 or end != start + 2:
         return False
     token = re.search(r"[A-Za-z]+$", prose[:start])
-    if token and token.group().casefold() in {"it", "that", "there", "what", "who", "he", "she", "let"}:
+    if token and token.group().casefold() in CONTRACTION_BASES:
         return False
     return (
-        start < len(prose) - 1
-        and prose[start : start + 2] in ("'s", "’s")
+        end <= len(prose)
+        and prose[start:end] == evidence["word"]
         and prose[start - 1].isalpha()
+        and (end == len(prose) or not prose[end].isalpha())
     )
 
 

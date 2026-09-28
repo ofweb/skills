@@ -37,6 +37,15 @@ For project files, `prose-check` combines three vocabulary sources:
 - `.workflow/context.md`: project concepts whose meaning must remain stable
   and explicit across contexts.
 
+`shared-terms.json` belongs to the `ofweb/skills` repository. When developing
+this skill there, add broadly reusable engineering and workflow terms directly
+to that file. In a consuming project, treat the installed file as read-only.
+Use the project's glossary for intentional local vocabulary and Context for
+canonical project concepts. Do not edit the installed skill copy from a
+consuming project. Suggest repeated local terms for promotion to shared
+vocabulary when they could help many projects. Make and review that change in
+`ofweb/skills` before it enters the common language profile.
+
 Add glossary terms under `technical_nouns` or `technical_verbs`. Each list
 accepts a word or an object with `word` and optional `inflections`. Keep
 meanings and feature behavior out of the glossary. A word does not need a
@@ -47,8 +56,8 @@ When STE100 reports unknown words, collect all distinct words before editing
 prose. Use `prose-check --vocabulary-report '.workflow/**/*.md'` to count findings
 across files. Classify the words, then make one vocabulary or rewrite pass:
 
-- Add common engineering or workflow terms to `shared-terms.json` when they
-  are broadly reusable across projects.
+- In `ofweb/skills`, add common engineering or workflow terms to
+  `shared-terms.json` when they are broadly reusable across projects.
 - Add intentional project or domain terms to `.workflow/ste-glossary.json`.
 - Add a term to Context only when it has an agreed canonical project meaning
   that must stay stable across contexts.

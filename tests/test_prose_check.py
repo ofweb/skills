@@ -35,19 +35,39 @@ class MarkdownProseTests(unittest.TestCase):
         prose = MODULE["prose_only"]("# Goal\r\n\r\nThe cabin is ready.\r\n")
         self.assertIn("Goal.\n\r\nThe cabin", prose)
 
-    def test_possessive_suffix_is_a_tokenizer_finding(self) -> None:
-        prose = "The owner's cabin is ready."
-        suffix = prose.index("'s")
+    def test_only_actual_possessive_suffix_findings_are_filtered(self) -> None:
+        cases = (
+            ("The owner's cabin.", "'s", True),
+            ("The cabin's owner.", "'s", True),
+            ("The owner’s cabin.", "’s", True),
+            ("It's ready.", "'s", False),
+            ("There's a cabin.", "'s", False),
+            ("Who's the owner?", "'s", False),
+            ("Don't enter.", "n't", False),
+            ("It isn't ready.", "n't", False),
+        )
+        for prose, suffix, expected in cases:
+            with self.subTest(prose=prose):
+                start = prose.index(suffix)
+                finding = {
+                    "rule_id": "STE-VOCAB-UNAPPROVED",
+                    "evidence": {"word": suffix},
+                    "start": start,
+                    "end": start + len(suffix),
+                }
+                self.assertEqual(MODULE["is_possessive_suffix"](finding, prose), expected)
+
+        prose = "The owner's cabin."
+        start = prose.index("'s")
         finding = {
             "rule_id": "STE-VOCAB-UNAPPROVED",
             "evidence": {"word": "'s"},
-            "start": suffix,
+            "start": start,
+            "end": start + 2,
         }
-        self.assertTrue(MODULE["is_possessive_suffix"](finding, prose))
-        self.assertFalse(MODULE["is_possessive_suffix"]({**finding, "start": 0}, prose))
-        self.assertFalse(
-            MODULE["is_possessive_suffix"](finding | {"start": 2}, "It's ready.")
-        )
+        self.assertFalse(MODULE["is_possessive_suffix"](finding | {"start": 0}, prose))
+        self.assertFalse(MODULE["is_possessive_suffix"](finding | {"end": start + 3}, prose))
+        self.assertFalse(MODULE["is_possessive_suffix"](finding | {"start": 1, "end": 3}, prose))
 
     def test_code_and_link_target_are_absent_without_shifting_offsets(self) -> None:
         source = (
@@ -78,10 +98,11 @@ class CommandTests(unittest.TestCase):
             "if os.environ.get('FAKE_STE_BAD_JSON'):\n"
             "    print('invalid report')\n"
             "    sys.exit(0)\n"
-            "if os.environ.get('FAKE_STE_POSSESSIVE'):\n"
-            "    start = text.index(\"'s\")\n"
+            "if os.environ.get('FAKE_STE_SUFFIX'):\n"
+            "    match = re.search(r\"n['’]t|['’]s\", text, re.I)\n"
+            "    start, end = match.span()\n"
             "    findings = [{'rule_id': 'STE-VOCAB-UNAPPROVED', 'severity': 'error', "
-            "'evidence': {'word': \"'s\"}, 'start': start}]\n"
+            "'evidence': {'word': match.group()}, 'start': start, 'end': end}]\n"
             "    print(json.dumps({'compliant': False, 'findings': findings}))\n"
             "    sys.exit(1)\n"
             "if os.environ.get('FAKE_STE_REPORT'):\n"
@@ -141,12 +162,21 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertLess(result.stdout.index("STE100 =="), result.stdout.index("Vale =="))
 
-    def test_possessive_finding_does_not_block_vale_or_enter_report(self) -> None:
-        self.env["FAKE_STE_POSSESSIVE"] = "1"
-        checked = self.run_tool(input_text="The owner's cabin.\n")
-        self.assertEqual(checked.returncode, 0, checked.stderr)
-        self.assertIn("Vale ==", checked.stdout)
-        self.assertNotIn("STE-VOCAB-UNAPPROVED", checked.stdout)
+    def test_possessives_pass_but_contractions_still_block_vale(self) -> None:
+        self.env["FAKE_STE_SUFFIX"] = "1"
+        for prose in ("The owner's cabin.", "The cabin's owner.", "The owner’s cabin."):
+            with self.subTest(prose=prose):
+                checked = self.run_tool(input_text=prose + "\n")
+                self.assertEqual(checked.returncode, 0, checked.stderr)
+                self.assertIn("Vale ==", checked.stdout)
+                self.assertNotIn("STE-VOCAB-UNAPPROVED", checked.stdout)
+
+        for prose in ("It's ready.", "There's a cabin.", "Who's the owner?", "Don't enter.", "It isn't ready."):
+            with self.subTest(prose=prose):
+                checked = self.run_tool(input_text=prose + "\n")
+                self.assertEqual(checked.returncode, 1, checked.stderr)
+                self.assertNotIn("Vale ==", checked.stdout)
+                self.assertIn("STE-VOCAB-UNAPPROVED", checked.stdout)
 
         reported = self.run_tool("--vocabulary-report", input_text="The owner's cabin.\n")
         self.assertEqual(reported.returncode, 0, reported.stderr)
@@ -278,6 +308,7 @@ class CommandTests(unittest.TestCase):
     def test_installed_prose_skill_keeps_context_derivation(self) -> None:
         installed = self.directory / "installed-prose"
         shutil.copytree(SKILL_DIR, installed)
+        shared_before = (installed / "shared-terms.json").read_bytes()
         isolated = self.directory / "isolated-python"
         isolated.mkdir()
         python = isolated / "python3"
@@ -301,6 +332,7 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('"word": "Signal"', result.stdout)
         self.assertIn('"word": "redstone"', result.stdout)
+        self.assertEqual((installed / "shared-terms.json").read_bytes(), shared_before)
 
     def test_explicit_project_root_works_for_stdin(self) -> None:
         project = self.directory / "project"

@@ -31,13 +31,22 @@ file, invalid project vocabulary, or checker failure does cause failure.
 
 The existing Vale configuration remains the style source. STE100 uses its own
 rules, built-in vocabulary, and the small shared software vocabulary beside
-`prose-check`. Add common engineering and workflow terms to shared vocabulary
-when they are broadly reusable. Project vocabulary has two sources. Context
-defines concepts whose meaning must stay stable across project work.
+`prose-check`. `shared-terms.json` belongs to `ofweb/skills`. Add common
+engineering and workflow terms there when they are broadly reusable. Treat an
+installed copy as read-only in a consuming project. Project vocabulary has two
+sources. Context defines concepts whose meaning must stay stable across project
+work.
 `.workflow/ste-glossary.json` approves intentional project or domain language
 without a special canonical meaning. Repeated use across documents is strong
 evidence for a glossary entry. Prefer vocabulary maintenance when rewriting a
 legitimate term would reduce precision, clarity, or consistency.
+
+A consuming project first adds useful local words to its project glossary. If
+repeated use suggests a term is useful across projects, propose its promotion
+to shared vocabulary. Make and review the shared change in `ofweb/skills`
+before it becomes part of the common language profile. Keep canonical project
+concepts in `.workflow/context.md`. Do not edit the installed skill copy from
+the consuming project.
 
 The project glossary is optional. It contains `technical_nouns` and
 `technical_verbs` lists. Each item is a word or an object with `word` and
@@ -61,11 +70,18 @@ standard library.
 
 Use `cmark` to select Markdown text nodes. Replace non-prose characters with
 spaces while preserving character offsets. Mark heading line endings as
-sentence boundaries so headings cannot join the next prose block. Ignore a
-possessive `'s` finding only when STE100 marks the actual suffix as unknown.
-Pass the masked text to STE100. If it passes, run Vale on the original input.
-Print each checker's findings with a source and checker label. Use a nonzero
-status for blocking findings or tool failure.
+sentence boundaries so headings cannot join the next prose block. Pass the
+masked text to STE100. If it passes, run Vale on the original input. Print each
+checker's findings with a source and checker label. Use a nonzero status for
+blocking findings or tool failure.
+
+STE100 permits possessive forms such as `owner's`. The pinned
+`asd-ste100-checker`
+revision `e193ecdd66b09ce81b7c611f1c841efd8ba84cc7` incorrectly reports
+possessive `'s` as unknown vocabulary because of tokenization. `prose-check`
+filters a finding only when it points to the actual possessive suffix. This is
+a compatibility workaround for that checker revision, not an STE100 rule.
+Contractions such as `it's`, `there's`, `don't`, and `isn't` still fail normally.
 
 GFM tables and YAML frontmatter receive no special treatment in this version.
 Collect unknown words before a repair pass. Classify them by vocabulary source
