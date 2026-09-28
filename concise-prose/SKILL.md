@@ -25,8 +25,8 @@ Avoid introductory prose, summaries of the immediately preceding text, and conve
 After writing or substantially editing prose, run `prose-check` on edited Markdown files.
 Pass other authored prose on standard input. The command checks STE100 first.
 When STE100 passes, it runs Vale. Treat findings as work to fix and rerun the
-checker. Stop when the checked prose passes. Ask the user only when a specific
-semantic decision prevents a safe fix.
+checker. Stop when the checked prose passes. Ask for the vocabulary review
+below. Ask about other findings only when a semantic decision prevents a safe fix.
 
 For project files, `prose-check` combines three vocabulary sources:
 
@@ -38,8 +38,8 @@ For project files, `prose-check` combines three vocabulary sources:
   and explicit across contexts.
 
 `shared-terms.json` belongs to the `ofweb/skills` repository. When developing
-this skill there, add broadly reusable engineering and workflow terms directly
-to that file. In a consuming project, treat the installed file as read-only.
+this skill there, add reviewed, broadly reusable engineering and workflow terms
+directly to that file. In a consuming project, treat the installed file as read-only.
 Use the project's glossary for intentional local vocabulary and Context for
 canonical project concepts. Do not edit the installed skill copy from a
 consuming project. Suggest repeated local terms for promotion to shared
@@ -54,22 +54,36 @@ for standard input or files outside the project tree.
 
 When STE100 reports unknown words, collect all distinct words before editing
 prose. Use `prose-check --vocabulary-report '.workflow/**/*.md'` to count findings
-across files. Classify the words, then make one vocabulary or rewrite pass:
+across files. Search existing project documents when usage can help classify a
+term. Classify every distinct unknown term as one of these:
 
-- In `ofweb/skills`, add common engineering or workflow terms to
-  `shared-terms.json` when they are broadly reusable across projects.
-- Add intentional project or domain terms to `.workflow/ste-glossary.json`.
-- Add a term to Context only when it has an agreed canonical project meaning
-  that must stay stable across contexts.
-- Rewrite prose only when the unknown word is unnecessary or a clearer
-  approved word exists.
+- Shared vocabulary candidate: common engineering or workflow language.
+- Project vocabulary candidate: intentional project or domain language.
+- Context concept candidate: a project meaning that must stay stable.
+- Ordinary prose to rewrite: an unnecessary term or one with a clearer approved word.
+- Probable checker or document-structure finding: inspect the checker or Markdown extraction.
+
+Rewrite ordinary prose without asking the user when meaning stays intact.
+Investigate probable checker or document-structure findings. Run `prose-check`
+again after each rewrite or tooling pass. When unknown vocabulary remains, do
+not stop with the raw checker output.
+
+Before adding vocabulary, present all candidate terms in one review group.
+For each term, give its proposed source and a short reason. Include a short
+example from the project when the classification is not clear. Do not present
+the full lint output unless the user asks for it. Wait for the user's review
+before adding vocabulary.
+
+Apply accepted project terms to `.workflow/ste-glossary.json`. Add a Context
+concept only after its canonical meaning is agreed. Change shared vocabulary
+only in `ofweb/skills`, after review. Do not edit the installed copy from a
+consuming project. Run `prose-check` again after each vocabulary pass.
 
 Add a vocabulary term when the prose uses it intentionally and replacement
 would reduce precision, clarity, or consistency. Repeated use across project
 documents is strong evidence for project vocabulary. Prefer vocabulary
 maintenance over awkward rewrites around legitimate technical terms.
 
-Run `prose-check` again after each pass. Continue until STE100 passes. Then
-fix Vale findings and rerun the checker. Do not respond to a large lint result
-with only a list or summary. Report findings only when a semantic conflict
-prevents an automatic fix.
+Continue until STE100 passes. Then fix Vale findings and rerun the checker.
+Treat large lint results as work to perform, not a report to summarize. Report
+remaining findings only when a semantic conflict prevents a safe fix.

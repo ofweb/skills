@@ -428,6 +428,18 @@
       "inflections": [
         "commits"
       ]
+    },
+    {
+      "word": "draft",
+      "inflections": [
+        "drafts"
+      ]
+    },
+    {
+      "word": "question",
+      "inflections": [
+        "questions"
+      ]
     }
   ],
   "technical_verbs": [
@@ -533,6 +545,38 @@
         "requests",
         "requested",
         "requesting"
+      ]
+    },
+    {
+      "word": "confirm",
+      "inflections": [
+        "confirms",
+        "confirmed",
+        "confirming"
+      ]
+    },
+    {
+      "word": "authorize",
+      "inflections": [
+        "authorizes",
+        "authorized",
+        "authorizing"
+      ]
+    },
+    {
+      "word": "recover",
+      "inflections": [
+        "recovers",
+        "recovered",
+        "recovering"
+      ]
+    },
+    {
+      "word": "delete",
+      "inflections": [
+        "deletes",
+        "deleted",
+        "deleting"
       ]
     }
   ]

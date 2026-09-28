@@ -41,7 +41,7 @@ without a special canonical meaning. Repeated use across documents is strong
 evidence for a glossary entry. Prefer vocabulary maintenance when rewriting a
 legitimate term would reduce precision, clarity, or consistency.
 
-A consuming project first adds useful local words to its project glossary. If
+A consuming project adds reviewed local words to its project glossary. If
 repeated use suggests a term is useful across projects, propose its promotion
 to shared vocabulary. Make and review the shared change in `ofweb/skills`
 before it becomes part of the common language profile. Keep canonical project
@@ -84,10 +84,16 @@ a compatibility workaround for that checker revision, not an STE100 rule.
 Contractions such as `it's`, `there's`, `don't`, and `isn't` still fail normally.
 
 GFM tables and YAML frontmatter receive no special treatment in this version.
-Collect unknown words before a repair pass. Classify them by vocabulary source
-or rewrite unnecessary words. Rerun STE100 after each pass. Once STE100 passes,
-fix Vale findings and rerun the checker. Treat findings as work to complete.
-Report them only when a semantic decision prevents a safe fix.
+Collect all distinct unknown words before a repair pass. Search project
+documents when usage helps classification. Classify each word as shared
+vocabulary, project vocabulary, a Context concept, ordinary prose to rewrite,
+or a probable checker or document-structure finding. Rewrite ordinary prose
+when meaning stays intact and investigate probable checker findings. Rerun
+STE100 after each pass. Before adding vocabulary, present candidates in one
+review group with their proposed sources and short reasons. Include project
+context when classification is not clear. Do not present full lint output
+unless requested. Apply accepted vocabulary in its owning repository and
+rerun the checker. Once STE100 passes, fix Vale findings and rerun the checker.
 
 The tested STE100 revision is installed from GitHub because the named package
 is not available from the package registry. Its spaCy model must be installed
