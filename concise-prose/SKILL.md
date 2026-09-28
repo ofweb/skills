@@ -22,33 +22,45 @@ Avoid repeating information already stated in nearby prose.
 State behavior directly.
 Avoid introductory prose, summaries of the immediately preceding text, and conversational filler.
 
-After writing or substantially editing prose, run `prose-check` on edited Markdown files or pass other authored
-prose on standard input. It checks STE100 first and then applies Vale's project
-style rules if STE100 passes. Fix findings without changing technical meaning;
-report a conflict if no safe correction exists.
+After writing or substantially editing prose, run `prose-check` on edited Markdown files.
+Pass other authored prose on standard input. The command checks STE100 first.
+When STE100 passes, it runs Vale. Treat findings as work to fix and rerun the
+checker. Stop when the checked prose passes. Ask the user only when a specific
+semantic decision prevents a safe fix.
 
-For project files, `prose-check` combines shared vocabulary with two optional
-project sources. `.workflow/context.md` defines agreed project concepts.
-`.workflow/ste-glossary.json` approves domain words that do not need a project
-definition. Add terms under `technical_nouns` or `technical_verbs`. Each list
+For project files, `prose-check` combines three vocabulary sources:
+
+- `shared-terms.json`: common software engineering and workflow language that
+  is broadly reusable across projects.
+- `.workflow/ste-glossary.json`: intentional project or domain language without
+  a special canonical project meaning.
+- `.workflow/context.md`: project concepts whose meaning must remain stable
+  and explicit across contexts.
+
+Add glossary terms under `technical_nouns` or `technical_verbs`. Each list
 accepts a word or an object with `word` and optional `inflections`. Keep
-meanings and feature behavior out of the glossary. Use `--project-root` for
-standard input or files outside the project tree. The combined vocabulary is
-JSON, which STE100 accepts as YAML. The derivation uses only the Python
-standard library.
+meanings and feature behavior out of the glossary. A word does not need a
+Context definition merely because STE100 does not know it. Use `--project-root`
+for standard input or files outside the project tree.
 
 When STE100 reports unknown words, collect all distinct words before editing
 prose. Use `prose-check --vocabulary-report '.workflow/**/*.md'` to count findings
-across files. Classify each word:
+across files. Classify the words, then make one vocabulary or rewrite pass:
 
-- Add established workflow or software terms to shared vocabulary when that
-  source is available. Otherwise, report the proposed addition.
-- Add established project or domain terms to `.workflow/ste-glossary.json`.
-- Add project-specific concepts to Context only after the user agrees on their
-  canonical meaning.
-- Rewrite prose that uses unnecessary non-STE words.
+- Add common engineering or workflow terms to `shared-terms.json` when they
+  are broadly reusable across projects.
+- Add intentional project or domain terms to `.workflow/ste-glossary.json`.
+- Add a term to Context only when it has an agreed canonical project meaning
+  that must stay stable across contexts.
+- Rewrite prose only when the unknown word is unnecessary or a clearer
+  approved word exists.
 
-Do not add entries merely to silence findings. Treat a large group of unknown
-words as missing vocabulary first. Do not repeatedly rewrite sentences around
-an established technical or domain term. Rewrite only the remaining prose,
-then run `prose-check` again. Make the smallest useful change.
+Add a vocabulary term when the prose uses it intentionally and replacement
+would reduce precision, clarity, or consistency. Repeated use across project
+documents is strong evidence for project vocabulary. Prefer vocabulary
+maintenance over awkward rewrites around legitimate technical terms.
+
+Run `prose-check` again after each pass. Continue until STE100 passes. Then
+fix Vale findings and rerun the checker. Do not respond to a large lint result
+with only a list or summary. Report findings only when a semantic conflict
+prevents an automatic fix.

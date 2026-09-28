@@ -85,9 +85,9 @@ Link related Backlog items, PDRs, Context terms, References, or research when
 those links help a fresh reader. Keep one canonical home for each conclusion.
 A Backlog item or Feature Brief may link directly to the relevant topic document.
 
-Use `concise-prose` for writing when available. Run `prose-check` on the edited
-file when available. `workflow-document-check` must be installed alongside this
-skill; use it after the edit.
+Invoke `concise-prose` before writing or revising Direction. Follow its STE100
+and Vale repair loop until `prose-check` passes. Install
+`workflow-document-check` alongside this skill and use it after the edit.
 Treat a hard-limit failure as a reason to prune or rebalance. Before finishing,
 check that the main document represents every topic and orients a fresh context
 without delivery detail. Check that each topic file agrees with its main

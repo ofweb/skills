@@ -70,8 +70,9 @@ information. Prefer links to canonical sources. Do not retain old status or
 rationale solely for history.
 
 Do not include discussion transcripts, option matrices, full feature
-requirements, implementation plans, or status tracking. Use `concise-prose`
-and `prose-check` when available. `workflow-document-check` must be installed
+requirements, implementation plans, or status tracking. Invoke `concise-prose`
+before writing or revising the PDR. Follow its STE100 and Vale repair loop until
+`prose-check` passes. `workflow-document-check` must be installed
 alongside this skill; use it after the edit.
 Prune or restructure after a hard-limit failure. Check the ID,
 status, scope, and links before finishing.

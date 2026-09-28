@@ -18,6 +18,37 @@ MODULE = runpy.run_path(str(SKILL_DIR / "prose-check"), run_name="prose_check_te
 
 @unittest.skipUnless(shutil.which("cmark"), "cmark is required")
 class MarkdownProseTests(unittest.TestCase):
+    def test_heading_ends_before_following_story(self) -> None:
+        source = "## Stories and acceptance\n\n### S1\n\nStory: A resident can enter.\n"
+        prose = MODULE["prose_only"](source)
+
+        self.assertEqual(len(prose), len(source))
+        self.assertIn("Stories and acceptance.\n", prose)
+        self.assertIn("S1.\n", prose)
+        self.assertEqual(prose.index("Story:"), source.index("Story:"))
+
+    def test_heading_without_blank_line_still_ends_sentence(self) -> None:
+        prose = MODULE["prose_only"]("# Goal\nThe cabin is ready.\n")
+        self.assertIn("Goal.The cabin", prose)
+
+    def test_heading_boundary_preserves_crlf(self) -> None:
+        prose = MODULE["prose_only"]("# Goal\r\n\r\nThe cabin is ready.\r\n")
+        self.assertIn("Goal.\n\r\nThe cabin", prose)
+
+    def test_possessive_suffix_is_a_tokenizer_finding(self) -> None:
+        prose = "The owner's cabin is ready."
+        suffix = prose.index("'s")
+        finding = {
+            "rule_id": "STE-VOCAB-UNAPPROVED",
+            "evidence": {"word": "'s"},
+            "start": suffix,
+        }
+        self.assertTrue(MODULE["is_possessive_suffix"](finding, prose))
+        self.assertFalse(MODULE["is_possessive_suffix"]({**finding, "start": 0}, prose))
+        self.assertFalse(
+            MODULE["is_possessive_suffix"](finding | {"start": 2}, "It's ready.")
+        )
+
     def test_code_and_link_target_are_absent_without_shifting_offsets(self) -> None:
         source = (
             "# Café\n\nUse `utilize` and [the file](https://example.com).\n\n"
@@ -44,6 +75,15 @@ class CommandTests(unittest.TestCase):
             "import json, os, re, sys\n"
             "from pathlib import Path\n"
             "text = sys.stdin.read()\n"
+            "if os.environ.get('FAKE_STE_BAD_JSON'):\n"
+            "    print('invalid report')\n"
+            "    sys.exit(0)\n"
+            "if os.environ.get('FAKE_STE_POSSESSIVE'):\n"
+            "    start = text.index(\"'s\")\n"
+            "    findings = [{'rule_id': 'STE-VOCAB-UNAPPROVED', 'severity': 'error', "
+            "'evidence': {'word': \"'s\"}, 'start': start}]\n"
+            "    print(json.dumps({'compliant': False, 'findings': findings}))\n"
+            "    sys.exit(1)\n"
             "if os.environ.get('FAKE_STE_REPORT'):\n"
             "    if os.environ.get('FAKE_STE_REPORT_ERROR'):\n"
             "        sys.exit(2)\n"
@@ -52,10 +92,12 @@ class CommandTests(unittest.TestCase):
             "    findings.append({'rule_id': 'STE-SENTENCE-LENGTH'})\n"
             "    print(json.dumps({'findings': findings}))\n"
             "    sys.exit(1 if words else 0)\n"
+            "report = {'compliant': 'BAD' not in text, 'findings': []}\n"
             "if os.environ.get('PRINT_GLOSSARY'):\n"
             "    path = Path(sys.argv[sys.argv.index('--glossary') + 1])\n"
-            "    print('GLOSSARY:', path.read_text())\n"
-            "print('STE text:', repr(text))\n"
+            "    report.update(json.loads(path.read_text()))\n"
+            "report['STE text'] = repr(text)\n"
+            "print(json.dumps(report))\n"
             "sys.exit(1 if 'BAD' in text else 0)\n",
             encoding="utf-8",
         )
@@ -98,6 +140,24 @@ class CommandTests(unittest.TestCase):
         result = self.run_tool(input_text="Use the file.\n")
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertLess(result.stdout.index("STE100 =="), result.stdout.index("Vale =="))
+
+    def test_possessive_finding_does_not_block_vale_or_enter_report(self) -> None:
+        self.env["FAKE_STE_POSSESSIVE"] = "1"
+        checked = self.run_tool(input_text="The owner's cabin.\n")
+        self.assertEqual(checked.returncode, 0, checked.stderr)
+        self.assertIn("Vale ==", checked.stdout)
+        self.assertNotIn("STE-VOCAB-UNAPPROVED", checked.stdout)
+
+        reported = self.run_tool("--vocabulary-report", input_text="The owner's cabin.\n")
+        self.assertEqual(reported.returncode, 0, reported.stderr)
+        self.assertIn("None.", reported.stdout)
+
+    def test_invalid_ste_report_is_a_tool_failure(self) -> None:
+        self.env["FAKE_STE_BAD_JSON"] = "1"
+        result = self.run_tool(input_text="Use the file.\n")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("invalid STE100 report", result.stdout)
+        self.assertNotIn("Vale ==", result.stdout)
 
     @unittest.skipUnless(shutil.which("vale"), "Vale is required")
     def test_real_vale_checks_stdin_after_ste100_passes(self) -> None:

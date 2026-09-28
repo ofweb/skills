@@ -69,10 +69,62 @@ def prose_only(markdown: str) -> str:
         for index in range(byte_to_char[start_byte], byte_to_char[end_byte]):
             keep[index] = True
 
-    return "".join(
+    prose = list(
         char if selected or char in "\r\n" else " "
         for char, selected in zip(markdown, keep)
     )
+    # A heading has no sentence punctuation. Use its line break as a boundary
+    # so STE100 does not join the heading to the next text block.
+    for node in root.iter():
+        if node.tag.rsplit("}", 1)[-1] != "heading":
+            continue
+        match = SOURCEPOS.fullmatch(node.attrib.get("sourcepos", ""))
+        if not match:
+            continue
+        end_line = int(match.group(3))
+        line_end = markdown.find("\n", byte_to_char[line_bytes[end_line - 1]])
+        if line_end != -1:
+            boundary = line_end - 1 if line_end and markdown[line_end - 1] == "\r" else line_end
+            prose[boundary] = "."
+    return "".join(prose)
+
+
+def is_possessive_suffix(finding: dict, prose: str) -> bool:
+    """Ignore STE100's false unknown word for a possessive suffix."""
+    if finding.get("rule_id") != "STE-VOCAB-UNAPPROVED":
+        return False
+    if finding.get("evidence", {}).get("word") not in ("'s", "’s"):
+        return False
+    start = finding.get("start")
+    if not isinstance(start, int) or start <= 0:
+        return False
+    token = re.search(r"[A-Za-z]+$", prose[:start])
+    if token and token.group().casefold() in {"it", "that", "there", "what", "who", "he", "she", "let"}:
+        return False
+    return (
+        start < len(prose) - 1
+        and prose[start : start + 2] in ("'s", "’s")
+        and prose[start - 1].isalpha()
+    )
+
+
+def ste_result(command: list[str], prose: str) -> tuple[int, dict | None, str]:
+    """Run STE100 and remove only verified possessive token findings."""
+    result = subprocess.run(command, input=prose, text=True, capture_output=True)
+    if result.returncode not in (0, 1):
+        return result.returncode, None, result.stderr
+    try:
+        report = json.loads(result.stdout)
+        findings = report["findings"]
+        if not isinstance(findings, list) or any(not isinstance(item, dict) for item in findings):
+            raise ValueError("findings must be a list of objects")
+        kept = [item for item in findings if not is_possessive_suffix(item, prose)]
+        report["findings"] = kept
+        status = 0 if result.returncode == 1 and findings and not kept else result.returncode
+        report["compliant"] = status == 0
+        return status, report, result.stderr
+    except (ValueError, KeyError, TypeError) as exc:
+        return 2, None, f"invalid STE100 report: {exc}\n"
 
 
 def run_check(command: list[str], content: str | None = None) -> int:
@@ -169,13 +221,13 @@ def main() -> int:
                     continue
             command = ["ste100", "check", "--glossary", str(glossary)]
             if args.vocabulary_report:
-                result = subprocess.run(command, input=prose, text=True, capture_output=True)
-                if result.returncode not in (0, 1):
-                    print(f"prose-check: {name}: STE100 failed: {result.stderr.strip()}", file=sys.stderr)
+                check_status, report, error = ste_result(command, prose)
+                if check_status not in (0, 1) or report is None:
+                    print(f"prose-check: {name}: STE100 failed: {error.strip()}", file=sys.stderr)
                     status = 2
                     continue
                 try:
-                    findings = json.loads(result.stdout)["findings"]
+                    findings = report["findings"]
                     if not isinstance(findings, list):
                         raise ValueError("findings must be a list")
                     for finding in findings:
@@ -193,7 +245,13 @@ def main() -> int:
                     print(f"prose-check: {name}: invalid STE100 report: {exc}", file=sys.stderr)
                     status = 2
                 continue
-            ste_status = run_check(command, prose)
+            ste_status, report, output = ste_result(command, prose)
+            if report is None:
+                sys.stdout.write(output)
+            else:
+                print(json.dumps(report, indent=2, ensure_ascii=False))
+                if output:
+                    sys.stderr.write(output)
         if ste_status:
             status = max(status, 1 if ste_status == 1 else 2)
             continue

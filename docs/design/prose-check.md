@@ -31,10 +31,13 @@ file, invalid project vocabulary, or checker failure does cause failure.
 
 The existing Vale configuration remains the style source. STE100 uses its own
 rules, built-in vocabulary, and the small shared software vocabulary beside
-`prose-check`. The user adds shared terms manually when a recurring technical
-concept needs a stable name. Project vocabulary has two sources. Context defines
-agreed project concepts. `.workflow/ste-glossary.json` approves domain words
-that the base vocabulary does not know, without defining new project concepts.
+`prose-check`. Add common engineering and workflow terms to shared vocabulary
+when they are broadly reusable. Project vocabulary has two sources. Context
+defines concepts whose meaning must stay stable across project work.
+`.workflow/ste-glossary.json` approves intentional project or domain language
+without a special canonical meaning. Repeated use across documents is strong
+evidence for a glossary entry. Prefer vocabulary maintenance when rewriting a
+legitimate term would reduce precision, clarity, or consistency.
 
 The project glossary is optional. It contains `technical_nouns` and
 `technical_verbs` lists. Each item is a word or an object with `word` and
@@ -57,14 +60,18 @@ YAML-compatible format accepted by STE100. Derivation needs only the Python
 standard library.
 
 Use `cmark` to select Markdown text nodes. Replace non-prose characters with
-spaces while preserving newlines and character offsets. Pass the masked text
-to STE100. If it passes, run Vale on the original input. Print each checker's
-native output with a source and checker label. Use a nonzero status for
-blocking findings or tool failure.
+spaces while preserving character offsets. Mark heading line endings as
+sentence boundaries so headings cannot join the next prose block. Ignore a
+possessive `'s` finding only when STE100 marks the actual suffix as unknown.
+Pass the masked text to STE100. If it passes, run Vale on the original input.
+Print each checker's findings with a source and checker label. Use a nonzero
+status for blocking findings or tool failure.
 
 GFM tables and YAML frontmatter receive no special treatment in this version.
-Existing documents can fail on ordinary words outside the small shared
-vocabulary; do not add those words automatically.
+Collect unknown words before a repair pass. Classify them by vocabulary source
+or rewrite unnecessary words. Rerun STE100 after each pass. Once STE100 passes,
+fix Vale findings and rerun the checker. Treat findings as work to complete.
+Report them only when a semantic decision prevents a safe fix.
 
 The tested STE100 revision is installed from GitHub because the named package
 is not available from the package registry. Its spaCy model must be installed

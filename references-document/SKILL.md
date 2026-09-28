@@ -44,6 +44,7 @@ unresolved. Remove an entry when it is no longer relevant, and update affected
 links. Group entries by topic when that helps navigation. Keep each entry to a
 few useful sentences. The register has no whole-file word limit.
 
-Use `concise-prose` and run `prose-check` when available. Before finishing,
+Invoke `concise-prose` before writing or revising References. Follow its STE100
+and Vale repair loop until `prose-check` passes. Before finishing,
 check that every entry has a working link, a reason to retain it, and clear
 uncertainty where needed.

@@ -132,6 +132,408 @@
       "inflections": [
         "deployments"
       ]
+    },
+    {
+      "word": "action",
+      "inflections": [
+        "actions"
+      ]
+    },
+    {
+      "word": "goal",
+      "inflections": [
+        "goals"
+      ]
+    },
+    {
+      "word": "plan",
+      "inflections": [
+        "plans"
+      ]
+    },
+    {
+      "word": "state",
+      "inflections": [
+        "states"
+      ]
+    },
+    {
+      "word": "constraint",
+      "inflections": [
+        "constraints"
+      ]
+    },
+    {
+      "word": "target",
+      "inflections": [
+        "targets"
+      ]
+    },
+    {
+      "word": "migration",
+      "inflections": [
+        "migrations"
+      ]
+    },
+    {
+      "word": "request",
+      "inflections": [
+        "requests"
+      ]
+    },
+    {
+      "word": "management"
+    },
+    {
+      "word": "backup",
+      "inflections": [
+        "backups"
+      ]
+    },
+    {
+      "word": "failure",
+      "inflections": [
+        "failures"
+      ]
+    },
+    {
+      "word": "permission",
+      "inflections": [
+        "permissions"
+      ]
+    },
+    {
+      "word": "identity",
+      "inflections": [
+        "identities"
+      ]
+    },
+    {
+      "word": "installation",
+      "inflections": [
+        "installations"
+      ]
+    },
+    {
+      "word": "recovery",
+      "inflections": [
+        "recoveries"
+      ]
+    },
+    {
+      "word": "delivery",
+      "inflections": [
+        "deliveries"
+      ]
+    },
+    {
+      "word": "automation"
+    },
+    {
+      "word": "expansion",
+      "inflections": [
+        "expansions"
+      ]
+    },
+    {
+      "word": "profile",
+      "inflections": [
+        "profiles"
+      ]
+    },
+    {
+      "word": "behavior",
+      "inflections": [
+        "behaviors"
+      ]
+    },
+    {
+      "word": "capability",
+      "inflections": [
+        "capabilities"
+      ]
+    },
+    {
+      "word": "compatibility"
+    },
+    {
+      "word": "definition",
+      "inflections": [
+        "definitions"
+      ]
+    },
+    {
+      "word": "interaction",
+      "inflections": [
+        "interactions"
+      ]
+    },
+    {
+      "word": "lifecycle",
+      "inflections": [
+        "lifecycles"
+      ]
+    },
+    {
+      "word": "mutation",
+      "inflections": [
+        "mutations"
+      ]
+    },
+    {
+      "word": "persistence"
+    },
+    {
+      "word": "resource",
+      "inflections": [
+        "resources"
+      ]
+    },
+    {
+      "word": "restart",
+      "inflections": [
+        "restarts"
+      ]
+    },
+    {
+      "word": "rule",
+      "inflections": [
+        "rules"
+      ]
+    },
+    {
+      "word": "setting",
+      "inflections": [
+        "settings"
+      ]
+    },
+    {
+      "word": "transaction",
+      "inflections": [
+        "transactions"
+      ]
+    },
+    {
+      "word": "transfer",
+      "inflections": [
+        "transfers"
+      ]
+    },
+    {
+      "word": "validation"
+    },
+    {
+      "word": "version",
+      "inflections": [
+        "versions"
+      ]
+    },
+    {
+      "word": "brief",
+      "inflections": [
+        "briefs"
+      ]
+    },
+    {
+      "word": "milestone",
+      "inflections": [
+        "milestones"
+      ]
+    },
+    {
+      "word": "relationship",
+      "inflections": [
+        "relationships"
+      ]
+    },
+    {
+      "word": "maturity"
+    },
+    {
+      "word": "story",
+      "inflections": [
+        "stories"
+      ]
+    },
+    {
+      "word": "assignment",
+      "inflections": [
+        "assignments"
+      ]
+    },
+    {
+      "word": "policy",
+      "inflections": [
+        "policies"
+      ]
+    },
+    {
+      "word": "alias",
+      "inflections": [
+        "aliases"
+      ]
+    },
+    {
+      "word": "actor",
+      "inflections": [
+        "actors"
+      ]
+    },
+    {
+      "word": "interface",
+      "inflections": [
+        "interfaces"
+      ]
+    },
+    {
+      "word": "exception",
+      "inflections": [
+        "exceptions"
+      ]
+    },
+    {
+      "word": "guidance",
+      "inflections": []
+    },
+    {
+      "word": "ownership",
+      "inflections": []
+    },
+    {
+      "word": "reason",
+      "inflections": [
+        "reasons"
+      ]
+    },
+    {
+      "word": "screen",
+      "inflections": [
+        "screens"
+      ]
+    },
+    {
+      "word": "list",
+      "inflections": [
+        "lists"
+      ]
+    },
+    {
+      "word": "change",
+      "inflections": [
+        "changes"
+      ]
+    },
+    {
+      "word": "commit",
+      "inflections": [
+        "commits"
+      ]
+    }
+  ],
+  "technical_verbs": [
+    {
+      "word": "assign",
+      "inflections": [
+        "assigns",
+        "assigned",
+        "assigning"
+      ]
+    },
+    {
+      "word": "change",
+      "inflections": [
+        "changes",
+        "changed",
+        "changing"
+      ]
+    },
+    {
+      "word": "commit",
+      "inflections": [
+        "commits",
+        "committed",
+        "committing"
+      ]
+    },
+    {
+      "word": "persist",
+      "inflections": [
+        "persists",
+        "persisted",
+        "persisting"
+      ]
+    },
+    {
+      "word": "inspect",
+      "inflections": [
+        "inspects",
+        "inspected",
+        "inspecting"
+      ]
+    },
+    {
+      "word": "configure",
+      "inflections": [
+        "configures",
+        "configured",
+        "configuring"
+      ]
+    },
+    {
+      "word": "validate",
+      "inflections": [
+        "validates",
+        "validated",
+        "validating"
+      ]
+    },
+    {
+      "word": "save",
+      "inflections": [
+        "saves",
+        "saved",
+        "saving"
+      ]
+    },
+    {
+      "word": "deploy",
+      "inflections": [
+        "deploys",
+        "deployed",
+        "deploying"
+      ]
+    },
+    {
+      "word": "restore",
+      "inflections": [
+        "restores",
+        "restored",
+        "restoring"
+      ]
+    },
+    {
+      "word": "restart",
+      "inflections": [
+        "restarts",
+        "restarted",
+        "restarting"
+      ]
+    },
+    {
+      "word": "transfer",
+      "inflections": [
+        "transfers",
+        "transferred",
+        "transferring"
+      ]
+    },
+    {
+      "word": "request",
+      "inflections": [
+        "requests",
+        "requested",
+        "requesting"
+      ]
     }
   ]
 }

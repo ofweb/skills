@@ -75,7 +75,8 @@ need a project-specific definition, duplicate concepts, distinctions that can
 be simpler, and implementation vocabulary. Do not split Context just to meet
 the limit; growth may mean it has become general project memory.
 
-Use `concise-prose` and `prose-check` when available. `prose-check` derives its
+Invoke `concise-prose` before writing or revising Context. Follow its STE100 and
+Vale repair loop until `prose-check` passes. `prose-check` derives its
 project vocabulary from agreed Context entries. `workflow-document-check` must
 be installed alongside this skill; use it after the edit. Prune or restructure
 after a hard-limit failure. Check each
