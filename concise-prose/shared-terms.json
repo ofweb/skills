@@ -81,6 +81,57 @@
       "inflections": [
         "projects"
       ]
+    },
+    {
+      "word": "acceptance"
+    },
+    {
+      "word": "requirement",
+      "inflections": [
+        "requirements"
+      ]
+    },
+    {
+      "word": "implementation",
+      "inflections": [
+        "implementations"
+      ]
+    },
+    {
+      "word": "scope",
+      "inflections": [
+        "scopes"
+      ]
+    },
+    {
+      "word": "status",
+      "inflections": [
+        "statuses"
+      ]
+    },
+    {
+      "word": "rationale",
+      "inflections": [
+        "rationales"
+      ]
+    },
+    {
+      "word": "assumption",
+      "inflections": [
+        "assumptions"
+      ]
+    },
+    {
+      "word": "configuration",
+      "inflections": [
+        "configurations"
+      ]
+    },
+    {
+      "word": "deployment",
+      "inflections": [
+        "deployments"
+      ]
     }
   ]
 }

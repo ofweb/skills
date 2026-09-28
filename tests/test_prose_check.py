@@ -41,9 +41,17 @@ class CommandTests(unittest.TestCase):
         checker = self.directory / "ste100"
         checker.write_text(
             "#!/usr/bin/env python3\n"
-            "import os, sys\n"
+            "import json, os, re, sys\n"
             "from pathlib import Path\n"
             "text = sys.stdin.read()\n"
+            "if os.environ.get('FAKE_STE_REPORT'):\n"
+            "    if os.environ.get('FAKE_STE_REPORT_ERROR'):\n"
+            "        sys.exit(2)\n"
+            "    words = re.findall(r'\\b(storage|requirement|room)\\b', text, re.I)\n"
+            "    findings = [{'rule_id': 'STE-VOCAB-UNAPPROVED', 'evidence': {'word': word}} for word in words]\n"
+            "    findings.append({'rule_id': 'STE-SENTENCE-LENGTH'})\n"
+            "    print(json.dumps({'findings': findings}))\n"
+            "    sys.exit(1 if words else 0)\n"
             "if os.environ.get('PRINT_GLOSSARY'):\n"
             "    path = Path(sys.argv[sys.argv.index('--glossary') + 1])\n"
             "    print('GLOSSARY:', path.read_text())\n"
@@ -115,6 +123,40 @@ class CommandTests(unittest.TestCase):
         self.assertIn(f"== {second}: STE100 ==", result.stdout)
         self.assertIn(f"== {second}: Vale ==", result.stdout)
         self.assertLess(result.stdout.index(f"== {first}: STE100 =="), result.stdout.index(f"== {second}: Vale =="))
+
+    def test_vocabulary_report_counts_across_recursive_glob_without_code(self) -> None:
+        docs = self.directory / "docs"
+        nested = docs / "nested"
+        nested.mkdir(parents=True)
+        (docs / "first.md").write_text("Storage storage room. `storage`\n")
+        (nested / "second.md").write_text("storage requirement requirement room.\n")
+        self.env["FAKE_STE_REPORT"] = "1"
+
+        result = self.run_tool("--vocabulary-report", str(docs / "**" / "*.md"))
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            result.stdout,
+            "Unknown vocabulary\n\n"
+            " 3 occurrences  storage\n"
+            " 2 occurrences  requirement\n"
+            " 2 occurrences  room\n",
+        )
+        self.assertNotIn("VALE RAN", result.stdout)
+
+    def test_vocabulary_report_rejects_missing_files_and_checker_failures(self) -> None:
+        self.env["FAKE_STE_REPORT"] = "1"
+        missing = self.run_tool("--vocabulary-report", str(self.directory / "*.md"))
+        self.assertEqual(missing.returncode, 2)
+        self.assertIn("no Markdown files match", missing.stderr)
+
+        source = self.directory / "source.md"
+        source.write_text("Storage room.\n")
+        self.env["FAKE_STE_REPORT_ERROR"] = "1"
+        failed = self.run_tool("--vocabulary-report", str(source))
+        self.assertEqual(failed.returncode, 2)
+        self.assertIn("STE100 failed", failed.stderr)
+        self.assertNotIn("Unknown vocabulary", failed.stdout)
 
     def test_project_context_adds_noun_and_verb_to_shared_vocabulary(self) -> None:
         project = self.directory / "project"

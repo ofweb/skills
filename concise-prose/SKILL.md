@@ -37,7 +37,18 @@ standard input or files outside the project tree. The combined vocabulary is
 JSON, which STE100 accepts as YAML. The derivation uses only the Python
 standard library.
 
-Add glossary entries only for established domain words that the prose needs.
-Do not add entries merely to silence findings.
-When fixing an error, make the smallest useful change.
-Do not expand text only to satisfy a linter.
+When STE100 reports unknown words, collect all distinct words before editing
+prose. Use `prose-check --vocabulary-report '.workflow/**/*.md'` to count findings
+across files. Classify each word:
+
+- Add established workflow or software terms to shared vocabulary when that
+  source is available. Otherwise, report the proposed addition.
+- Add established project or domain terms to `.workflow/ste-glossary.json`.
+- Add project-specific concepts to Context only after the user agrees on their
+  canonical meaning.
+- Rewrite prose that uses unnecessary non-STE words.
+
+Do not add entries merely to silence findings. Treat a large group of unknown
+words as missing vocabulary first. Do not repeatedly rewrite sentences around
+an established technical or domain term. Rewrite only the remaining prose,
+then run `prose-check` again. Make the smallest useful change.

@@ -21,6 +21,14 @@ accumulates a failing exit status. It returns each checker's native findings.
 The model also receives STE100 warnings and uses its judgment to fix valid
 findings. Checker or setup failures cannot pass as clean checks.
 
+`--vocabulary-report` collects `STE-VOCAB-UNAPPROVED` findings across its
+Markdown inputs. It prints one count per word, with the largest count first.
+It groups words without regard to case. It accepts file paths and quoted glob
+patterns, including `**`. It excludes Markdown code through the normal prose
+selection step. The report does not run Vale or edit files. Unknown words are
+expected report data, so they do not cause a failing exit status. A missing
+file, invalid project vocabulary, or checker failure does cause failure.
+
 The existing Vale configuration remains the style source. STE100 uses its own
 rules, built-in vocabulary, and the small shared software vocabulary beside
 `prose-check`. The user adds shared terms manually when a recurring technical

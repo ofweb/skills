@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Run STE100, then Vale, on Markdown prose."""
+"""Check Markdown prose or report unknown STE100 words."""
 
 from __future__ import annotations
 
 import argparse
+from collections import Counter
+import glob
 import json
 import re
 import shutil
@@ -90,21 +92,50 @@ def run_check(command: list[str], content: str | None = None) -> int:
     return result.returncode
 
 
+def report_inputs(names: list[str]) -> list[str]:
+    """Expand report globs and read each file once."""
+    selected = []
+    seen = set()
+    for name in names or ["-"]:
+        matches = glob.glob(name, recursive=True) if glob.has_magic(name) else [name]
+        files = [match for match in matches if match == "-" or Path(match).is_file()]
+        if not files:
+            raise ValueError(f"no Markdown files match: {name}")
+        for match in sorted(files):
+            key = match if match == "-" else str(Path(match).resolve())
+            if key not in seen:
+                selected.append(match)
+                seen.add(key)
+    return selected
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, help="Project root for vocabulary")
-    parser.add_argument("files", nargs="*", metavar="FILE", help="Markdown files or - for stdin")
+    parser.add_argument(
+        "--vocabulary-report", action="store_true", help="Count unknown STE100 words"
+    )
+    parser.add_argument(
+        "files", nargs="*", metavar="FILE", help="Markdown files, report globs, or - for stdin"
+    )
     args = parser.parse_args()
 
     if args.project_root is not None and not args.project_root.is_dir():
         parser.error(f"not a directory: {args.project_root}")
 
-    missing = [name for name in ("cmark", "vale", "ste100") if shutil.which(name) is None]
+    commands = ("cmark", "ste100") if args.vocabulary_report else ("cmark", "vale", "ste100")
+    missing = [name for name in commands if shutil.which(name) is None]
     if missing:
         parser.exit(2, f"prose-check: missing command: {', '.join(missing)}\n")
 
+    try:
+        names = report_inputs(args.files) if args.vocabulary_report else args.files or ["-"]
+    except ValueError as exc:
+        parser.exit(2, f"prose-check: {exc}\n")
+
     status = 0
-    for name in args.files or ["-"]:
+    unknown: Counter[str] = Counter()
+    for name in names:
         try:
             markdown = sys.stdin.read() if name == "-" else Path(name).read_text(encoding="utf-8")
             prose = prose_only(markdown)
@@ -113,7 +144,8 @@ def main() -> int:
             status = 2
             continue
 
-        print(f"== {name}: STE100 ==", flush=True)
+        if not args.vocabulary_report:
+            print(f"== {name}: STE100 ==", flush=True)
         with tempfile.TemporaryDirectory(prefix="prose-check-") as temporary:
             glossary = GLOSSARY
             root = project_root(name, args.project_root)
@@ -135,7 +167,33 @@ def main() -> int:
                     print(f"prose-check: {name}: Project vocabulary: {exc}", file=sys.stderr)
                     status = 2
                     continue
-            ste_status = run_check(["ste100", "check", "--glossary", str(glossary)], prose)
+            command = ["ste100", "check", "--glossary", str(glossary)]
+            if args.vocabulary_report:
+                result = subprocess.run(command, input=prose, text=True, capture_output=True)
+                if result.returncode not in (0, 1):
+                    print(f"prose-check: {name}: STE100 failed: {result.stderr.strip()}", file=sys.stderr)
+                    status = 2
+                    continue
+                try:
+                    findings = json.loads(result.stdout)["findings"]
+                    if not isinstance(findings, list):
+                        raise ValueError("findings must be a list")
+                    for finding in findings:
+                        if not isinstance(finding, dict):
+                            raise ValueError("a finding must be an object")
+                        if finding.get("rule_id") == "STE-VOCAB-UNAPPROVED":
+                            evidence = finding.get("evidence")
+                            if not isinstance(evidence, dict):
+                                raise ValueError("a vocabulary finding needs evidence")
+                            word = evidence.get("word")
+                            if not isinstance(word, str) or not word.strip():
+                                raise ValueError("a vocabulary finding has no word")
+                            unknown[word.casefold()] += 1
+                except (ValueError, KeyError, TypeError) as exc:
+                    print(f"prose-check: {name}: invalid STE100 report: {exc}", file=sys.stderr)
+                    status = 2
+                continue
+            ste_status = run_check(command, prose)
         if ste_status:
             status = max(status, 1 if ste_status == 1 else 2)
             continue
@@ -150,6 +208,16 @@ def main() -> int:
         if vale_status:
             status = max(status, 1 if vale_status == 1 else 2)
 
+    if args.vocabulary_report and status == 0:
+        print("Unknown vocabulary")
+        if unknown:
+            print()
+            width = max(2, len(str(max(unknown.values()))))
+            for word, count in sorted(unknown.items(), key=lambda item: (-item[1], item[0])):
+                label = "occurrence" if count == 1 else "occurrences"
+                print(f"{count:>{width}} {label}  {word}")
+        else:
+            print("\nNone.")
     return status
 
 
