@@ -1,20 +1,20 @@
 ---
 name: references-document
-description: Keep relevant external links and short relevance notes in a project's .workflow/references.md during Direction discussion.
+description: Keep external sources with durable project value and short relevance notes in a project's .workflow/references.md.
 ---
 
 # References document
 
 Direction owns one optional `.workflow/references.md`. Create it when the first
-relevant external link appears. Check for an existing references document
+source has durable project value. Check for an existing references document
 elsewhere before creating it. Do not create a duplicate or migrate a file in
 this skill. Ask for a separate migration when needed.
 
-Record relevant links supplied by the user or found during investigation.
-Preserve a useful user link during the discussion even when its effect on
-Direction is not yet known. Do not wait until the session ends. Read a source
-before claiming that it supports a conclusion. If it has not been checked,
-mark the relevant claim as unverified.
+Record a source when it affects Direction, supports a decision, resolves an
+important uncertainty, or is likely to help again. Do not record every source
+inspected. Preserve a useful user link even when its effect on Direction is not
+yet known. Read a source before claiming that it supports a conclusion. If it
+has not been checked, mark the relevant claim as unverified.
 
 Use one entry per external source or closely related source set. Preserve the
 source URLs and give the entry a clear title.

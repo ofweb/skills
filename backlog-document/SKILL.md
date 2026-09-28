@@ -1,13 +1,14 @@
 ---
 name: backlog-document
-description: Create or revise the shared Backlog at .workflow/backlog.md. Use when Direction or Shape changes possible work, its understanding maturity, or its durable relationships.
+description: Create or revise the shared Backlog at .workflow/backlog.md when agreed future implementation work or its readiness for Shape changes.
 ---
 
 # Backlog
 
-The Backlog is the shared inventory of possible work. Direction and Shape
-maintain one file at `.workflow/backlog.md`. It is authoritative about candidate
-work and durable relationships, not accepted feature behaviour or work order.
+The Backlog retains future implementation work that the user and model agree is
+worth doing. Direction and Shape maintain one file at `.workflow/backlog.md`.
+It is authoritative about retained work and durable relationships, not accepted
+feature behaviour or work order.
 Create the file with `# Backlog` during initial Direction setup, even when no
 items exist yet.
 
@@ -18,41 +19,50 @@ separate migration.
 ## Item format
 
 Use one section per item. Assign a stable `B-0001` style ID with the next unused
-number. Keep the ID when the title or maturity changes.
+number. Keep the ID when the title or status changes.
 
 ```markdown
 # Backlog
 
 ## B-0001: Concise title
 
-- Maturity: Unclear
-- Possible value: Short statement or question.
+- Status: Needs Direction
+- Value: Why this work is worth doing.
+- Open Direction: Consequential question, when one remains.
 - Feature Brief: Relative link, when one exists.
 - Relationships: Durable dependency, order, overlap, or group, when relevant.
 - Source: Link to Direction or a durable decision, when useful.
 ```
 
-Select exactly one maturity marker. Omit an optional line when it has no value.
+Select exactly one status. Omit an optional line when it has no value.
 When a Feature Brief exists, link `features/<item-id>/brief.md`. The item ID is
 an identity, not a priority or delivery order.
 
-The maturity marker describes how well the idea is understood:
+The status describes whether Direction is sufficiently settled for Shape:
 
-| Marker | Meaning |
+| Status | Meaning |
 | --- | --- |
-| Unclear | The possible value or problem still needs framing. |
-| Framed | The value or problem is clear, but consequential questions remain. |
-| Understood | Enough is known to decide how to handle the idea in Shape. |
+| Needs Direction | We agree this work is worth doing, but consequential Direction questions remain. |
+| Ready for Shape | Direction is sufficiently settled for this work to enter Shape. |
 
-`Understood` does not make an item a requirement or commit it to delivery. New
-evidence can move an item to an earlier marker. A Feature Brief link shows its
-relationship to later stages. The link must not change the maturity marker by
-itself.
+`Ready for Shape` does not commit the work to delivery or mean that Direction
+is complete. New evidence can return an item to `Needs Direction`. A Feature
+Brief link shows its relationship to later stages. The link does not set the
+status by itself.
+
+When an existing item uses `Unclear`, `Framed`, or `Understood`, review whether
+the work still merits a Backlog item. Set its new status from its current
+Direction, not from a direct marker translation.
 
 ## Maintenance
 
-Add or revise compact items when Direction finds possible work or Shape changes
-its boundaries. Shape can split, combine, replace, or relate items. Keep IDs
+Add an item after Direction establishes why it exists and how it fits the
+intended end state. Agree with the user that the work is worth retaining.
+Do not add items while exploring possibilities. Do not use the Backlog for open
+Direction questions, research tasks, architecture tasks, or implementation
+details. An item may retain a consequential Direction question when the work
+itself is already agreed. Revise items when Shape changes their boundaries.
+Shape can split, combine, replace, or relate items. Keep IDs
 stable for retained items. Update affected links when an item is replaced or
 removed. Delete items that are no longer plausible work, including delivered
 items with no remaining work. Merge or replace duplicate items. Do not create
@@ -76,4 +86,4 @@ Invoke `concise-prose` before writing or revising the Backlog. Follow its STE100
 and Vale repair loop until `prose-check` passes. Install
 `workflow-document-check` alongside this skill and use it after the edit.
 Prune or restructure after a hard-limit failure. Check that every item has a
-stable ID, one maturity marker, and a recognizable value or problem.
+stable ID, one status, and a clear reason to retain the work.

@@ -57,14 +57,17 @@ between them.
 Do not add a Backlog, roadmap, delivery order, progress report, feature
 requirements, architecture, task list, or completed-work catalogue. Keep
 transient ideas in discussion until the user adopts them as Direction. Put
-possible work in the Backlog and durable product reasoning in a PDR.
+agreed future implementation work in the Backlog and durable product reasoning
+in a PDR.
 
 ## Maintenance
 
 Create the main document when the project first agrees on an intended end
-state. Revise the affected documents when that understanding changes. Feature
-completion alone does not require a revision. Rewrite sections as current
-understanding, not a chronological record. Remove superseded wording. Keep a
+state. Revise the affected documents when that understanding materially changes
+or an important unresolved end-state question needs to remain visible. A small
+wording improvement or feature completion alone does not require a revision.
+Rewrite sections as current understanding, not a chronological record. Remove
+superseded wording. Keep a
 genuine unresolved question visible without weakening settled statements.
 
 After any main or topic edit, check the other affected documents. Update the
