@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import runpy
 import shutil
@@ -128,6 +129,9 @@ class CommandTests(unittest.TestCase):
             "## Escrow\n\n- Meaning: To hold a project amount until release.\n"
             "- STE class: Technical verb\n- Forms: Escrows, Escrowed\n"
         )
+        (context.parent / "ste-glossary.json").write_text(
+            json.dumps({"technical_nouns": ["redstone"]})
+        )
         source.write_text("Use Signal and Escrow.\n")
         self.env["PRINT_GLOSSARY"] = "1"
 
@@ -137,8 +141,37 @@ class CommandTests(unittest.TestCase):
         self.assertIn('"technical_verbs":', result.stdout)
         self.assertIn('"word": "Signal"', result.stdout)
         self.assertIn('"word": "Escrow"', result.stdout)
+        self.assertIn('"word": "redstone"', result.stdout)
         self.assertIn('"word": "file"', result.stdout)
-        self.assertFalse((project / ".workflow" / "glossary.yaml").exists())
+
+    def test_project_glossary_alone_is_found_for_file_and_stdin(self) -> None:
+        project = self.directory / "project"
+        workflow = project / ".workflow"
+        source = project / "docs" / "guide.md"
+        workflow.mkdir(parents=True)
+        source.parent.mkdir(parents=True)
+        (workflow / "ste-glossary.json").write_text(json.dumps({"technical_nouns": ["redstone"]}))
+        source.write_text("Use redstone.\n")
+        self.env["PRINT_GLOSSARY"] = "1"
+
+        file_result = self.run_tool(str(source))
+        self.assertEqual(file_result.returncode, 0, file_result.stderr)
+        self.assertIn('"word": "redstone"', file_result.stdout)
+        self.assertIn('"word": "file"', file_result.stdout)
+
+        stdin_result = self.run_tool("--project-root", str(project), input_text="Use redstone.\n")
+        self.assertEqual(stdin_result.returncode, 0, stdin_result.stderr)
+        self.assertIn('"word": "redstone"', stdin_result.stdout)
+
+    def test_malformed_project_glossary_stops_before_ste_check(self) -> None:
+        project = self.directory / "project"
+        workflow = project / ".workflow"
+        workflow.mkdir(parents=True)
+        (workflow / "ste-glossary.json").write_text("{bad JSON")
+        result = self.run_tool("--project-root", str(project), input_text="Use the file.\n")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Project vocabulary", result.stderr)
+        self.assertNotIn("STE text:", result.stdout)
 
     def test_installed_prose_skill_keeps_context_derivation(self) -> None:
         installed = self.directory / "installed-prose"
@@ -156,12 +189,16 @@ class CommandTests(unittest.TestCase):
             "# Context\n\n## Signal\n- Meaning: A project event.\n"
             "- STE class: Technical name\n"
         )
+        (context.parent / "ste-glossary.json").write_text(
+            json.dumps({"technical_nouns": ["redstone"]})
+        )
         self.env["PRINT_GLOSSARY"] = "1"
         result = self.run_tool(
             "--project-root", str(project), input_text="Use Signal.\n", skill_dir=installed
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('"word": "Signal"', result.stdout)
+        self.assertIn('"word": "redstone"', result.stdout)
 
     def test_explicit_project_root_works_for_stdin(self) -> None:
         project = self.directory / "project"
@@ -183,7 +220,7 @@ class CommandTests(unittest.TestCase):
         context.write_text("# Context\n\n## Candidate\n\n- Meaning: A tentative idea.\n")
         result = self.run_tool("--project-root", str(project), input_text="Use the file.\n")
         self.assertEqual(result.returncode, 2)
-        self.assertIn("Context vocabulary", result.stderr)
+        self.assertIn("Project vocabulary", result.stderr)
         self.assertNotIn("STE text:", result.stdout)
 
     def test_missing_checker_is_a_tool_failure(self) -> None:

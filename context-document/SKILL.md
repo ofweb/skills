@@ -19,9 +19,16 @@ different concepts. Return unresolved ambiguity to the owning workflow.
 Do not choose a canonical term or meaning silently.
 
 Add an entry only when the concept is project-specific and needs one stable
-meaning across features, documents, code, or fresh contexts. Reject ordinary
-programming and framework vocabulary. Do not add a term only to satisfy an
-STE or prose check. Create `.workflow/context.md` when the first term qualifies.
+meaning across features, documents, code, or fresh contexts. The definition
+must resolve competing names, prevent meaning drift, or separate concepts that
+readers could confuse. A named feature part, state, or action does not qualify
+only because a document describes it. Keep its behavior in the Feature Brief
+or decision record unless its name also meets the vocabulary test. Reject
+ordinary programming and framework vocabulary. Do not add a term only to
+satisfy an STE or prose check. Create `.workflow/context.md` when the first
+term qualifies.
+Put legitimate domain words without a project-specific meaning in
+`.workflow/ste-glossary.json` when STE100 does not approve them.
 If a copy exists elsewhere, do not create a duplicate or migrate it here.
 Keep only terms whose canonical meaning the user has agreed. Leave candidate
 terms in the owning workflow until that agreement exists.
@@ -33,26 +40,27 @@ Use one short entry per concept:
 ```markdown
 # Context
 
-## Canonical term
+## Signal
 
-- Meaning: One or two sentences that define the project concept.
-- STE class: <Technical name or Technical verb>
+- Meaning: A Signal is a project event that starts a review.
+- STE class: Technical name
 - Forms: <comma-separated approved forms, when needed>
 - Avoid: Misleading synonyms, when needed.
 - Distinguish from: Related concept and its difference, when needed.
 ```
 
 The heading gives the canonical spelling. `STE class` is document-skill-derived
-metadata consumed by `prose-check`; it is not a user decision. Write one
-STE-compatible definition
-that gives the term one project meaning. Keep meaningful distinctions and
-approved forms explicit. The user agrees spelling, meaning, distinctions,
-misleading synonyms, and semantically important forms through the owning
-workflow. Derive the STE class from that agreed meaning and usage. Use
-`Technical name` for a concept used as a noun and `Technical verb` for a named
-action. Do not ask the user to classify the term. List approved forms as
-comma-separated spellings. Omit optional fields with no value. Link related
-entries or records when a definition depends on them.
+metadata consumed by `prose-check`; it is not a user decision. Context defines
+vocabulary. Each `Meaning:` must use one or two normal STE100 description
+sentences with a subject and a complete statement. Name the term in the
+sentence. The heading and `STE class` do not replace words in it. Keep
+meaningful distinctions and approved forms explicit. The user agrees spelling,
+meaning, distinctions, misleading synonyms, and semantically important forms
+through the owning workflow. Derive the STE class from that agreed meaning and
+usage. Use `Technical name` for a concept used as a noun. Use `Technical verb`
+for a named action. Do not ask the user to classify the term. List approved
+forms as comma-separated spellings. Omit optional fields with no value. Link
+related entries or records when a definition depends on them.
 
 Revise a definition when the user changes the agreed meaning. Check affected
 uses in project documents and code. Route a behavioural change to a PDR or

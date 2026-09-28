@@ -27,12 +27,17 @@ prose on standard input. It checks STE100 first and then applies Vale's project
 style rules if STE100 passes. Fix findings without changing technical meaning;
 report a conflict if no safe correction exists.
 
-For project files, `prose-check` derives approved technical terms from
-`.workflow/context.md` and combines them with its separate shared vocabulary.
-Use `--project-root` for standard input or files outside the project tree.
-The shared vocabulary is stored as JSON, which STE100 accepts as YAML. The
-derivation uses only the Python standard library.
+For project files, `prose-check` combines shared vocabulary with two optional
+project sources. `.workflow/context.md` defines agreed project concepts.
+`.workflow/ste-glossary.json` approves domain words that do not need a project
+definition. Add terms under `technical_nouns` or `technical_verbs`. Each list
+accepts a word or an object with `word` and optional `inflections`. Keep
+meanings and feature behavior out of the glossary. Use `--project-root` for
+standard input or files outside the project tree. The combined vocabulary is
+JSON, which STE100 accepts as YAML. The derivation uses only the Python
+standard library.
 
-Do not add glossary entries merely to silence findings.
+Add glossary entries only for established domain words that the prose needs.
+Do not add entries merely to silence findings.
 When fixing an error, make the smallest useful change.
 Do not expand text only to satisfy a linter.

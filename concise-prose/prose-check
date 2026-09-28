@@ -24,7 +24,8 @@ def project_root(name: str, explicit: Path | None) -> Path | None:
         return explicit.resolve()
     start = Path.cwd() if name == "-" else Path(name).resolve().parent
     for parent in (start, *start.parents):
-        if (parent / ".workflow" / "context.md").is_file():
+        workflow = parent / ".workflow"
+        if (workflow / "context.md").is_file() or (workflow / "ste-glossary.json").is_file():
             return parent
     return None
 
@@ -91,7 +92,7 @@ def run_check(command: list[str], content: str | None = None) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--project-root", type=Path, help="Project root for Context terms")
+    parser.add_argument("--project-root", type=Path, help="Project root for vocabulary")
     parser.add_argument("files", nargs="*", metavar="FILE", help="Markdown files or - for stdin")
     args = parser.parse_args()
 
@@ -117,16 +118,21 @@ def main() -> int:
             glossary = GLOSSARY
             root = project_root(name, args.project_root)
             context = root / ".workflow" / "context.md" if root else None
-            if context and context.is_file():
+            project_glossary = root / ".workflow" / "ste-glossary.json" if root else None
+            context = context if context and context.is_file() else None
+            project_glossary = (
+                project_glossary if project_glossary and project_glossary.is_file() else None
+            )
+            if context or project_glossary:
                 try:
                     sys.path.insert(0, str(Path(__file__).resolve().parent))
                     from context_glossary import combined_glossary
 
-                    merged = combined_glossary(GLOSSARY, context)
+                    merged = combined_glossary(GLOSSARY, context, project_glossary)
                     glossary = Path(temporary) / "glossary.json"
                     glossary.write_text(json.dumps(merged, ensure_ascii=False), encoding="utf-8")
                 except Exception as exc:
-                    print(f"prose-check: {name}: Context vocabulary: {exc}", file=sys.stderr)
+                    print(f"prose-check: {name}: Project vocabulary: {exc}", file=sys.stderr)
                     status = 2
                     continue
             ste_status = run_check(["ste100", "check", "--glossary", str(glossary)], prose)
