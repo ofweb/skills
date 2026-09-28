@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from collections import Counter
 from pathlib import Path
 
 
@@ -18,6 +19,26 @@ MODULE = runpy.run_path(str(SKILL_DIR / "prose-check"), run_name="prose_check_te
 
 @unittest.skipUnless(shutil.which("cmark"), "cmark is required")
 class MarkdownProseTests(unittest.TestCase):
+    def test_exact_name_spans_keep_sentence_text(self) -> None:
+        source = "Farmer's Delight supplies meals. Farmers supply meals."
+        spans = MODULE["phrase_spans"](source, ["Farmer's Delight"])
+        self.assertEqual(spans, [(0, len("Farmer's Delight"))])
+        self.assertEqual(source[spans[0][0]:spans[0][1]], "Farmer's Delight")
+
+    def test_vocabulary_groups_observed_noun_and_verb_forms(self) -> None:
+        words = Counter({
+            "meal": 2, "meals": 3, "tier": 1, "tiers": 2,
+            "variant": 1, "variants": 2, "ingredient": 1, "ingredients": 2,
+            "enchantment": 1, "enchantments": 2,
+            "harvest": 1, "harvests": 2, "harvested": 1, "harvesting": 2,
+        })
+        grouped = {base: (set(forms), count) for base, forms, count in MODULE["vocabulary_groups"](words)}
+        self.assertEqual(grouped["meal"], ({"meal", "meals"}, 5))
+        self.assertEqual(grouped["tier"], ({"tier", "tiers"}, 3))
+        self.assertEqual(grouped["variant"], ({"variant", "variants"}, 3))
+        self.assertEqual(grouped["ingredient"], ({"ingredient", "ingredients"}, 3))
+        self.assertEqual(grouped["enchantment"], ({"enchantment", "enchantments"}, 3))
+        self.assertEqual(grouped["harvest"], ({"harvest", "harvests", "harvested", "harvesting"}, 6))
     def test_heading_ends_before_following_story(self) -> None:
         source = "## Stories and acceptance\n\n### S1\n\nStory: A resident can enter.\n"
         prose = MODULE["prose_only"](source)
@@ -108,11 +129,11 @@ class CommandTests(unittest.TestCase):
             "if os.environ.get('FAKE_STE_REPORT'):\n"
             "    if os.environ.get('FAKE_STE_REPORT_ERROR'):\n"
             "        sys.exit(2)\n"
-            "    words = re.findall(r'\\b(storage|requirement|room)\\b', text, re.I)\n"
-            "    findings = [{'rule_id': 'STE-VOCAB-UNAPPROVED', 'evidence': {'word': word}} for word in words]\n"
+            "    words = re.finditer(r'\\b(storage|requirement|room|farmer|delight|meal|meals|job|reservation)\\b', text, re.I)\n"
+            "    findings = [{'rule_id': 'STE-VOCAB-UNAPPROVED', 'evidence': {'word': match.group()}, 'start': match.start(), 'end': match.end()} for match in words]\n"
             "    findings.append({'rule_id': 'STE-SENTENCE-LENGTH'})\n"
             "    print(json.dumps({'findings': findings}))\n"
-            "    sys.exit(1 if words else 0)\n"
+            "    sys.exit(1 if len(findings) > 1 else 0)\n"
             "report = {'compliant': 'BAD' not in text, 'findings': []}\n"
             "if os.environ.get('PRINT_GLOSSARY'):\n"
             "    path = Path(sys.argv[sys.argv.index('--glossary') + 1])\n"
@@ -233,6 +254,77 @@ class CommandTests(unittest.TestCase):
             " 2 occurrences  room\n",
         )
         self.assertNotIn("VALE RAN", result.stdout)
+
+    def test_vocabulary_report_merges_observed_forms(self) -> None:
+        self.env["FAKE_STE_REPORT"] = "1"
+        result = self.run_tool("--vocabulary-report", input_text="meal meals meals.\n")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("3 occurrences  meal (forms: meal, meals)", result.stdout)
+        self.assertNotIn("occurrences  meals\n", result.stdout)
+
+    def test_exact_name_does_not_create_fragment_candidates(self) -> None:
+        project = self.directory / "project"
+        workflow = project / ".workflow"
+        workflow.mkdir(parents=True)
+        (workflow / "ste-glossary.json").write_text(json.dumps({
+            "exact_names": ["Farmer's Delight"],
+        }))
+        source = project / "brief.md"
+        source.write_text("Farmer's Delight supplies meals.\n")
+        self.env["FAKE_STE_REPORT"] = "1"
+
+        result = self.run_tool("--vocabulary-report", str(source))
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("meals", result.stdout)
+        self.assertNotIn("farmer", result.stdout.casefold())
+        self.assertNotIn("delight", result.stdout.casefold())
+
+        checked = self.run_tool(str(source))
+        self.assertEqual(checked.returncode, 1, checked.stderr)
+        self.assertIn("STE-SENTENCE-LENGTH", checked.stdout)
+        self.assertNotIn("Vale ==", checked.stdout)
+
+    def test_context_phrase_approves_words_only_inside_phrase(self) -> None:
+        project = self.directory / "project"
+        workflow = project / ".workflow"
+        workflow.mkdir(parents=True)
+        (workflow / "context.md").write_text(
+            "# Context\n\n## Job reservation\n"
+            "- Meaning: A Job reservation holds work for one task.\n"
+            "- STE class: Technical name\n"
+        )
+        source = project / "brief.md"
+        source.write_text("A Job reservation is saved. A reservation remains.\n")
+        self.env["FAKE_STE_REPORT"] = "1"
+        result = self.run_tool("--vocabulary-report", str(source))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("reservation", result.stdout)
+        self.assertNotIn("job", result.stdout.casefold())
+
+    @unittest.skipUnless(shutil.which("ste100"), "STE100 is required")
+    def test_exact_name_does_not_hide_sentence_length(self) -> None:
+        real_tool = self.directory / "real-ste100"
+        real_tool.mkdir()
+        (real_tool / "ste100").symlink_to(shutil.which("ste100"))
+        self.env["PATH"] = f"{real_tool}:{os.environ['PATH']}"
+        project = self.directory / "project"
+        workflow = project / ".workflow"
+        workflow.mkdir(parents=True)
+        (workflow / "ste-glossary.json").write_text(json.dumps({
+            "exact_names": ["Farmer's Delight"],
+        }))
+        source = project / "brief.md"
+        source.write_text(
+            "Farmer's Delight can make a meal after the player puts the correct items "
+            "in the cabin, but the player must also make sure that the cabin has enough space.\n"
+        )
+        result = self.run_tool(str(source))
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("STE-SENTENCE-LENGTH", result.stdout)
+        self.assertNotIn("Word 'Farmer'", result.stdout)
+        self.assertNotIn("Word 'Delight'", result.stdout)
+        self.assertNotIn("Vale ==", result.stdout)
 
     def test_vocabulary_report_rejects_missing_files_and_checker_failures(self) -> None:
         self.env["FAKE_STE_REPORT"] = "1"

@@ -46,44 +46,66 @@ consuming project. Suggest repeated local terms for promotion to shared
 vocabulary when they could help many projects. Make and review that change in
 `ofweb/skills` before it enters the common language profile.
 
-Add glossary terms under `technical_nouns` or `technical_verbs`. Each list
-accepts a word or an object with `word` and optional `inflections`. Keep
-meanings and feature behavior out of the glossary. A word does not need a
-Context definition merely because STE100 does not know it. Use `--project-root`
-for standard input or files outside the project tree.
+Put reviewed terms in an `approved_terms` list. Each entry has a `word` and
+only the `inflections` that the prose needs. Add `part_of_speech` only when it
+helps distinguish a verb or adjective. The pinned checker still needs its
+native noun and verb lists; `prose-check` builds those lists at run time.
+Existing project glossaries with `technical_nouns` and `technical_verbs` still
+work. Do not use a glossary term to change the approved meaning of an ordinary
+STE100 word. Keep meanings and feature behavior out of the project glossary.
+Use `--project-root` for standard input or files outside the project tree.
 
-When STE100 reports unknown words, collect all distinct words before editing
-prose. Use `prose-check --vocabulary-report '.workflow/**/*.md'` to count findings
-across files. Search existing project documents when usage can help classify a
-term. Classify every distinct unknown term as one of these:
+Keep exact product names, mod names, API names, commands, and identifiers
+verbatim. Do not approve their fragments as vocabulary. Inline code is already
+excluded from STE100 input. For plain-text exact names, add the complete name
+to `exact_names` in `.workflow/ste-glossary.json`. This only filters vocabulary
+findings within that name. Use the exact capitalized spelling. Put lowercase
+identifiers in inline code. Sentence checks still see the full text.
 
-- Shared vocabulary candidate: common engineering or workflow language.
-- Project vocabulary candidate: intentional project or domain language.
-- Context concept candidate: a project meaning that must stay stable.
-- Ordinary prose to rewrite: an unnecessary term or one with a clearer approved word.
-- Probable checker or document-structure finding: inspect the checker or Markdown extraction.
+Use Context only for a project concept with a stable canonical meaning. Prefer
+a multi-word concept when its special meaning belongs to the phrase. A generic
+word does not need Context merely because STE100 does not know it. For example,
+`reservation` can be a shared term while `Job reservation` can be a Context
+concept. The checker approves unknown words only inside the complete Context
+phrase, so the individual words do not gain general approval.
 
-Rewrite ordinary prose without asking the user when meaning stays intact.
-Investigate probable checker or document-structure findings. Run `prose-check`
-again after each rewrite or tooling pass. When unknown vocabulary remains, do
-not stop with the raw checker output.
+When STE100 reports unknown words, first ask if simpler approved language can
+preserve useful meaning. Prefer that rewrite over a vocabulary exception.
+Collect all distinct unknown words with
+`prose-check --vocabulary-report '.workflow/**/*.md'`. The report groups observed forms and counts their total
+use. Search existing vocabulary, Context, and project documents when usage
+helps classification. Classify every remaining term as one of these:
 
-Before adding vocabulary, present all candidate terms in one review group.
-For each term, give its proposed source and a short reason. Include a short
-example from the project when the classification is not clear. Do not present
-the full lint output unless the user asks for it. Wait for the user's review
-before adding vocabulary.
+- `rewrite`: simpler STE100 wording preserves the meaning.
+- `shared`: necessary software or workflow language useful across projects.
+- `project`: necessary local or domain language without a special meaning.
+- `context`: a project concept whose exact meaning must remain stable.
+- `checker`: an exact name, identifier, false positive, or extraction problem.
+
+Rewrite safe `rewrite` cases without asking the user. Investigate `checker`
+cases and fix the tool or exact-name list where appropriate. Rerun
+`prose-check` after each pass. Do not stop with raw checker output.
+
+Add vocabulary only if replacement would reduce precision, clarity, or
+consistency, or make the prose awkward. Repeated use suggests intent, but it
+does not approve a term by itself. Be especially conservative with ordinary
+adjectives, abstract nouns, jargon, rare words, and words that approved STE100
+language can express clearly. Vocabulary supports necessary terminology; it
+must not recreate unrestricted English.
+
+Before adding vocabulary, present one compact review group of real decisions.
+Group trivial noun and verb forms under one canonical candidate. For each
+candidate, show its source (`shared`, `project`, or `context`), observed forms,
+and a short reason an approved replacement does not work. Include one short
+project example when the classification is unclear. Do not show raw lint output
+unless requested. Wait for the user's review before adding vocabulary.
 
 Apply accepted project terms to `.workflow/ste-glossary.json`. Add a Context
 concept only after its canonical meaning is agreed. Change shared vocabulary
 only in `ofweb/skills`, after review. Do not edit the installed copy from a
-consuming project. Run `prose-check` again after each vocabulary pass.
-
-Add a vocabulary term when the prose uses it intentionally and replacement
-would reduce precision, clarity, or consistency. Repeated use across project
-documents is strong evidence for project vocabulary. Prefer vocabulary
-maintenance over awkward rewrites around legitimate technical terms.
-
-Continue until STE100 passes. Then fix Vale findings and rerun the checker.
-Treat large lint results as work to perform, not a report to summarize. Report
-remaining findings only when a semantic conflict prevents a safe fix.
+consuming project. Rerun `prose-check` after each accepted vocabulary pass.
+Continue rewriting avoidable words until STE100 passes. Then fix Vale findings
+and rerun the checker. Do not soften sentence structure, verb usage, approved
+meaning, sentence length, ambiguity, or complexity rules to approve a term.
+The pinned checker does not enforce part of speech for technical terms. Review
+their verb use and intended meaning directly.

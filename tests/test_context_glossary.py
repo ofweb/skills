@@ -28,6 +28,45 @@ class ContextGlossaryTests(unittest.TestCase):
             self.assertEqual(nouns["Nautilus"]["inflections"], ["Nautiluses"])
             self.assertIn("attune", verbs)
 
+    def test_generic_terms_keep_forms_and_optional_grammar(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary) / "ste-glossary.json"
+            project.write_text(json.dumps({
+                "approved_terms": [
+                    {"word": "meal", "inflections": ["meals"]},
+                    {"word": "harvest", "part_of_speech": "verb", "inflections": ["harvests", "harvested"]},
+                    {"word": "virtual", "part_of_speech": "adjective"},
+                ],
+                "exact_names": ["Farmer's Delight"],
+            }))
+            glossary = MODULE.combined_glossary(SKILL / "shared-terms.json", project_path=project)
+            nouns = {entry["word"]: entry for entry in glossary["technical_nouns"]}
+            verbs = {entry["word"]: entry for entry in glossary["technical_verbs"]}
+            self.assertEqual(nouns["meal"]["inflections"], ["meals"])
+            self.assertEqual(nouns["virtual"]["part_of_speech"], "adjective")
+            self.assertEqual(verbs["harvest"]["inflections"], ["harvests", "harvested"])
+            self.assertEqual(MODULE.project_data(project)[1], ["Farmer's Delight"])
+
+    def test_shared_generic_terms_merge_to_native_glossary(self):
+        glossary = MODULE.combined_glossary(SKILL / "shared-terms.json")
+        nouns = {entry["word"]: entry for entry in glossary["technical_nouns"]}
+        verbs = {entry["word"]: entry for entry in glossary["technical_verbs"]}
+        self.assertIn("question", nouns)
+        self.assertEqual(nouns["question"]["inflections"], ["questions"])
+        self.assertIn("confirm", verbs)
+
+    def test_shared_terms_reject_duplicate_forms(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            shared = Path(temporary) / "shared-terms.json"
+            shared.write_text(json.dumps({
+                "approved_terms": [
+                    {"word": "meal", "inflections": ["meals"]},
+                    {"word": "meals"},
+                ]
+            }))
+            with self.assertRaisesRegex(ValueError, "repeats"):
+                MODULE.combined_glossary(shared)
+
     def test_project_glossary_and_context_cannot_repeat_terms_or_forms(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -53,6 +92,12 @@ class ContextGlossaryTests(unittest.TestCase):
             project.write_text(json.dumps({"technical_nouns": [{"word": "redstone", "inflections": "redstones"}]}))
             with self.assertRaisesRegex(ValueError, "forms"):
                 MODULE.combined_glossary(SKILL / "shared-terms.json", project_path=project)
+            project.write_text(json.dumps({"exact_names": [""]}))
+            with self.assertRaisesRegex(ValueError, "exact_names"):
+                MODULE.project_data(project)
+            project.write_text(json.dumps({"exact_names": ["ordinary prose"]}))
+            with self.assertRaisesRegex(ValueError, "capitalized"):
+                MODULE.project_data(project)
 
     def test_approved_context_entries_extend_shared_terms(self):
         with tempfile.TemporaryDirectory() as temporary:

@@ -1,6 +1,6 @@
 {
   "name": "shared-software-prose",
-  "technical_nouns": [
+  "approved_terms": [
     {
       "word": "file",
       "approved_meaning": "A named unit of data stored by a computer.",
@@ -178,7 +178,9 @@
     {
       "word": "request",
       "inflections": [
-        "requests"
+        "requests",
+        "requested",
+        "requesting"
       ]
     },
     {
@@ -292,7 +294,9 @@
     {
       "word": "restart",
       "inflections": [
-        "restarts"
+        "restarts",
+        "restarted",
+        "restarting"
       ]
     },
     {
@@ -316,7 +320,9 @@
     {
       "word": "transfer",
       "inflections": [
-        "transfers"
+        "transfers",
+        "transferred",
+        "transferring"
       ]
     },
     {
@@ -392,12 +398,10 @@
       ]
     },
     {
-      "word": "guidance",
-      "inflections": []
+      "word": "guidance"
     },
     {
-      "word": "ownership",
-      "inflections": []
+      "word": "ownership"
     },
     {
       "word": "reason",
@@ -420,40 +424,6 @@
     {
       "word": "change",
       "inflections": [
-        "changes"
-      ]
-    },
-    {
-      "word": "commit",
-      "inflections": [
-        "commits"
-      ]
-    },
-    {
-      "word": "draft",
-      "inflections": [
-        "drafts"
-      ]
-    },
-    {
-      "word": "question",
-      "inflections": [
-        "questions"
-      ]
-    }
-  ],
-  "technical_verbs": [
-    {
-      "word": "assign",
-      "inflections": [
-        "assigns",
-        "assigned",
-        "assigning"
-      ]
-    },
-    {
-      "word": "change",
-      "inflections": [
         "changes",
         "changed",
         "changing"
@@ -468,12 +438,109 @@
       ]
     },
     {
+      "word": "draft",
+      "inflections": [
+        "drafts"
+      ]
+    },
+    {
+      "word": "question",
+      "inflections": [
+        "questions"
+      ]
+    },
+    {
+      "word": "architecture"
+    },
+    {
+      "word": "batch",
+      "inflections": [
+        "batches"
+      ]
+    },
+    {
+      "word": "bounded"
+    },
+    {
+      "word": "cancellation",
+      "inflections": [
+        "cancellations"
+      ]
+    },
+    {
+      "word": "integration",
+      "inflections": [
+        "integrations"
+      ]
+    },
+    {
+      "word": "intermediate",
+      "inflections": [
+        "intermediates"
+      ]
+    },
+    {
+      "word": "interruption",
+      "inflections": [
+        "interruptions"
+      ]
+    },
+    {
+      "word": "registry",
+      "inflections": [
+        "registries"
+      ]
+    },
+    {
+      "word": "reservation",
+      "inflections": [
+        "reservations"
+      ]
+    },
+    {
+      "word": "simulation",
+      "inflections": [
+        "simulations"
+      ]
+    },
+    {
+      "word": "startup",
+      "inflections": [
+        "startups"
+      ]
+    },
+    {
+      "word": "throughput"
+    },
+    {
+      "word": "trigger",
+      "inflections": [
+        "triggers"
+      ]
+    },
+    {
+      "word": "variant",
+      "inflections": [
+        "variants"
+      ]
+    },
+    {
+      "word": "assign",
+      "inflections": [
+        "assigns",
+        "assigned",
+        "assigning"
+      ],
+      "part_of_speech": "verb"
+    },
+    {
       "word": "persist",
       "inflections": [
         "persists",
         "persisted",
         "persisting"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "inspect",
@@ -481,7 +548,8 @@
         "inspects",
         "inspected",
         "inspecting"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "configure",
@@ -489,7 +557,8 @@
         "configures",
         "configured",
         "configuring"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "validate",
@@ -497,7 +566,8 @@
         "validates",
         "validated",
         "validating"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "save",
@@ -505,7 +575,8 @@
         "saves",
         "saved",
         "saving"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "deploy",
@@ -513,7 +584,8 @@
         "deploys",
         "deployed",
         "deploying"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "restore",
@@ -521,31 +593,8 @@
         "restores",
         "restored",
         "restoring"
-      ]
-    },
-    {
-      "word": "restart",
-      "inflections": [
-        "restarts",
-        "restarted",
-        "restarting"
-      ]
-    },
-    {
-      "word": "transfer",
-      "inflections": [
-        "transfers",
-        "transferred",
-        "transferring"
-      ]
-    },
-    {
-      "word": "request",
-      "inflections": [
-        "requests",
-        "requested",
-        "requesting"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "confirm",
@@ -553,7 +602,8 @@
         "confirms",
         "confirmed",
         "confirming"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "authorize",
@@ -561,7 +611,8 @@
         "authorizes",
         "authorized",
         "authorizing"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "recover",
@@ -569,7 +620,8 @@
         "recovers",
         "recovered",
         "recovering"
-      ]
+      ],
+      "part_of_speech": "verb"
     },
     {
       "word": "delete",
@@ -577,7 +629,17 @@
         "deletes",
         "deleted",
         "deleting"
-      ]
+      ],
+      "part_of_speech": "verb"
+    },
+    {
+      "word": "bind",
+      "inflections": [
+        "binds",
+        "bound",
+        "binding"
+      ],
+      "part_of_speech": "verb"
     }
   ]
 }

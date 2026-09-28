@@ -91,6 +91,24 @@ def prose_only(markdown: str) -> str:
     return "".join(prose)
 
 
+def phrase_spans(prose: str, phrases: list[str], *, ignore_case: bool = False) -> list[tuple[int, int]]:
+    """Locate complete approved phrases without changing sentence text."""
+    spans = []
+    flags = re.IGNORECASE if ignore_case else 0
+    for phrase in phrases:
+        pattern = re.compile(rf"(?<!\w){re.escape(phrase)}(?!\w)", flags)
+        spans.extend(match.span() for match in pattern.finditer(prose))
+    return spans
+
+
+def in_phrase(finding: dict, spans: list[tuple[int, int]]) -> bool:
+    """True only when a checker finding lies wholly inside an approved phrase."""
+    start, end = finding.get("start"), finding.get("end")
+    return isinstance(start, int) and isinstance(end, int) and any(
+        phrase_start <= start < end <= phrase_end for phrase_start, phrase_end in spans
+    )
+
+
 def is_possessive_suffix(finding: dict, prose: str) -> bool:
     """Filter the pinned checker's false unknown word for a possessive suffix."""
     # STE100 permits owner's. The pinned asd-ste100-checker revision
@@ -116,7 +134,10 @@ def is_possessive_suffix(finding: dict, prose: str) -> bool:
     )
 
 
-def ste_result(command: list[str], prose: str) -> tuple[int, dict | None, str]:
+def ste_result(
+    command: list[str], prose: str, *, exact_spans: list[tuple[int, int]] | None = None,
+    context_spans: list[tuple[int, int]] | None = None,
+) -> tuple[int, dict | None, str]:
     """Run STE100 and remove only verified possessive token findings."""
     result = subprocess.run(command, input=prose, text=True, capture_output=True)
     if result.returncode not in (0, 1):
@@ -126,7 +147,20 @@ def ste_result(command: list[str], prose: str) -> tuple[int, dict | None, str]:
         findings = report["findings"]
         if not isinstance(findings, list) or any(not isinstance(item, dict) for item in findings):
             raise ValueError("findings must be a list of objects")
-        kept = [item for item in findings if not is_possessive_suffix(item, prose)]
+        exact_spans = exact_spans or []
+        context_spans = context_spans or []
+        kept = [
+            item for item in findings
+            if not is_possessive_suffix(item, prose)
+            and not (
+                item.get("rule_id") in {"STE-VOCAB-UNAPPROVED", "STE-POS-MISMATCH"}
+                and in_phrase(item, exact_spans)
+            )
+            and not (
+                item.get("rule_id") == "STE-VOCAB-UNAPPROVED"
+                and in_phrase(item, context_spans)
+            )
+        ]
         report["findings"] = kept
         status = 0 if result.returncode == 1 and findings and not kept else result.returncode
         report["compliant"] = status == 0
@@ -169,6 +203,35 @@ def report_inputs(names: list[str]) -> list[str]:
     return selected
 
 
+def vocabulary_groups(unknown: Counter[str]) -> list[tuple[str, list[str], int]]:
+    """Group only clear forms whose base word also appears in the report."""
+    observed = set(unknown)
+
+    def base_for(word: str) -> str:
+        candidates = []
+        if word.endswith("ies"):
+            candidates.append(word[:-3] + "y")
+        if word.endswith("es"):
+            candidates.append(word[:-2])
+        if word.endswith("s") and not word.endswith("ss"):
+            candidates.append(word[:-1])
+        if word.endswith("ied"):
+            candidates.append(word[:-3] + "y")
+        if word.endswith("ed"):
+            candidates.extend((word[:-2], word[:-1]))
+        if word.endswith("ing"):
+            candidates.extend((word[:-3], word[:-3] + "e"))
+        return next((base for base in candidates if base in observed), word)
+
+    grouped: dict[str, list[str]] = {}
+    for word in sorted(observed):
+        grouped.setdefault(base_for(word), []).append(word)
+    return sorted(
+        ((base, forms, sum(unknown[form] for form in forms)) for base, forms in grouped.items()),
+        key=lambda item: (-item[2], item[0]),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, help="Project root for vocabulary")
@@ -207,7 +270,6 @@ def main() -> int:
         if not args.vocabulary_report:
             print(f"== {name}: STE100 ==", flush=True)
         with tempfile.TemporaryDirectory(prefix="prose-check-") as temporary:
-            glossary = GLOSSARY
             root = project_root(name, args.project_root)
             context = root / ".workflow" / "context.md" if root else None
             project_glossary = root / ".workflow" / "ste-glossary.json" if root else None
@@ -215,21 +277,37 @@ def main() -> int:
             project_glossary = (
                 project_glossary if project_glossary and project_glossary.is_file() else None
             )
-            if context or project_glossary:
-                try:
-                    sys.path.insert(0, str(Path(__file__).resolve().parent))
-                    from context_glossary import combined_glossary
+            exact_names = []
+            context_phrases = []
+            try:
+                sys.path.insert(0, str(Path(__file__).resolve().parent))
+                from context_glossary import combined_glossary, context_entries, project_data
 
-                    merged = combined_glossary(GLOSSARY, context, project_glossary)
-                    glossary = Path(temporary) / "glossary.json"
-                    glossary.write_text(json.dumps(merged, ensure_ascii=False), encoding="utf-8")
-                except Exception as exc:
-                    print(f"prose-check: {name}: Project vocabulary: {exc}", file=sys.stderr)
-                    status = 2
-                    continue
+                merged = combined_glossary(GLOSSARY, context, project_glossary)
+                if project_glossary:
+                    _, exact_names = project_data(project_glossary)
+                if context:
+                    context_phrases = [
+                        phrase
+                        for term, _, _, forms in context_entries(
+                            context.read_text(encoding="utf-8")
+                        )
+                        for phrase in (term, *forms)
+                        if " " in phrase
+                    ]
+                glossary = Path(temporary) / "glossary.json"
+                glossary.write_text(json.dumps(merged, ensure_ascii=False), encoding="utf-8")
+            except Exception as exc:
+                print(f"prose-check: {name}: Project vocabulary: {exc}", file=sys.stderr)
+                status = 2
+                continue
+            exact_spans = phrase_spans(prose, exact_names)
+            context_spans = phrase_spans(prose, context_phrases, ignore_case=True)
             command = ["ste100", "check", "--glossary", str(glossary)]
             if args.vocabulary_report:
-                check_status, report, error = ste_result(command, prose)
+                check_status, report, error = ste_result(
+                    command, prose, exact_spans=exact_spans, context_spans=context_spans
+                )
                 if check_status not in (0, 1) or report is None:
                     print(f"prose-check: {name}: STE100 failed: {error.strip()}", file=sys.stderr)
                     status = 2
@@ -253,7 +331,9 @@ def main() -> int:
                     print(f"prose-check: {name}: invalid STE100 report: {exc}", file=sys.stderr)
                     status = 2
                 continue
-            ste_status, report, output = ste_result(command, prose)
+            ste_status, report, output = ste_result(
+                command, prose, exact_spans=exact_spans, context_spans=context_spans
+            )
             if report is None:
                 sys.stdout.write(output)
             else:
@@ -277,11 +357,13 @@ def main() -> int:
     if args.vocabulary_report and status == 0:
         print("Unknown vocabulary")
         if unknown:
+            groups = vocabulary_groups(unknown)
             print()
-            width = max(2, len(str(max(unknown.values()))))
-            for word, count in sorted(unknown.items(), key=lambda item: (-item[1], item[0])):
+            width = max(2, len(str(max(count for _, _, count in groups))))
+            for word, forms, count in groups:
                 label = "occurrence" if count == 1 else "occurrences"
-                print(f"{count:>{width}} {label}  {word}")
+                detail = f" (forms: {', '.join(forms)})" if len(forms) > 1 else ""
+                print(f"{count:>{width}} {label}  {word}{detail}")
         else:
             print("\nNone.")
     return status
