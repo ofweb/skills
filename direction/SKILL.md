@@ -86,10 +86,11 @@ Place each durable result in one home:
 - Changed understanding of the intended end state or an unresolved end-state
   question: main or relevant topic Direction document. Keep the main synthesis
   current across all topics.
-- Future feature or implementation effort that the user and model agree is
+- Future feature with an observable outcome that the user and model agree is
   worth retaining: Backlog. Understand its place in the intended end state
-  before adding it. Do not add open questions, research tasks, architecture
-  tasks, or implementation details as separate items.
+  before adding it. Keep unresolved end-state questions in Direction and link
+  to them from `Needs Direction` items. Do not add research, architecture, or
+  internal engineering tasks as separate Backlog items.
 - Durable product or behavioural decision: PDR.
 - Stable project term: Context.
 - External source with durable project value and its context: References.
@@ -120,4 +121,5 @@ genuine session boundary, briefly state what changed and what remains open.
 Give a workflow handoff when the user finishes Direction or switches stages.
 Suggest `/clear` and a copyable prompt only when a context reset is useful.
 Direction has no global completion state. A Backlog item becomes Ready for Shape
-when Direction is sufficiently settled for that item.
+when Direction is sufficiently settled for that item. Direction owns that
+readiness decision.

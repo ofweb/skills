@@ -15,11 +15,14 @@ return to Shape.
 ## Create and locate
 
 Create a brief when Shape has enough useful behavioural understanding to
-preserve. Do not create one merely because Shape has started. Read the related
-Backlog item, nearby briefs, and applicable main or topic Direction, Context,
-PDR, and ADR material. If the feature has no Backlog item, confirm that the
-work is worth retaining and create one through `backlog-document` first. Use
-that item's stable ID as the feature ID. Store the brief at
+preserve. Do not create one merely because Shape has started. Require an
+existing Backlog item with `Status: Ready for Shape`. If no item exists, return
+the work to Direction. If its status is `Needs Direction`, return to the
+unresolved question in Direction. Return any other status besides
+`Ready for Shape` to Direction for review. Do not create or promote an item from
+this skill. Read the Ready item, nearby briefs, and applicable main or topic
+Direction, Context, PDR, and ADR material. Use the item's stable ID as the
+feature ID. Store the brief at
 `.workflow/features/<feature-id>/brief.md`, such as
 `.workflow/features/B-0001/brief.md`. Link it from the Backlog item through
 `backlog-document`.
@@ -75,7 +78,12 @@ Before Ready, give every story acceptance coverage. Cover relevant failure and
 boundary behaviour, permissions, persistence, lifecycle, and compatibility
 where observable.
 
-State scope and non-goals. Link neighbouring features and shared Direction, Context, PDR, or ADR material when they constrain this feature. Record unresolved questions and unverified assumptions in Draft, clearly marked as such. Remove resolved questions and superseded wording instead of retaining a discussion history.
+State scope and non-goals. Link neighbouring features and shared Direction,
+Context, PDR, or ADR material when they constrain this feature. Record unresolved
+feature-behaviour questions and unverified assumptions in Draft. Keep unresolved
+end-state questions in Direction and link to them instead of copying them.
+Remove resolved questions and superseded wording instead of retaining a
+discussion history.
 
 Ready requires one coherent vertical slice, agreed behaviour and boundaries,
 acceptance coverage, intentional scope and non-goals, and linked shared

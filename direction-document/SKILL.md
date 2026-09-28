@@ -57,7 +57,7 @@ between them.
 Do not add a Backlog, roadmap, delivery order, progress report, feature
 requirements, architecture, task list, or completed-work catalogue. Keep
 transient ideas in discussion until the user adopts them as Direction. Put
-agreed future implementation work in the Backlog and durable product reasoning
+agreed future features in the Backlog and durable product reasoning
 in a PDR.
 
 ## Maintenance

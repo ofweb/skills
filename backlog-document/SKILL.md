@@ -1,14 +1,16 @@
 ---
 name: backlog-document
-description: Create or revise the shared Backlog at .workflow/backlog.md when agreed future implementation work or its readiness for Shape changes.
+description: Record agreed future features and their readiness for Shape in the shared Backlog at .workflow/backlog.md.
 ---
 
 # Backlog
 
-The Backlog retains future implementation work that the user and model agree is
-worth doing. Direction and Shape maintain one file at `.workflow/backlog.md`.
-It is authoritative about retained work and durable relationships, not accepted
-feature behaviour or work order.
+The Backlog retains feature-level future work that the user and model agree is
+worth doing. Each item has a path toward Shape and an observable outcome.
+Direction owns item creation and readiness for Shape. Shape may update agreed
+boundaries and relationships of existing items in `.workflow/backlog.md`.
+The file is authoritative about retained work and durable relationships, not
+accepted feature behaviour or work order.
 Create the file with `# Backlog` during initial Direction setup, even when no
 items exist yet.
 
@@ -28,13 +30,15 @@ number. Keep the ID when the title or status changes.
 
 - Status: Needs Direction
 - Value: Why this work is worth doing.
-- Open Direction: Consequential question, when one remains.
+- Direction: [Relevant topic](direction/topic.md)
 - Feature Brief: Relative link, when one exists.
 - Relationships: Durable dependency, order, overlap, or group, when relevant.
-- Source: Link to Direction or a durable decision, when useful.
 ```
 
 Select exactly one status. Omit an optional line when it has no value.
+For `Needs Direction`, link to the Direction material that holds the unresolved
+question. For `Ready for Shape`, keep the Direction link when it gives useful
+context. Do not copy the question into the Backlog.
 When a Feature Brief exists, link `features/<item-id>/brief.md`. The item ID is
 an identity, not a priority or delivery order.
 
@@ -56,13 +60,16 @@ Direction, not from a direct marker translation.
 
 ## Maintenance
 
-Add an item after Direction establishes why it exists and how it fits the
-intended end state. Agree with the user that the work is worth retaining.
-Do not add items while exploring possibilities. Do not use the Backlog for open
-Direction questions, research tasks, architecture tasks, or implementation
-details. An item may retain a consequential Direction question when the work
-itself is already agreed. Revise items when Shape changes their boundaries.
-Shape can split, combine, replace, or relate items. Keep IDs
+Add an item only through Direction after it establishes why the feature exists
+and how it fits the intended end state. Agree with the user that the work is
+worth retaining. Do not add items while exploring possibilities. Do not use
+the Backlog for open Direction questions, research tasks, architecture tasks,
+or internal engineering work without its own observable outcome. Keep refactors,
+helper work, module changes, migrations, and implementation steps within the
+owning feature's later Design or Implementation. Return a possible separate
+technical capability to Direction for discussion. Shape may propose a split or
+new item, but Direction decides whether to retain it and when it is Ready.
+Revise existing items when Shape changes their agreed boundaries. Keep IDs
 stable for retained items. Update affected links when an item is replaced or
 removed. Delete items that are no longer plausible work, including delivered
 items with no remaining work. Merge or replace duplicate items. Do not create
@@ -79,8 +86,8 @@ precisely than the main document.
 Record only durable dependencies or sequence constraints. Do not record a
 transient priority order or the user's active Shape selection. Do not copy
 Feature Brief requirements, stories, acceptance criteria, implementation plans,
-or discussion transcripts into an item. Create a draft Feature Brief when
-durable behavioural detail no longer fits a compact Backlog item.
+or discussion transcripts into an item. For a `Ready for Shape` item, create
+a draft Feature Brief when useful behavioural understanding needs a durable home.
 
 Invoke `concise-prose` before writing or revising the Backlog. Follow its STE100
 and Vale repair loop until `prose-check` passes. Install

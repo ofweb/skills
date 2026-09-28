@@ -8,18 +8,31 @@ description: Discuss agreed project work with the user to shape observable featu
 Shape is an iterative design discussion about work that belongs in the project.
 Its purpose is shared understanding of observable behaviour before Design.
 The brief records what survives that discussion. The user names the item or
-related work to shape. Shape may prepare related features, but it selects at
-most one Ready Feature Brief for Design.
+related work to shape. Shape starts only from an existing Backlog item with
+`Status: Ready for Shape`. It may prepare related Ready items together, but it
+selects at most one Ready Feature Brief for Design.
 
 ## Orient and bound the work
 
-Read the relevant `.workflow/direction.md` sections, linked Direction topic documents, Backlog items, Feature Briefs, and decisions. Inspect repository behaviour before relying on claims about the current system. Investigate prior art when it can change expected behaviour or feature boundaries. Read only context relevant to the active question.
+Find the existing Backlog item for the requested work. If none exists, return
+the work to Direction to decide whether it belongs in the intended end state.
+If its status is `Needs Direction`, identify the relevant unresolved question
+in Direction and return to that discussion. Do not create an item or start a
+Feature Brief from Shape. Return any other status besides `Ready for Shape` to
+Direction for review. Read the relevant `.workflow/direction.md` sections,
+linked topic documents, the Ready item, existing briefs, and decisions. Inspect
+repository behaviour before relying on claims about the current system.
+Investigate prior art when it can change behaviour or feature boundaries.
+Read only context relevant to the active question.
 
 Start with a concrete proposal, example, or consequence drawn from that context.
 Explain what follows from Direction and current system behaviour. Give the user
 something to react to, even when the prompt names only a Backlog item.
 
-Identify the candidate feature or small related group under discussion. Shape related candidates together only while their boundaries or order need joint reasoning. Leave independent candidates for later rounds. Direction and Backlog wording supplies ideas, not accepted requirements.
+Identify the feature or small group of Ready items under discussion. Shape
+related items together only while their boundaries or order need joint
+reasoning. Leave independent items for later rounds. Direction and Backlog
+wording supplies ideas, not accepted requirements.
 
 ## Explore behaviour
 
@@ -45,7 +58,8 @@ deferred. One answer does not close an issue by itself. When the user disagrees,
 revise the current model of the feature and test its consequences. Explore a
 coupled issue that the answer exposes. Challenge weak reasoning and
 inconsistencies with evidence, then let the user make the product judgment.
-Preserve material open questions in a Draft Feature Brief when one exists.
+Preserve material feature-behaviour questions in a Draft Feature Brief when one
+exists. Keep unresolved end-state questions in Direction and link to them.
 
 Use concrete stories when they expose ambiguity or test proposed behaviour.
 Examine successful behaviour, failures, permissions, persistence, lifecycle,
@@ -54,7 +68,13 @@ question sequence. State scope and non-goals as understanding improves. Keep
 uncertain behaviour in Draft until the user resolves, verifies, removes, or
 safely defers it.
 
-Prefer the smallest coherent feature with an independently observable outcome. Do not invent a system actor or story to make engineering work appear to be a feature. When agreed, put work without independent value in the Backlog as engineering work supporting another feature. Do not use Shape to choose internal APIs, modules, data structures, libraries, implementation plans, or test code.
+Prefer the smallest coherent feature with an independently observable outcome.
+Do not invent an actor or story to make internal engineering work appear to be
+a feature. Keep refactors, helper work, module changes, migrations, and other
+implementation steps within the owning feature's later Design or Implementation.
+If technical work may be a separate project capability, return it to Direction
+to decide. Do not use Shape to choose internal APIs, modules, data structures,
+libraries, implementation plans, or test code.
 
 ## Maintain durable records
 
@@ -64,7 +84,13 @@ question in an existing brief. Continue the discussion after an edit. Do not
 create a brief merely because Shape has started, and do not rewrite it after
 every exploratory turn. Mark tentative parts of a Draft clearly.
 
-Use `backlog-document` when agreed future work, its readiness for Shape, or durable relationships change. Before a Direction idea gets a Feature Brief, retain it in the Backlog only when the user and model agree that the work is worth doing. Resolve consequential Direction questions for that item before Shape. Use `feature-brief-document` when the discussion has enough useful behaviour to preserve. Keep each existing draft current with material agreements and open questions.
+Use `backlog-document` to update an existing item's agreed boundaries or
+relationships when Shape changes them. Direction decides whether discovered
+work merits a new item and when an item becomes Ready for Shape. Return such
+work to Direction; do not create or promote a Backlog item in Shape. Use
+`feature-brief-document` when the discussion has enough useful behaviour to
+preserve. Keep each existing draft current with material agreements and open
+questions.
 
 Draft Feature Briefs are durable memory of shared behavioural understanding.
 They support the discussion instead of driving it. Do not create separate Shape
