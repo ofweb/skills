@@ -277,14 +277,21 @@ def check_stories(
     return len(stories)
 
 
-def check_brief(doc: Document, findings: list[Finding]) -> tuple[str | None, int]:
-    parts = doc.path.split("/")
+def brief_directory_id(path: str) -> str | None:
+    parts = path.split("/")
     if (
-        len(parts) != 4
-        or parts[:2] != [".workflow", "features"]
-        or parts[-1] != "brief.md"
-        or not FEATURE_ID.fullmatch(parts[2])
+        len(parts) == 4
+        and parts[:2] == [".workflow", "features"]
+        and parts[3] == "brief.md"
+        and FEATURE_ID.fullmatch(parts[2])
     ):
+        return parts[2]
+    return None
+
+
+def check_brief(doc: Document, findings: list[Finding]) -> tuple[str | None, int]:
+    directory_id = brief_directory_id(doc.path)
+    if directory_id is None:
         add(
             findings, "FB017", doc.path, 1,
             "Feature Brief must be at .workflow/features/B-xxxx/brief.md",
@@ -317,10 +324,10 @@ def check_brief(doc: Document, findings: list[Finding]) -> tuple[str | None, int
             ids[1][1] if len(ids) > 1 else ids[0][1] if ids else 1,
             "Feature ID must occur once and have form B-xxxx",
         )
-    elif parts[2] != ids[0][0]:
+    elif directory_id is not None and directory_id != ids[0][0]:
         add(
             findings, "FB003", doc.path, ids[0][1],
-            f"Feature ID {ids[0][0]} does not match directory {parts[2]}",
+            f"Feature ID {ids[0][0]} does not match directory {directory_id}",
         )
     parts_by_name: dict[str, Section] = {}
     for part in sections(doc):
@@ -430,7 +437,9 @@ def check_backlog(
             )
         elif identity:
             seen_ids[identity] = doc.path
-        directory_id = doc.path.split("/")[2]
+        directory_id = brief_directory_id(doc.path)
+        if directory_id is None:
+            continue
         item = items.get(directory_id)
         if item is None:
             add(findings, "FB012", doc.path, 1, f"No backlog item for {directory_id}")

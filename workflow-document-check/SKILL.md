@@ -27,3 +27,8 @@ The checker counts whitespace-separated words in Markdown source,
 including headings and link text. A hard-limit error calls for pruning
 or a clearer document boundary. Do not fill documents to their hard
 limits.
+
+To maintain the validator, edit `scripts/validate.py`, run
+`python scripts/build_bundle.py`, then run
+`python -m unittest discover -s tests` from this skill directory.
+The tests fail if the bundled validator differs from the source.

@@ -3,6 +3,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 
@@ -77,6 +78,28 @@ class ValidatorTests(unittest.TestCase):
     def test_valid_ready_brief(self):
         result = self.run_check()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_misplaced_briefs_report_fb017_without_crashing(self):
+        canonical = self.root / ".workflow/features/B-0001/brief.md"
+        canonical.unlink()
+        self.put(".workflow/backlog.md", "# Backlog\n")
+        for name in (
+            ".workflow/brief.md",
+            ".workflow/features/brief.md",
+            ".workflow/features/not-an-id/brief.md",
+        ):
+            with self.subTest(name=name):
+                self.put(name, BRIEF.format(status="Ready"))
+                result = self.run_check()
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn(f"FB017 {name}:1", result.stdout)
+                self.assertEqual(result.stderr, "")
+                (self.root / name).unlink()
+
+    def test_bundle_contains_current_validator(self):
+        source = (SKILL / "scripts" / "validate.py").read_bytes()
+        with zipfile.ZipFile(SKILL / "dist" / "check_workflow_docs.pyz") as bundle:
+            self.assertEqual(bundle.read("__main__.py"), source)
 
     def test_draft_omissions_warn_and_ready_omissions_fail(self):
         incomplete = """# First
