@@ -5,16 +5,15 @@ description: Check workflow Markdown, Feature Brief structure and links, and doc
 
 # Workflow document check
 
-Install dependencies once in this skill directory with `npm ci`. Run
-`python scripts/check_workflow_docs.py <project-root>` from this skill
+Run `python scripts/check_workflow_docs.py <project-root>` from this skill
 directory. The command also accepts no path and then checks the current
-directory. Node.js is required. The command prints stable rule IDs, file
+directory. Python 3.10 or newer is required. The skill includes its Markdown packages. The command prints stable rule IDs, file
 paths relative to the project, and line numbers. It exits with status 1
 for errors, status 2 for a tool failure, and status 0 when it finds only
 warnings or no findings.
 
-The checker uses `remark` to parse Markdown and `remark-validate-links`
-to check local files and anchors. It checks Feature Brief structure,
+The checker uses `markdown-it-py` to parse Markdown and an anchor plugin
+to find heading IDs. It checks local links, Feature Brief structure,
 backlog relationships, and all existing hard word limits. Read
 [rules.md](references/rules.md) when a finding needs interpretation.
 

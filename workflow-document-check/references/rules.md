@@ -9,21 +9,19 @@ keep their current word limits.
 
 | ID | Check |
 | --- | --- |
-| MD001 | A selected `remark-lint` rule found a Markdown structure problem. |
+| MD001 | A heading skips a level or a link has an empty URL. |
 | LINK001 | A local link or image points to a missing file. |
 | LINK002 | A local link points to a missing heading anchor. |
 
-The selected lint rules cover heading levels, heading-like text,
-duplicate definitions, empty link URLs, undefined references, and
-media syntax. Markdown permits many unusual forms. A successful check
-does not prove that every intended link or heading was written.
+Markdown permits many unusual forms. A successful check does not prove
+that every intended link or heading was written.
 External web links are outside this check.
 
-The validator parses Markdown with `remark` and GitHub Flavored
-Markdown support. It uses `unified-engine` to give
-`remark-validate-links` the files needed for cross-file anchor checks.
-The validator collects library findings and prints them in stable order.
-The package lock fixes the library versions for CI.
+The validator parses Markdown with `markdown-it-py`. The
+`mdit-py-plugins` anchor plugin supplies heading IDs. The validator
+checks local file paths and anchors from parsed links. The installed
+skill includes a Python archive with pinned packages. The source and
+build requirements remain in `scripts/` and `requirements-build.txt`.
 
 ## Feature Briefs and backlog
 
@@ -39,7 +37,7 @@ The package lock fixes the library versions for CI.
 | FB008 | A story has no `Story:` statement or has more than one. |
 | FB009 | A story has no `Acceptance:` block or has more than one. |
 | FB010 | An acceptance block has no list criterion. |
-| FB011 | Story content or subheadings have an invalid position or form. |
+| FB011 | An H3 story heading has an invalid story ID or no title. |
 | FB012 | A brief has no matching backlog item. |
 | FB013 | A backlog item has no canonical brief link or has a wrong link. |
 | FB014 | A backlog ID occurs twice. |
@@ -51,8 +49,9 @@ The package lock fixes the library versions for CI.
 `Goal`, `Stories and acceptance`, `Scope`, and `Non-goals` are
 required sections. `Feature-wide constraints and acceptance`,
 `Related records`, and `Open questions and assumptions` are optional.
-Every named section may occur at most once. Story headings are H3
-headings inside `Stories and acceptance`.
+Every named section may occur at most once. H3 headings inside
+`Stories and acceptance` identify stories. Other subheadings may
+organize content.
 
 For Draft, FB004 and FB005 findings for missing or empty required
 content are warnings. FB007 through FB010 are warnings when content
@@ -61,10 +60,10 @@ blocks are errors for every status. Ready makes all completeness
 findings errors. Identity, location, duplicate, link, and size findings
 are always errors.
 
-A backlog item normally uses `Feature Brief:` to link its canonical
-brief. An older `Source:` link counts when it points to the same
-canonical file. A `Source:` link to other material remains a source
-link. Briefs without a matching backlog item fail.
+A backlog item needs exactly one local link to its canonical brief when
+that brief exists. The link label and list field do not affect this
+check. Links to other briefs remain valid relationship links. Briefs
+without a matching backlog item fail.
 
 The checker counts whitespace-separated source words. It preserves
 the existing limits: Direction 4,000; each Direction topic 2,000;

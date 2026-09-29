@@ -65,7 +65,7 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
             shutil.copytree(
                 SKILL,
                 installed,
-                ignore=shutil.ignore_patterns("node_modules"),
+                ignore=shutil.ignore_patterns("node_modules", "package-lock.json"),
             )
             (project / ".workflow").mkdir(parents=True)
             (project / ".workflow" / "direction.md").write_text("# Direction\n")
@@ -75,8 +75,8 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
                 text=True,
                 check=False,
             )
-            self.assertEqual(result.returncode, 2)
-            self.assertIn("npm ci", result.stderr)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("passed validation", result.stdout)
 
     def test_draft_warning_and_ready_error_exit_codes(self):
         with tempfile.TemporaryDirectory() as temporary:
