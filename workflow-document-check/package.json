@@ -1,0 +1,20 @@
+{
+  "name": "workflow-document-check",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/validator.test.mjs"
+  },
+  "dependencies": {
+    "remark": "15.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-lint-correct-media-syntax": "1.0.0",
+    "remark-lint-heading-increment": "4.0.0",
+    "remark-lint-no-duplicate-definitions": "4.0.0",
+    "remark-lint-no-empty-url": "4.0.0",
+    "remark-lint-no-heading-like-paragraph": "4.0.0",
+    "remark-lint-no-undefined-references": "5.0.0",
+    "remark-validate-links": "13.1.0",
+    "unified-engine": "11.2.0"
+  }
+}
