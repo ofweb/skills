@@ -7,7 +7,7 @@ description: The STE100 language foundation for concise-prose and other prose-wr
 
 ## Preserve meaning
 
-Technical meaning, requirements, conditions, obligations, and established terminology take precedence over rewriting for STE100. Do not silently change meaning to satisfy a writing rule. Preserve the meaning and report a conflict if necessary.
+Technical meaning, requirements, conditions, obligations, and established terminology take precedence over rewriting for STE100. Do not silently change meaning to satisfy a writing rule. If a conflict requires a user decision, preserve the meaning and explain the conflict. Propose how to resolve it. Ask the user to approve or change that proposal. Apply the agreed decision and continue after the response.
 
 ## General writing rules
 

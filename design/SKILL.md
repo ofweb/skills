@@ -19,6 +19,12 @@ Trace each significant design element to agreed behaviour or a durable constrain
 
 Before writing code, agree on the scope of design changes, the documentation required, and the testing approach. Challenge assumptions and unnecessary structure. Use a dedicated pushback skill when one is available. Record a durable architectural trade-off with `adr-document` when its criteria apply.
 
+When a workflow step requires a user decision, formulate the decision request.
+Present the proposed decision and its reason. Ask the user to approve or change
+it. Make the request explicit and easy to answer. Do not merely announce that
+a decision is required. After the response, apply the agreed decision and
+continue the workflow.
+
 ## Choose reviewable structure
 
 Read [simple-code](../simple-code/SKILL.md) before choosing the code structure. Apply it to the responsibilities of types and modules, dependency direction, and effect boundaries. Check each abstraction for a concrete current need because Implementation will build around the accepted structure. Prefer readability, then testability, then performance. Let measured latency, memory use, power use, protocol limits, or hardware limits justify a different order for a specific path.
@@ -35,7 +41,7 @@ Add only the modules, types, signatures, errors, effect boundaries, and selectiv
 
 Run compile or type checks, existing tests, formatting, lint, and prose checks after the design changes. Confirm that stubs are clear and that Design introduced no failing feature tests. Check that a fresh reader can locate the implementation target from the Feature Brief, code, and linked decisions.
 
-Review important types, valid states, errors, ownership, and effect boundaries with the user. Explain how they express the agreed behaviour. Present the code baseline, ADRs, check results, and remaining constraints for explicit acceptance. A change belongs back in Design when it would have mattered during this review.
+Review important types, valid states, errors, ownership, and effect boundaries with the user. Explain how they express the agreed behaviour. Present the code baseline, ADRs, check results, and remaining constraints. Ask the user to accept the proposed Design or request changes. A change belongs back in Design when it would have mattered during this review.
 
 After acceptance and passing checks, commit the accepted Design state. Verify that the commit contains only accepted artifacts and record its SHA as the Implementation baseline. Do not hand off until the commit succeeds. The commit marks the implementation diff boundary; durable project decisions and the Feature Brief govern Review. Implementation starts in a fresh context from this commit. If implementation disproves a material design premise, reopen Design and accept a revised baseline before continuing.
 

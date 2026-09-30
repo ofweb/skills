@@ -121,7 +121,12 @@ a term as `rewrite`, `shared`, `project`, `context`, or `checker`. Rewrite safe
 cases and investigate checker noise before review. Group observed word forms.
 Present one compact review group with only necessary vocabulary candidates,
 their source, forms, reason, and an example when useful. Do not present full
-lint output unless requested. Apply accepted terms in their owning source and
+lint output unless requested. Ask the user to approve or change the proposed
+vocabulary decisions before adding terms. Do not merely report that approval
+is required. Classify terms directly and ask only about genuine semantic choices.
+After the response, apply the accepted decisions and continue the repair loop
+automatically. Repeat review only when a new decision requires user approval.
+Apply accepted terms in their owning source and
 rerun STE100. Rewrite remaining avoidable words. Once STE100 passes, fix Vale
 findings and rerun the checker.
 

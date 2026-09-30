@@ -14,8 +14,10 @@ Direction maintains `.workflow/direction.md` and optional files at
 `.workflow/direction/<topic>.md` with the user. Use a short, stable, lowercase
 hyphenated topic filename. Shape may read these files but must not silently
 redefine them. Before creating a file, check for the same material elsewhere.
-Do not create a duplicate or migrate an existing document in this skill. Ask
-for a separate migration.
+Do not create a duplicate or migrate an existing document in this skill.
+Present its current path and proposed canonical destination. Ask the user
+whether to start a separate migration or keep the current location. After the
+response, continue only the work permitted in this skill.
 
 ## Content
 

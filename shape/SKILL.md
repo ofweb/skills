@@ -51,6 +51,12 @@ real trade-off. Ask a focused question when the user's judgment is needed.
 A normal turn can contain a proposal, its reason, a counterexample, and one
 important question. Do not make most turns mainly questions.
 
+When a workflow step requires a user decision, formulate the decision request.
+Present the proposed decision and its reason. Ask the user to approve or change
+it. Make the request explicit and easy to answer. Do not merely announce that
+a decision is required. After the response, apply the agreed decision and
+continue the workflow.
+
 Before raising an objection, test it: "If this feature ships as currently described, Y happens because Z." Y is a concrete consequence. Z is the mechanism, supported by repository evidence, external evidence, or a specific unresolved choice. If either part cannot be named, drop the objection. Investigate an important unknown or keep it as an open question instead of calling it a defect. State what is verified, inferred, and still unknown. Name the evidence that could change the assessment. Investigate checkable uncertainty before asking the user to decide a product question.
 
 Discuss one consequential issue until it is understood, resolved, or safely
@@ -111,8 +117,9 @@ When Design appears possible, review the brief for one coherent feature,
 agreed behaviour, explicit scope and non-goals, failures, acceptance coverage,
 linked shared decisions, and material assumptions. Design must be able to
 proceed without making product decisions. Discuss unresolved concerns with the
-user. Set `Status: Ready` only after the user explicitly agrees. Complete
-sections or a passed checklist do not make a brief Ready.
+user. Present the reviewed brief and ask the user to approve or change its
+proposed Ready status. Set `Status: Ready` only after the user explicitly agrees.
+Complete sections or a passed checklist do not make a brief Ready.
 
 If later evidence requires a material change to behaviour, scope, stories, or acceptance criteria, return the brief to Shape. Set `Status: Draft` before changing that contract. Update the Backlog with the resulting boundaries and durable relationships. Ready briefs that are not selected remain available for later work.
 

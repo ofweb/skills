@@ -27,7 +27,7 @@ feature ID. Store the brief at
 `.workflow/features/B-0001/brief.md`. Link it from the Backlog item through
 `backlog-document`.
 
-Before creating the file, check whether a brief for the feature exists elsewhere. Do not create a duplicate or migrate it in this skill. Ask for a separate migration when an existing brief is outside the canonical location.
+Before creating the file, check whether a brief for the feature exists elsewhere. Do not create a duplicate or migrate it in this skill. If a migration is needed, present the current path and proposed canonical destination. Ask the user whether to start a separate migration or keep the current location. After the response, continue only the work permitted in this skill.
 
 Use this structure as the brief gains content. A Draft can have empty or
 incomplete sections. Omit optional sections when they add no value:

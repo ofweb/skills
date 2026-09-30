@@ -98,7 +98,20 @@ Group trivial noun and verb forms under one canonical candidate. For each
 candidate, show its source (`shared`, `project`, or `context`), observed forms,
 and a short reason an approved replacement does not work. Include one short
 project example when the classification is unclear. Do not show raw lint output
-unless requested. Wait for the user's review before adding vocabulary.
+unless requested. Ask the user to approve or change the proposed vocabulary
+decisions before adding vocabulary. Make this approval request the next action.
+Do not merely report that approval is required.
+
+When user review is required, actively request it. Present the proposed
+decisions with each term's classification and reason. Make each decision
+request explicit and easy to answer. Do not ask the user to classify terms
+that you can classify yourself. Ask only about genuine semantic choices.
+
+After the user responds, apply the accepted decisions. Continue the repair
+loop automatically. Run `prose-check` again and keep fixing safe findings.
+Repeat the review step only when a new decision requires user approval.
+Finish when the checked prose passes. If a new user decision is required,
+present the proposal and ask the user to approve or change it.
 
 Apply accepted project terms to `.workflow/ste-glossary.json`. Add a Context
 concept only after its canonical meaning is agreed. Change shared vocabulary

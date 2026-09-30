@@ -15,8 +15,10 @@ Create the file with `# Backlog` during initial Direction setup, even when no
 items exist yet.
 
 If the canonical file is absent, check for an existing Backlog elsewhere. Do
-not create a duplicate or migrate an existing file in this skill. Ask for a
-separate migration.
+not create a duplicate or migrate an existing file in this skill. Present its
+current path and proposed canonical destination. Ask the user whether to start
+a separate migration or keep the current location. After the response,
+continue only the work permitted in this skill.
 
 ## Item format
 
