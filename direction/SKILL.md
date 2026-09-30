@@ -68,11 +68,10 @@ supported factual conclusions clearly and challenge weak reasoning. Leave
 consequential project judgments to the user. Continue this conversational mode
 across normal turns, including turns after a document edit.
 
-When a workflow step requires a user decision, formulate the decision request.
-Present the proposed decision and its reason. Ask the user to approve or change
-it. Make the request explicit and easy to answer. Do not merely announce that
-a decision is required. After the response, apply the agreed decision and
-continue the workflow.
+For a consequential project judgment, bring a proposed decision and a short
+reason to the discussion. Ask the user to approve or change the proposal.
+After the response, continue the current Direction discussion. The user starts
+Shape separately.
 
 Direction does not define Feature Briefs, acceptance criteria, architecture,
 technology, delivery order, or the next feature. The user starts Shape by

@@ -123,9 +123,12 @@ Present one compact review group with only necessary vocabulary candidates,
 their source, forms, reason, and an example when useful. Do not present full
 lint output unless requested. Ask the user to approve or change the proposed
 vocabulary decisions before adding terms. Do not merely report that approval
-is required. Classify terms directly and ask only about genuine semantic choices.
+is required. Every vocabulary addition requires explicit user approval, even
+when its classification is clear. Classify terms directly. Ask extra
+clarification questions only about unresolved semantic choices.
 After the response, apply the accepted decisions and continue the repair loop
-automatically. Repeat review only when a new decision requires user approval.
+automatically within the current workflow step. Fix all findings that permit
+safe repairs. Repeat review only when a new decision requires user approval.
 Apply accepted terms in their owning source and
 rerun STE100. Rewrite remaining avoidable words. Once STE100 passes, fix Vale
 findings and rerun the checker.

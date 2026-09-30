@@ -30,12 +30,11 @@ For each chunk:
 
 Keep the chunk small enough that feedback arrives while the reason for the code is still fresh. Broaden integration checks as paths become complete. Fix ordinary compiler, test, lint, formatting, fixture, and integration problems autonomously.
 
-If evidence invalidates an accepted contract, stop that path and return the problem to its owner. Include what the contract implied, what code or tests revealed, and why local implementation cannot solve it. Propose a next step in Shape or Design and ask the user to approve or change it. If local investigation stops producing information, explain the concrete obstacle. Propose a next action and ask the user to approve or change it. Do not silently change behaviour or architecture to get past it.
+When work must return to Shape or Design, stop that path and identify the missing or invalid contract. Include what the contract implied, what code or tests revealed, and why local implementation cannot solve it. Recommend a next step in the owning workflow and give a short reason. Ask the user to approve or change that step. If local investigation stops producing information, explain the concrete obstacle. Propose a next action and ask the user to approve or change it. Do not silently change behaviour or architecture to get past it.
 
-When a workflow step requires a user decision, formulate the decision request.
-Make the request explicit and easy to answer. Do not merely announce that a
-decision is required. After the response, apply the agreed decision and
-continue within the accepted scope. Shape or Design owns changes to its contract.
+After the response, continue within Implement's accepted scope. Keep the
+affected path blocked until Shape or Design accepts any required contract
+change.
 
 ## Verify completion
 

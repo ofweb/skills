@@ -15,7 +15,10 @@ This skill records it.
 
 Read `.workflow/context.md` first when it exists. Scan material that uses the
 candidate term. Find competing names for one concept or one name used for
-different concepts. Return unresolved ambiguity to the owning workflow.
+different concepts. Investigate usage before treating ambiguity as a user
+decision. When meaning remains unresolved, propose a definition and explain
+the distinction it preserves. Ask the user to approve or change it through the
+owning workflow. Keep the entry blocked until its meaning is agreed.
 Do not choose a canonical term or meaning silently.
 
 Add an entry only when the concept is project-specific and needs one stable
@@ -29,7 +32,13 @@ satisfy an STE or prose check. Create `.workflow/context.md` when the first
 term qualifies.
 Put legitimate domain words without a project-specific meaning in
 `.workflow/ste-glossary.json` when STE100 does not approve them.
+
 If a copy exists elsewhere, do not create a duplicate or migrate it here.
+Present the found path and canonical destination, `.workflow/context.md`.
+Recommend a separate migration to keep one authoritative vocabulary document.
+Ask the user to approve starting that migration or request changes. Keep this
+file operation blocked until the migration is complete.
+
 Keep only terms whose canonical meaning the user has agreed. Leave candidate
 terms in the owning workflow until that agreement exists.
 

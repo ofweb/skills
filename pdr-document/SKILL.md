@@ -18,8 +18,13 @@ on the decision. Check for an existing record before creating one. Store PDRs in
 `.workflow/decisions/pdr/`. Give each record the next unused `PDR-0001` style
 ID and name its file `0001-short-title.md`. Do not reuse a deleted ID; check
 Git history when needed. Keep the ID and filename stable while the record applies.
+
 If the decision already has a record elsewhere, do not create a duplicate or
 migrate it in this skill.
+Present the found path and required destination under `.workflow/decisions/pdr/`.
+Recommend a separate migration to keep one authoritative product record.
+Ask the user to approve starting that migration or request changes. Keep this
+record operation blocked until the migration is complete.
 
 Use this compact structure. Add optional sections only when they help a future
 reader understand or revisit the choice.
@@ -61,8 +66,10 @@ the same PDR when the answer changes within its durable question and scope.
 Keep its ID and inbound links. Create a new PDR for a different or independent
 decision. Delete an obsolete PDR when nothing current depends on it. Update
 affected links when a record is removed or its scope changes. Git preserves
-earlier answers. Surface conflicts with other current PDRs rather than silently
-choosing one.
+earlier answers. Investigate apparent conflicts with other current PDRs.
+If resolving a conflict requires a product decision, propose a resolution and
+give a short reason. Ask the user to approve or change it through Direction or
+Shape. Keep the disputed record change blocked until that workflow settles it.
 
 Aim for 150–300 words; the hard limit is 500 words. Near that limit, remove
 stale context, repeated material, and optional sections that add no useful

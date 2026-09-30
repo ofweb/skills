@@ -9,7 +9,7 @@ Design is an alignment checkpoint for one ready Feature Brief. Express important
 
 ## Start from an agreed feature
 
-Confirm that the working tree is clean. Run the repository's full compile, test, lint, format, and prose checks. Record failures and stop if the baseline is not sound. Do not repair or discard unrelated changes within Design.
+Confirm that the working tree is clean. Run the repository's full compile, test, lint, format, and prose checks. If an entry prerequisite fails, identify it and recommend a separate action to restore the baseline. Ask the user to approve or change that action. Keep Design blocked until its entry prerequisites pass. Do not repair or discard unrelated changes within Design.
 
 Read the selected Feature Brief and its relevant Direction, Context, PDR, and ADR links. Confirm that stories and acceptance criteria describe one feature with settled behaviour. Return material behaviour questions to Shape. Read nearby code and tests before choosing new structure. Find the existing owners, representations, call paths, effects, and build conventions.
 
@@ -19,11 +19,13 @@ Trace each significant design element to agreed behaviour or a durable constrain
 
 Before writing code, agree on the scope of design changes, the documentation required, and the testing approach. Challenge assumptions and unnecessary structure. Use a dedicated pushback skill when one is available. Record a durable architectural trade-off with `adr-document` when its criteria apply.
 
-When a workflow step requires a user decision, formulate the decision request.
-Present the proposed decision and its reason. Ask the user to approve or change
-it. Make the request explicit and easy to answer. Do not merely announce that
-a decision is required. After the response, apply the agreed decision and
-continue the workflow.
+For a consequential technical choice, recommend a design and explain its
+effect on the feature contract. Ask the user to approve or change it. When
+behaviour must return to Shape, propose the product decision and explain why.
+Ask the user to approve or change it through Shape. Keep that design path
+blocked until Shape settles it.
+After a response, continue within Design. Make reversible local choices and
+safe mechanical repairs directly.
 
 ## Choose reviewable structure
 

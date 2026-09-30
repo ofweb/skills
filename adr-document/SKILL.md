@@ -13,7 +13,7 @@ Create an ADR when changing the choice later has meaningful cost, future contrib
 
 Read related ADRs, Feature Briefs, PDRs, and relevant code before creating a record. Check for an existing ADR that owns the same decision. Store current records in `.workflow/decisions/adr/`. Give each record the next unused `ADR-0001` style ID and a matching `0001-short-title.md` filename. Check Git history before assigning an ID so deleted IDs are not reused. Keep the ID and filename stable while the decision applies.
 
-If a record exists outside the canonical location, do not create a duplicate or migrate it in this skill. Present its current path and proposed canonical destination. Ask the user whether to start a separate migration or keep the current location. After the response, continue only the work permitted in this skill.
+If a record exists outside the canonical location, do not create a duplicate or migrate it in this skill. Present the found path and required canonical destination. Recommend a separate migration to keep one authoritative record. Ask the user to approve starting that migration or request changes. Keep this record operation blocked until the migration is complete.
 
 ## Record the decision
 

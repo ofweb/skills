@@ -27,7 +27,11 @@ feature ID. Store the brief at
 `.workflow/features/B-0001/brief.md`. Link it from the Backlog item through
 `backlog-document`.
 
-Before creating the file, check whether a brief for the feature exists elsewhere. Do not create a duplicate or migrate it in this skill. If a migration is needed, present the current path and proposed canonical destination. Ask the user whether to start a separate migration or keep the current location. After the response, continue only the work permitted in this skill.
+If a prerequisite requires a Direction decision, explain the missing decision
+and recommend a next step there. Ask the user to approve or change that step.
+Keep brief creation blocked until the Backlog item is Ready for Shape.
+
+Before creating the file, check whether a brief for the feature exists elsewhere. Do not create a duplicate or migrate it in this skill. If a migration is needed, present the found path and required canonical destination. Recommend a separate migration to keep one authoritative Feature Brief. Ask the user to approve starting that migration or request changes. Keep this brief operation blocked until the migration is complete.
 
 Use this structure as the brief gains content. A Draft can have empty or
 incomplete sections. Omit optional sections when they add no value:
@@ -66,6 +70,10 @@ Shape changes it to Ready only after explicit user agreement and a readiness
 review. If later evidence requires a material contract change, return it to
 Shape. Set Draft before changing behaviour, scope, stories, or acceptance
 criteria. Do not present a Draft brief as accepted behaviour.
+For a material contract change, propose the behaviour and explain why it must
+return to Shape. Ask the user to approve or change the proposal there. Keep
+the contract change blocked until Shape settles it. Shape owns the Ready
+acceptance request. This document skill does not start Design after approval.
 
 ## Content and acceptance
 

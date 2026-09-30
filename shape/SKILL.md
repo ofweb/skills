@@ -51,11 +51,10 @@ real trade-off. Ask a focused question when the user's judgment is needed.
 A normal turn can contain a proposal, its reason, a counterexample, and one
 important question. Do not make most turns mainly questions.
 
-When a workflow step requires a user decision, formulate the decision request.
-Present the proposed decision and its reason. Ask the user to approve or change
-it. Make the request explicit and easy to answer. Do not merely announce that
-a decision is required. After the response, apply the agreed decision and
-continue the workflow.
+When a question belongs in Direction, propose the decision that Direction
+needs to resolve and explain why. Ask the user to approve or change that
+proposed next step. Keep the affected Shape work blocked until Direction
+settles the question. Investigate facts and make safe document fixes directly.
 
 Before raising an objection, test it: "If this feature ships as currently described, Y happens because Z." Y is a concrete consequence. Z is the mechanism, supported by repository evidence, external evidence, or a specific unresolved choice. If either part cannot be named, drop the objection. Investigate an important unknown or keep it as an open question instead of calling it a defect. State what is verified, inferred, and still unknown. Name the evidence that could change the assessment. Investigate checkable uncertainty before asking the user to decide a product question.
 
@@ -105,6 +104,10 @@ future work in the Backlog.
 
 Use `context-document` for agreed project terms and `pdr-document` for durable product decisions whose rationale matters beyond one feature. Use `adr-document` only when an architectural choice must be settled to establish feasibility, observable behaviour, or feature boundaries. Link each affected Feature Brief to shared decisions and constraints. If evidence challenges Direction or an existing decision, return the question to its owning workflow instead of silently changing it.
 
+For a challenged shared decision, recommend a correction and explain the
+evidence. Ask the user to approve or change it through the owning workflow.
+Keep dependent feature behaviour unsettled until that workflow resolves it.
+
 ## Establish acceptance and readiness
 
 As behaviour becomes agreed, express useful stories and observable acceptance
@@ -120,6 +123,8 @@ proceed without making product decisions. Discuss unresolved concerns with the
 user. Present the reviewed brief and ask the user to approve or change its
 proposed Ready status. Set `Status: Ready` only after the user explicitly agrees.
 Complete sections or a passed checklist do not make a brief Ready.
+After acceptance, update the status and continue within Shape. Stop before
+Design and use the session boundary instructions for its handoff.
 
 If later evidence requires a material change to behaviour, scope, stories, or acceptance criteria, return the brief to Shape. Set `Status: Draft` before changing that contract. Update the Backlog with the resulting boundaries and durable relationships. Ready briefs that are not selected remain available for later work.
 

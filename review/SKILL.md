@@ -33,7 +33,7 @@ Each candidate identifies its specialist, exact location, expected and observed 
 
 ## Hand off to Acceptance
 
-Before writing, verify that the intended path in `.workflow/review/` is ignored by Git in this project. If it is not, report the project setup problem and do not edit `.gitignore` or write the report. Write one temporary report at `.workflow/review/<feature-id>-<implementation-sha>.md`. Include both commit SHAs, check results, specialist coverage, and retained candidates. The report is workflow state, not permanent project documentation. Acceptance transfers relevant evidence and deletes it. Give the report path for a fresh Acceptance context; do not present unverified candidates directly to the user or continue into Acceptance here.
+Before writing, verify that the intended path in `.workflow/review/` is ignored by Git in this project. If it is not, explain why the report needs an ignored path. Recommend a separate setup change and ask the user to approve or change it. Keep the report blocked until that setup is complete. Do not edit `.gitignore` within Review. Write one temporary report at `.workflow/review/<feature-id>-<implementation-sha>.md`. Include both commit SHAs, check results, specialist coverage, and retained candidates. The report is workflow state, not permanent project documentation. Acceptance transfers relevant evidence and deletes it. Give the report path for a fresh Acceptance context; do not present unverified candidates directly to the user or continue into Acceptance here.
 
 ## End-of-step report
 

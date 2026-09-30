@@ -25,8 +25,9 @@ Avoid introductory prose, summaries of the immediately preceding text, and conve
 After writing or substantially editing prose, run `prose-check` on edited Markdown files.
 Pass other authored prose on standard input. The command checks STE100 first.
 When STE100 passes, it runs Vale. Treat findings as work to fix and rerun the
-checker. Stop when the checked prose passes. Ask for the vocabulary review
-below. Ask about other findings only when a semantic decision prevents a safe fix.
+checker. Continue until the checked prose passes or a user decision is required.
+Always request explicit user approval before adding vocabulary, as described
+below. Fix other findings without asking when their meaning is clear.
 
 For project files, `prose-check` combines three vocabulary sources:
 
@@ -93,7 +94,7 @@ adjectives, abstract nouns, jargon, rare words, and words that approved STE100
 language can express clearly. Vocabulary supports necessary terminology; it
 must not recreate unrestricted English.
 
-Before adding vocabulary, present one compact review group of real decisions.
+Before adding vocabulary, present one compact group of proposed vocabulary decisions.
 Group trivial noun and verb forms under one canonical candidate. For each
 candidate, show its source (`shared`, `project`, or `context`), observed forms,
 and a short reason an approved replacement does not work. Include one short
@@ -102,16 +103,20 @@ unless requested. Ask the user to approve or change the proposed vocabulary
 decisions before adding vocabulary. Make this approval request the next action.
 Do not merely report that approval is required.
 
-When user review is required, actively request it. Present the proposed
-decisions with each term's classification and reason. Make each decision
-request explicit and easy to answer. Do not ask the user to classify terms
-that you can classify yourself. Ask only about genuine semantic choices.
+Vocabulary additions always require explicit user approval, including terms
+whose classification is clear. Make each approval request explicit and easy to
+answer. Classify terms yourself from the available evidence. Ask extra
+clarification questions only when a genuine semantic choice remains unresolved.
+Such questions do not replace the vocabulary approval request.
 
 After the user responds, apply the accepted decisions. Continue the repair
-loop automatically. Run `prose-check` again and keep fixing safe findings.
+loop automatically within the current workflow step. Run `prose-check` again.
+Fix all findings that you safely can without further user decisions.
 Repeat the review step only when a new decision requires user approval.
 Finish when the checked prose passes. If a new user decision is required,
-present the proposal and ask the user to approve or change it.
+present the proposed decision, a short reason, and an explicit approve or change
+request. Keep mechanical fixes, obvious classifications, and checker noise
+within the automatic repair loop.
 
 Apply accepted project terms to `.workflow/ste-glossary.json`. Add a Context
 concept only after its canonical meaning is agreed. Change shared vocabulary

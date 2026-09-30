@@ -8,10 +8,10 @@ description: Keep external sources with durable project value and short relevanc
 Direction owns one optional `.workflow/references.md`. Create it when the first
 source has durable project value. Check for an existing references document
 elsewhere before creating it. Do not create a duplicate or migrate a file in
-this skill. If a migration is needed, present the current path and proposed
-canonical destination. Ask the user whether to start a separate migration or
-keep the current location. After the response, continue only the work permitted
-in this skill.
+this skill. If a migration is needed, present the found path and required
+canonical destination. Recommend a separate migration to keep one source
+register. Ask the user to approve starting that migration or request changes.
+Keep this file operation blocked until the migration is complete.
 
 Record a source when it affects Direction, supports a decision, resolves an
 important uncertainty, or is likely to help again. Do not record every source
