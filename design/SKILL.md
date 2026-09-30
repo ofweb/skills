@@ -7,9 +7,11 @@ description: Design the code structure for one ready Feature Brief. Align techni
 
 Design is an alignment checkpoint for one ready Feature Brief. Express important types, signatures, boundaries, and stubs before full implementation. Keep this surface small so the user can check understanding and find structural mistakes while changes are cheap. Use agreed behaviour as the contract. Do not change feature scope or implement the complete feature during Design.
 
-## Start from an agreed feature
+## Start on a feature branch
 
-Confirm that the working tree is clean. Run the repository's full compile, test, lint, format, and prose checks. If an entry prerequisite fails, identify it and recommend a separate action to restore the baseline. Ask the user to approve or change that action. Keep Design blocked until its entry prerequisites pass. Do not repair or discard unrelated changes within Design.
+Confirm that the working tree is clean. Before checks or design changes, create a Git branch from the current commit. Use the feature ID in the branch name. Follow repository naming conventions. Switch to the new branch. When you continue an earlier Design, use its branch.
+
+Run the repository's full compile, test, lint, format, and prose checks. If an entry prerequisite fails, identify it and recommend a separate action to restore the baseline. Ask the user to approve or change that action. Keep Design blocked until its entry prerequisites pass. Do not repair or discard unrelated changes within Design.
 
 Read the selected Feature Brief and its relevant Direction, Context, PDR, and ADR links. Confirm that stories and acceptance criteria describe one feature with settled behaviour. Return material behaviour questions to Shape. Read nearby code and tests before choosing new structure. Find the existing owners, representations, call paths, effects, and build conventions.
 
