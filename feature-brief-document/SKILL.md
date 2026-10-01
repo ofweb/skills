@@ -10,28 +10,37 @@ useful behavioural understanding that survives discussion. It is working memory
 while Draft and the behavioural contract for Design while Ready. Writing the
 brief does not drive the discussion. Design may correct non-material wording
 or links, with those changes included in Design acceptance. Material changes
-return to Shape.
+return to Shape through the status rules below.
 
 ## Create and locate
 
 Create a brief when Shape has enough useful behavioural understanding to
-preserve. Do not create one merely because Shape has started. Require an
-existing Backlog item with `Status: Ready for Shape`. If no item exists, return
-the work to Direction. If its status is `Needs Direction`, return to the
-unresolved question in Direction. Return any other status besides
-`Ready for Shape` to Direction for review. Do not create or promote an item from
-this skill. Read the Ready item, nearby briefs, and applicable main or topic
-Direction, Context, PDR, and ADR material. Use the item's stable ID as the
-feature ID. Store the brief at
-`.workflow/features/<feature-id>/brief.md`, such as
-`.workflow/features/B-0001/brief.md`. Link it from the Backlog item through
-`backlog-document`.
+preserve. Do not create one merely because Shape has started.
+
+Require an existing Backlog item with `Status: Ready for Shape`. If no item
+exists, return the work to Direction. If its status is `Needs Direction`, return
+to the unresolved question in Direction. Return any other status besides `Ready
+for Shape` to Direction for review. Do not create or promote an item from this
+skill.
 
 If a prerequisite requires a Direction decision, explain the missing decision
 and recommend a next step there. Ask the user to approve or change that step.
 Keep brief creation blocked until the Backlog item is Ready for Shape.
 
-Before creating the file, check whether a brief for the feature exists elsewhere. Do not create a duplicate or migrate it in this skill. If a migration is needed, present the found path and required canonical destination. Recommend a separate migration to keep one authoritative Feature Brief. Ask the user to approve starting that migration or request changes. Keep this brief operation blocked until the migration is complete.
+Read the Ready item, nearby briefs, and applicable main or topic Direction,
+Context, PDR, and ADR material. Use the item's stable ID as the feature ID.
+Store the brief at `.workflow/features/<feature-id>/brief.md`, such as
+`.workflow/features/B-0001/brief.md`. Link it from the Backlog item through
+`backlog-document`.
+
+Before creating the file, check whether a brief for the feature exists elsewhere.
+Do not create a duplicate or migrate it in this skill. If a migration is needed,
+present the found path and required canonical destination. Recommend a separate
+migration to keep one authoritative Feature Brief. Ask the user to approve
+starting it or request changes. Keep this brief operation blocked until the
+migration is complete.
+
+## Structure
 
 Use this structure as the brief gains content. A Draft can have empty or
 incomplete sections. Omit optional sections when they add no value:
@@ -65,42 +74,48 @@ Acceptance:
 ## Open questions and assumptions
 ```
 
+## Status changes
+
 Keep `Status: Draft` or `Status: Ready` near the title. Create a brief as Draft.
-Shape changes it to Ready only after explicit user agreement and a readiness
-review. If later evidence requires a material contract change, return it to
-Shape. Set Draft before changing behaviour, scope, stories, or acceptance
-criteria. Do not present a Draft brief as accepted behaviour.
-For a material contract change, propose the behaviour and explain why it must
-return to Shape. Ask the user to approve or change the proposal there. Keep
-the contract change blocked until Shape settles it. Shape owns the Ready
-acceptance request. This document skill does not start Design after approval.
+Do not present a Draft brief as accepted behaviour. Shape owns the readiness
+review and acceptance request. Set Ready only after explicit user agreement.
+This document skill does not start Design after approval.
+
+If later evidence requires a material change to behaviour, scope, stories, or
+acceptance criteria, return it to Shape. Propose the behaviour and explain why.
+Ask the user to approve or change the proposal there. Set Draft before changing
+the contract and keep the contract change blocked until Shape settles it.
 
 ## Content and acceptance
 
 State the goal and intended value. Use stories and failure cases to test
 behaviour in the discussion. Record stories and acceptance criteria as the user
 and model agree on them. Each story identifies an actor, situation, intent or
-action, and observable result. Put criteria under each story so their trace is
-clear. Put criteria that span stories under a named feature-wide constraint.
-Before Ready, give every story acceptance coverage. Cover relevant failure and
-boundary behaviour, permissions, persistence, lifecycle, and compatibility
-where observable.
+action, and observable result.
+
+Give every Ready feature at least one user or system story. Put criteria under
+each story so their trace is clear. Put criteria that span stories under a named
+feature-wide constraint. Before Ready, give every story acceptance coverage.
+Cover relevant failure and boundary behaviour, permissions, persistence,
+lifecycle, and compatibility where observable.
 
 State scope and non-goals. Link neighbouring features and shared Direction,
-Context, PDR, or ADR material when they constrain this feature. Record unresolved
-feature-behaviour questions and unverified assumptions in Draft. Keep unresolved
-end-state questions in Direction and link to them instead of copying them.
-Remove resolved questions and superseded wording instead of retaining a
-discussion history.
+Context, PDR, or ADR material when they constrain this feature.
+
+Record unresolved feature-behaviour questions and unverified assumptions in
+Draft. Keep unresolved end-state questions in Direction and link to them instead
+of copying them. Remove resolved questions and superseded wording instead of
+retaining a discussion history.
 
 Ready requires one coherent vertical slice, agreed behaviour and boundaries,
 acceptance coverage, intentional scope and non-goals, and linked shared
 decisions. Design must be able to proceed without making product decisions.
 No open question may materially change the feature. A safely deferred
-assumption must leave the feature contract clear. The user must explicitly
-agree that the brief is Ready.
+assumption must leave the feature contract clear.
 
-Do not include internal APIs, modules, schemas, classes, libraries, implementation plans, test code, copied shared rules, or speculative future behaviour.
+Do not include internal APIs, modules, schemas, classes, libraries,
+implementation plans, test code, copied shared rules, or speculative future
+behaviour.
 
 ## Size and validation
 

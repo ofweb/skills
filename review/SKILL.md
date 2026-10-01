@@ -5,13 +5,39 @@ description: Review one completed feature against durable project intent with fo
 
 # Review
 
-Review one completed feature in a fresh context. Derive intended behaviour and constraints from the Feature Brief, linked PDRs and ADRs, and relevant Direction and Context documents. Inspect the Implementation commit, tests, affected callers and callees, and integration paths as evidence. Do not use current code to define what the feature was supposed to do. The Design commit only marks the start of the implementation diff. A difference from Design code is not itself a finding. Do not use the Implementation conversation or its check reports as evidence.
+Review one completed feature in a fresh context. Derive intended behaviour and
+constraints from the Feature Brief, linked PDRs and ADRs, and relevant Direction
+and Context documents. Inspect the Implementation commit and tests as evidence.
+Do not use current code to define what the feature was supposed to do.
+
+The Design commit only marks the start of the implementation diff. A difference
+from Design code is not itself a finding. Do not use the Implementation
+conversation or its check reports as evidence.
 
 ## Establish the reviewed snapshot
 
-Record the feature ID, Design commit SHA, and Implementation commit SHA. Confirm the checked-out revision matches the Implementation commit and the tracked working tree is clean, or use an isolated checkout. Review that immutable commit and compare it with the Design commit. Follow affected callers, callees, types, state, and integration paths when the change can affect them. Do not audit unrelated code.
+Record the feature ID, Design commit SHA, and Implementation commit SHA.
+Confirm the checked-out revision matches the Implementation commit and the
+tracked working tree is clean, or use an isolated checkout. Review that immutable
+commit and compare it with the Design commit.
 
-Independently run the repository's configured compile or type check, complete test suite, lint, formatting check, and other relevant mechanical checks against the reviewed commit. Use check-only commands. If a check would modify the implementation tree, run it in isolation or record it as incomplete. Run mechanical prose checks on changed documentation and comments embedded in source files. If the checker cannot inspect source comments directly, extract the changed comments and check that text. Record comment coverage as incomplete when neither method works. Report failed or incomplete checks with evidence; do not repair the feature. The prose specialist separately evaluates comment meaning and usefulness.
+Follow affected callers, callees, types, state, and integration paths when the
+change can affect them. Do not audit unrelated code.
+
+## Run independent checks
+
+Independently run the repository's configured compile or type check, complete
+test suite, lint, formatting check, and other relevant mechanical checks against
+the reviewed commit. Use check-only commands. If a check would modify the
+implementation tree, run it in isolation or record it as incomplete.
+
+Run mechanical prose checks on changed documentation and comments embedded in
+source files. If the checker cannot inspect source comments directly, extract
+the changed comments and check that text. Record comment coverage as incomplete
+when neither method works. The prose specialist separately evaluates comment
+meaning and usefulness.
+
+Report failed or incomplete checks with evidence; do not repair the feature.
 
 ## Dispatch focused specialists
 
@@ -29,11 +55,33 @@ The test specialist may introduce a deliberate fault only when a critical test's
 
 ## Curate candidates
 
-Each candidate identifies its specialist, exact location, expected and observed behaviour, supporting code or durable contract, plausible consequence, and preliminary impact and severity. Mechanical failures also identify the check and result. Keep supported uncertainty visible. Merge duplicates and omit claims that are unsupported, contradicted, unrelated, or outside the feature's impact. Do not verify findings on Acceptance's behalf, recommend solutions, or decide that the feature is complete.
+Each candidate identifies its specialist, exact location, expected and observed
+behaviour, supporting code or durable contract, plausible consequence, and
+preliminary impact and severity. Mechanical failures also identify the check
+and result.
+
+Keep supported uncertainty visible. Merge duplicates and omit claims that are
+unsupported, contradicted, unrelated, or outside the feature's impact. Do not
+verify findings on Acceptance's behalf, recommend solutions, or decide that the
+feature is complete. Keep unverified candidates in the report for Acceptance;
+do not present them directly to the user.
 
 ## Hand off to Acceptance
 
-Before writing, verify that the intended path in `.workflow/review/` is ignored by Git in this project. If it is not, explain why the report needs an ignored path. Recommend a separate setup change and ask the user to approve or change it. Keep the report blocked until that setup is complete. Do not edit `.gitignore` within Review. Write one temporary report at `.workflow/review/<feature-id>-<implementation-sha>.md`. Include both commit SHAs, check results, specialist coverage, and retained candidates. The report is workflow state, not permanent project documentation. Acceptance transfers relevant evidence and deletes it. Give the report path for a fresh Acceptance context; do not present unverified candidates directly to the user or continue into Acceptance here.
+Before writing, verify that the intended path in `.workflow/review/` is ignored
+by Git in this project. If it is not, explain why the report needs an ignored
+path. Recommend a separate setup change and ask the user to approve or change
+it. Keep the report blocked until that setup is complete. Do not edit
+`.gitignore` within Review.
+
+Write one temporary report at
+`.workflow/review/<feature-id>-<implementation-sha>.md`. Include both commit
+SHAs, check results, specialist coverage, and retained candidates. The report
+is workflow state, not permanent project documentation. Acceptance transfers
+relevant evidence and deletes it.
+
+Use the end-of-step report to give its path for a fresh Acceptance context.
+Do not continue into Acceptance here.
 
 ## End-of-step report
 
@@ -41,5 +89,4 @@ List the report path and any documents changed, or state that none changed.
 State that Review is complete, identify the Implementation commit, and summarize
 which checks passed, failed, or could not run. Name Acceptance as the next step
 for the feature ID. Give a copyable `/clear` command and a separate copyable
-prompt that asks for Acceptance using the report path. Do not expose candidate
-findings in this message; Acceptance evaluates them first.
+prompt that asks for Acceptance using the report path.
