@@ -49,11 +49,6 @@ real trade-off. Ask a focused question when the user's judgment is needed.
 A normal turn can contain a proposal, its reason, a counterexample, and one
 important question. Do not make most turns mainly questions.
 
-When a question belongs in Direction, propose the decision that Direction
-needs to resolve and explain why. Ask the user to approve or change that
-proposed next step. Keep the affected Shape work blocked until Direction
-settles the question. Investigate facts and make safe document fixes directly.
-
 Before raising an objection, test it: "If this feature ships as currently
 described, Y happens because Z." Y is a concrete consequence. Z is the
 mechanism, supported by repository evidence, external evidence, or a specific
@@ -62,6 +57,8 @@ unresolved choice. If either part cannot be named, drop the objection.
 Investigate an important unknown or keep it as an open question instead of
 calling it a defect. State what is verified, inferred, and still unknown.
 Name the evidence that could change the assessment.
+Investigate checkable uncertainty before asking the user to decide a product
+question.
 
 Discuss one consequential issue until it is understood, resolved, or safely
 deferred. One answer does not close an issue by itself. When the user disagrees,
@@ -73,9 +70,7 @@ inconsistencies with evidence, then let the user make the product judgment.
 Use concrete stories when they expose ambiguity or test proposed behaviour.
 Examine successful behaviour, failures, permissions, persistence, lifecycle,
 compatibility, and safety when relevant. Use these as lenses, not a fixed
-question sequence. State scope and non-goals as understanding improves. Keep
-uncertain behaviour in Draft until the user resolves, verifies, removes, or
-safely defers it.
+question sequence. State scope and non-goals as understanding improves.
 
 Prefer the smallest coherent feature with an independently observable outcome.
 Do not invent an actor or story to make internal engineering work appear to be a
@@ -84,66 +79,54 @@ Implementation. If technical work may be a separate project capability, return
 it to Direction to decide. Do not use Shape to choose internal APIs, modules,
 data structures, libraries, implementation plans, or test code.
 
-## Maintain durable records
+## Return questions to the owning workflow
 
-Use `feature-brief-document` to create a brief when enough useful behavioural
-understanding exists to preserve. Keep an existing brief current with material
-changes to behaviour, boundaries, agreements, and open questions. Do not create
-a brief merely because Shape has started or rewrite it after every exploratory
-turn. Mark tentative parts of a Draft clearly.
+When a question belongs in Direction, propose the decision that Direction
+needs to resolve and explain why. Ask the user to approve or change that
+proposed next step. Keep the affected Shape work blocked until Direction
+settles the question. Investigate facts and make safe document fixes directly.
 
-Preserve material feature-behaviour questions in a Draft brief when one exists.
-Keep unresolved end-state questions in Direction and link to them.
+Direction decides whether discovered work merits a new Backlog item and when
+it becomes Ready for Shape. Return such work to Direction; do not create or
+promote a Backlog item in Shape.
 
-Use `backlog-document` to update an existing item's agreed boundaries or
-relationships when Shape changes them. Direction decides whether discovered
-work merits a new item and when an item becomes Ready for Shape. Return such
-work to Direction; do not create or promote a Backlog item in Shape.
+If evidence challenges Direction or an existing decision, return the question
+to its owning workflow. Recommend a correction and explain the evidence. Ask
+the user to approve or change it there. Keep dependent feature behaviour
+unsettled until that workflow resolves it; do not silently change it.
 
-Draft Feature Briefs are durable memory of shared behavioural understanding.
-They support the discussion instead of driving it. Do not create separate Shape
-notes, context dumps, or handoff documents. Keep stable relationships between
-future work in the Backlog.
+## Preserve results
 
-Use `context-document` for agreed project terms and `pdr-document` for durable
-product decisions whose rationale matters beyond one feature. Use
-`adr-document` only when an architectural choice must be settled to establish
-feasibility, observable behaviour, or feature boundaries. Link each affected
-Feature Brief to shared decisions and constraints.
+Use the document skills to record durable knowledge:
 
-If evidence challenges Direction or an existing decision, return the question to
-its owning workflow. Recommend a correction and explain the evidence. Ask the
-user to approve or change it there. Keep dependent feature behaviour unsettled
-until that workflow resolves it; do not silently change it.
+- `feature-brief-document`: agreed feature behaviour, boundaries, and open
+  feature questions.
+- `backlog-document`: agreed boundaries and durable relationships of existing
+  items.
+- `context-document`: agreed project terms.
+- `pdr-document`: durable product decisions whose rationale matters beyond one
+  feature.
+- `adr-document`: architectural choices that must be settled for feasibility,
+  observable behaviour, or feature boundaries.
 
-## Establish acceptance and readiness
+Keep unresolved end-state questions in Direction. The document skills own
+record creation, maintenance, links, and status mechanics.
 
-As behaviour becomes agreed, express useful stories and observable acceptance
-criteria using `feature-brief-document` for story coverage and criterion trace.
-Include relevant failures and boundaries. Keep acceptance criteria about
-behaviour, not internal design or test implementation.
+## Decide readiness for Design
 
-When Design appears possible, review the brief for one coherent feature,
-agreed behaviour, explicit scope and non-goals, failures, acceptance coverage,
-linked shared decisions, and material assumptions. Design must be able to
-proceed without making product decisions. Discuss unresolved concerns with the
-user.
+Review the brief with `feature-brief-document` to confirm that behaviour is
+settled and Design can proceed without making product decisions. Resolve
+material concerns with the user before proposing Ready.
 
-Present the reviewed brief and ask the user to approve or change its
-proposed Ready status. Set `Status: Ready` only after the user explicitly agrees.
-Complete sections or a passed checklist do not make a brief Ready.
+Present the reviewed brief and explicitly ask the user to approve or change
+its proposed Ready status. Only after the user agrees, use
+`feature-brief-document` to mark it Ready. Complete sections or a passed
+checklist do not make a brief Ready.
 
-After acceptance, update the status and continue within Shape. Stop before
-Design and use the session boundary instructions for its handoff.
-
-If later evidence requires a material change to the contract, return the brief
-to Shape and use `feature-brief-document` to handle its Draft status. Update the
-Backlog with the resulting boundaries and durable relationships.
-
-Select no more than one Ready brief as the next Design input. Other Ready
-briefs remain available for later work. Do not send a Draft brief to Design to
-resolve a product question. A Shape session may end with only Backlog or Draft
-brief progress.
+Continue within Shape after acceptance. Stop before Design and use the session
+boundary instructions for its handoff. Select no more than one Ready brief as
+the next Design input. Do not send a Draft brief to Design to resolve a product
+question. A Shape session may end with only Backlog or Draft brief progress.
 
 ## Session boundaries
 
@@ -159,5 +142,4 @@ Then state what changed, what remains open, and the status of affected briefs.
 When a Ready brief is selected, name Design and its feature ID. Give a Design
 handoff only for a Ready brief. Suggest `/clear` and a copyable prompt only
 when a context reset is useful. If repository changes remain before Design,
-tell the user about Design's clean-tree entry gate. Do not continue Design in
-the Shape context.
+tell the user about Design's clean-tree entry gate.

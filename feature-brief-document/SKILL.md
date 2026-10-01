@@ -15,7 +15,9 @@ return to Shape through the status rules below.
 ## Create and locate
 
 Create a brief when Shape has enough useful behavioural understanding to
-preserve. Do not create one merely because Shape has started.
+preserve. Do not create one merely because Shape has started. Keep material
+agreements and open questions in the brief rather than separate Shape notes,
+context dumps, or handoff documents.
 
 Require an existing Backlog item with `Status: Ready for Shape`. If no item
 exists, return the work to Direction. If its status is `Needs Direction`, return
@@ -74,12 +76,23 @@ Acceptance:
 ## Open questions and assumptions
 ```
 
+## Maintenance
+
+Keep an existing brief current with material changes to behaviour, boundaries,
+agreements, and open questions. Do not rewrite it after every exploratory turn.
+Mark tentative parts of a Draft clearly. Continue the Shape discussion after
+an edit.
+
+When the feature contract changes, use `backlog-document` to update affected
+item boundaries and durable relationships.
+
 ## Status changes
 
 Keep `Status: Draft` or `Status: Ready` near the title. Create a brief as Draft.
 Do not present a Draft brief as accepted behaviour. Shape owns the readiness
 review and acceptance request. Set Ready only after explicit user agreement.
-This document skill does not start Design after approval.
+This document skill does not start Design after approval. Ready briefs that
+are not selected remain available for later work.
 
 If later evidence requires a material change to behaviour, scope, stories, or
 acceptance criteria, return it to Shape. Propose the behaviour and explain why.
@@ -93,7 +106,8 @@ behaviour in the discussion. Record stories and acceptance criteria as the user
 and model agree on them. Each story identifies an actor, situation, intent or
 action, and observable result.
 
-Give every Ready feature at least one user or system story. Put criteria under
+Keep acceptance criteria about observable behaviour, not internal design or
+test implementation. Give every Ready feature at least one user or system story. Put criteria under
 each story so their trace is clear. Put criteria that span stories under a named
 feature-wide constraint. Before Ready, give every story acceptance coverage.
 Cover relevant failure and boundary behaviour, permissions, persistence,
@@ -103,9 +117,10 @@ State scope and non-goals. Link neighbouring features and shared Direction,
 Context, PDR, or ADR material when they constrain this feature.
 
 Record unresolved feature-behaviour questions and unverified assumptions in
-Draft. Keep unresolved end-state questions in Direction and link to them instead
-of copying them. Remove resolved questions and superseded wording instead of
-retaining a discussion history.
+Draft. Keep uncertain behaviour there until the user resolves, verifies,
+removes, or safely defers it. Keep unresolved end-state questions in Direction
+and link to them instead of copying them. Remove resolved questions and
+superseded wording instead of retaining a discussion history.
 
 Ready requires one coherent vertical slice, agreed behaviour and boundaries,
 acceptance coverage, intentional scope and non-goals, and linked shared
