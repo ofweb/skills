@@ -49,7 +49,7 @@ Do not include feature requirements, acceptance criteria, an implementation plan
 
 Aim for 200–400 words. The hard limit is 700 words. Near that limit, remove stale context and repeated detail. Link canonical material instead of copying it.
 
-Invoke `concise-prose` before writing or revising the ADR. Follow its STE100 and
-Vale repair loop until `prose-check` passes. Install `workflow-document-check`
+Invoke `concise-prose` before writing or revising the ADR. Apply its principles
+and run `prose-check` as described there. Install `workflow-document-check`
 alongside this skill and run it after edits. Check the ID, status, scope,
 rationale, and links before finishing.

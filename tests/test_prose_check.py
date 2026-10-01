@@ -1,159 +1,38 @@
-"""Tests for the Markdown prose boundary and command status."""
-
 from __future__ import annotations
 
 import json
 import os
-import runpy
+from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
-from collections import Counter
-from pathlib import Path
 
 
-SKILL_DIR = Path(__file__).resolve().parent.parent / "concise-prose"
-MODULE = runpy.run_path(str(SKILL_DIR / "prose-check"), run_name="prose_check_test")
+SKILL_DIR = Path(__file__).resolve().parents[1] / "concise-prose"
+REAL_VALE = shutil.which("vale")
 
 
-@unittest.skipUnless(shutil.which("cmark"), "cmark is required")
-class MarkdownProseTests(unittest.TestCase):
-    def test_exact_name_spans_keep_sentence_text(self) -> None:
-        source = "Farmer's Delight supplies meals. Farmers supply meals."
-        spans = MODULE["phrase_spans"](source, ["Farmer's Delight"])
-        self.assertEqual(spans, [(0, len("Farmer's Delight"))])
-        self.assertEqual(source[spans[0][0]:spans[0][1]], "Farmer's Delight")
-
-    def test_vocabulary_groups_observed_noun_and_verb_forms(self) -> None:
-        words = Counter({
-            "meal": 2, "meals": 3, "tier": 1, "tiers": 2,
-            "variant": 1, "variants": 2, "ingredient": 1, "ingredients": 2,
-            "enchantment": 1, "enchantments": 2,
-            "harvest": 1, "harvests": 2, "harvested": 1, "harvesting": 2,
-        })
-        grouped = {base: (set(forms), count) for base, forms, count in MODULE["vocabulary_groups"](words)}
-        self.assertEqual(grouped["meal"], ({"meal", "meals"}, 5))
-        self.assertEqual(grouped["tier"], ({"tier", "tiers"}, 3))
-        self.assertEqual(grouped["variant"], ({"variant", "variants"}, 3))
-        self.assertEqual(grouped["ingredient"], ({"ingredient", "ingredients"}, 3))
-        self.assertEqual(grouped["enchantment"], ({"enchantment", "enchantments"}, 3))
-        self.assertEqual(grouped["harvest"], ({"harvest", "harvests", "harvested", "harvesting"}, 6))
-    def test_heading_ends_before_following_story(self) -> None:
-        source = "## Stories and acceptance\n\n### S1\n\nStory: A resident can enter.\n"
-        prose = MODULE["prose_only"](source)
-
-        self.assertEqual(len(prose), len(source))
-        self.assertIn("Stories and acceptance.\n", prose)
-        self.assertIn("S1.\n", prose)
-        self.assertEqual(prose.index("Story:"), source.index("Story:"))
-
-    def test_heading_without_blank_line_still_ends_sentence(self) -> None:
-        prose = MODULE["prose_only"]("# Goal\nThe cabin is ready.\n")
-        self.assertIn("Goal.The cabin", prose)
-
-    def test_heading_boundary_preserves_crlf(self) -> None:
-        prose = MODULE["prose_only"]("# Goal\r\n\r\nThe cabin is ready.\r\n")
-        self.assertIn("Goal.\n\r\nThe cabin", prose)
-
-    def test_only_actual_possessive_suffix_findings_are_filtered(self) -> None:
-        cases = (
-            ("The owner's cabin.", "'s", True),
-            ("The cabin's owner.", "'s", True),
-            ("The owner’s cabin.", "’s", True),
-            ("It's ready.", "'s", False),
-            ("There's a cabin.", "'s", False),
-            ("Who's the owner?", "'s", False),
-            ("Don't enter.", "n't", False),
-            ("It isn't ready.", "n't", False),
-        )
-        for prose, suffix, expected in cases:
-            with self.subTest(prose=prose):
-                start = prose.index(suffix)
-                finding = {
-                    "rule_id": "STE-VOCAB-UNAPPROVED",
-                    "evidence": {"word": suffix},
-                    "start": start,
-                    "end": start + len(suffix),
-                }
-                self.assertEqual(MODULE["is_possessive_suffix"](finding, prose), expected)
-
-        prose = "The owner's cabin."
-        start = prose.index("'s")
-        finding = {
-            "rule_id": "STE-VOCAB-UNAPPROVED",
-            "evidence": {"word": "'s"},
-            "start": start,
-            "end": start + 2,
-        }
-        self.assertFalse(MODULE["is_possessive_suffix"](finding | {"start": 0}, prose))
-        self.assertFalse(MODULE["is_possessive_suffix"](finding | {"end": start + 3}, prose))
-        self.assertFalse(MODULE["is_possessive_suffix"](finding | {"start": 1, "end": 3}, prose))
-
-    def test_code_and_link_target_are_absent_without_shifting_offsets(self) -> None:
-        source = (
-            "# Café\n\nUse `utilize` and [the file](https://example.com).\n\n"
-            "```text\nleverage synergy\n```\n"
-        )
-        prose = MODULE["prose_only"](source)
-
-        self.assertEqual(len(prose), len(source))
-        self.assertEqual(prose.index("Café"), source.index("Café"))
-        self.assertEqual(prose.index("the file"), source.index("the file"))
-        for hidden in ("utilize", "https://example.com", "leverage synergy"):
-            self.assertNotIn(hidden, prose)
-
-
-@unittest.skipUnless(shutil.which("cmark"), "cmark is required")
 class CommandTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.directory = Path(self.temp.name)
-        checker = self.directory / "ste100"
-        checker.write_text(
-            "#!/usr/bin/env python3\n"
-            "import json, os, re, sys\n"
-            "from pathlib import Path\n"
-            "text = sys.stdin.read()\n"
-            "if os.environ.get('FAKE_STE_BAD_JSON'):\n"
-            "    print('invalid report')\n"
-            "    sys.exit(0)\n"
-            "if os.environ.get('FAKE_STE_SUFFIX'):\n"
-            "    match = re.search(r\"n['’]t|['’]s\", text, re.I)\n"
-            "    start, end = match.span()\n"
-            "    findings = [{'rule_id': 'STE-VOCAB-UNAPPROVED', 'severity': 'error', "
-            "'evidence': {'word': match.group()}, 'start': start, 'end': end}]\n"
-            "    print(json.dumps({'compliant': False, 'findings': findings}))\n"
-            "    sys.exit(1)\n"
-            "if os.environ.get('FAKE_STE_REPORT'):\n"
-            "    if os.environ.get('FAKE_STE_REPORT_ERROR'):\n"
-            "        sys.exit(2)\n"
-            "    words = re.finditer(r'\\b(storage|requirement|room|farmer|delight|meal|meals|job|reservation)\\b', text, re.I)\n"
-            "    findings = [{'rule_id': 'STE-VOCAB-UNAPPROVED', 'evidence': {'word': match.group()}, 'start': match.start(), 'end': match.end()} for match in words]\n"
-            "    findings.append({'rule_id': 'STE-SENTENCE-LENGTH'})\n"
-            "    print(json.dumps({'findings': findings}))\n"
-            "    sys.exit(1 if len(findings) > 1 else 0)\n"
-            "report = {'compliant': 'BAD' not in text, 'findings': []}\n"
-            "if os.environ.get('PRINT_GLOSSARY'):\n"
-            "    path = Path(sys.argv[sys.argv.index('--glossary') + 1])\n"
-            "    report.update(json.loads(path.read_text()))\n"
-            "report['STE text'] = repr(text)\n"
-            "print(json.dumps(report))\n"
-            "sys.exit(1 if 'BAD' in text else 0)\n",
-            encoding="utf-8",
-        )
-        checker.chmod(0o755)
-        vale = self.directory / "vale"
+        tools = self.directory / "tools"
+        tools.mkdir()
+        (tools / "python3").symlink_to(sys.executable)
+        vale = tools / "vale"
         vale.write_text(
             "#!/usr/bin/env python3\n"
-            "import os, sys\n"
-            "print('VALE RAN')\n"
-            "sys.exit(int(os.environ.get('FAKE_VALE_STATUS', '0')))\n",
-            encoding="utf-8",
+            "import json, os, sys\n"
+            "print(json.dumps({'args': sys.argv[1:], 'stdin': sys.stdin.read()}))\n"
+            "print('vale diagnostic', file=sys.stderr)\n"
+            "status = int(os.environ.get('FAKE_VALE_STATUS', '0'))\n"
+            "sys.exit(1 if sys.argv[-1].endswith('bad.md') else status)\n"
         )
         vale.chmod(0o755)
-        self.env = dict(os.environ, PATH=f"{self.directory}:{os.environ['PATH']}")
+        self.env = dict(os.environ, PATH=str(tools))
 
     def run_tool(
         self, *args: str, input_text: str | None = None, skill_dir: Path = SKILL_DIR
@@ -167,300 +46,109 @@ class CommandTests(unittest.TestCase):
             check=False,
         )
 
-    def test_stdin_ignores_code_but_checks_prose(self) -> None:
-        passed = self.run_tool(input_text="Use the file.\n\n```text\nBAD\n```\n")
-        self.assertEqual(passed.returncode, 0, passed.stderr)
-        self.assertNotIn("BAD", passed.stdout)
-        self.assertLess(passed.stdout.index("STE100 =="), passed.stdout.index("Vale =="))
+    def test_stdin_uses_markdown_and_bundled_config_without_other_tools(self) -> None:
+        source = "# Signal\n\nUse `signal`.\n"
+        for args in ((), ("-",)):
+            with self.subTest(args=args):
+                result = self.run_tool(*args, input_text=source)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                report = json.loads(result.stdout.splitlines()[1])
+                self.assertEqual(report['stdin'], source)
+                self.assertEqual(report['args'], [
+                    '--config', str(SKILL_DIR / '.vale.ini'),
+                    '--ext=.md', '--path=stdin.md',
+                ])
+                self.assertIn('vale diagnostic', result.stderr)
 
-        failed = self.run_tool(input_text="BAD prose.\n")
-        self.assertEqual(failed.returncode, 1, failed.stderr)
-        self.assertNotIn("Vale ==", failed.stdout)
-
-    def test_vale_failure_after_ste100_passes(self) -> None:
-        self.env["FAKE_VALE_STATUS"] = "1"
-        result = self.run_tool(input_text="Use the file.\n")
+    def test_file_checks_continue_after_lint_and_input_failures(self) -> None:
+        bad = self.directory / 'bad.md'
+        good = self.directory / 'good.md'
+        bad.write_text('Note that the file exists.\n')
+        good.write_text('Use the file.\n')
+        result = self.run_tool(str(bad), str(good))
         self.assertEqual(result.returncode, 1, result.stderr)
-        self.assertLess(result.stdout.index("STE100 =="), result.stdout.index("Vale =="))
+        self.assertIn(f'== {good}: Vale ==', result.stdout)
+        self.assertLess(result.stdout.index(str(bad)), result.stdout.index(str(good)))
 
-    def test_possessives_pass_but_contractions_still_block_vale(self) -> None:
-        self.env["FAKE_STE_SUFFIX"] = "1"
-        for prose in ("The owner's cabin.", "The cabin's owner.", "The owner’s cabin."):
-            with self.subTest(prose=prose):
-                checked = self.run_tool(input_text=prose + "\n")
-                self.assertEqual(checked.returncode, 0, checked.stderr)
-                self.assertIn("Vale ==", checked.stdout)
-                self.assertNotIn("STE-VOCAB-UNAPPROVED", checked.stdout)
-
-        for prose in ("It's ready.", "There's a cabin.", "Who's the owner?", "Don't enter.", "It isn't ready."):
-            with self.subTest(prose=prose):
-                checked = self.run_tool(input_text=prose + "\n")
-                self.assertEqual(checked.returncode, 1, checked.stderr)
-                self.assertNotIn("Vale ==", checked.stdout)
-                self.assertIn("STE-VOCAB-UNAPPROVED", checked.stdout)
-
-        reported = self.run_tool("--vocabulary-report", input_text="The owner's cabin.\n")
-        self.assertEqual(reported.returncode, 0, reported.stderr)
-        self.assertIn("None.", reported.stdout)
-
-    def test_invalid_ste_report_is_a_tool_failure(self) -> None:
-        self.env["FAKE_STE_BAD_JSON"] = "1"
-        result = self.run_tool(input_text="Use the file.\n")
+        result = self.run_tool(str(self.directory / 'missing.md'), str(good))
         self.assertEqual(result.returncode, 2)
-        self.assertIn("invalid STE100 report", result.stdout)
-        self.assertNotIn("Vale ==", result.stdout)
+        self.assertIn('missing.md', result.stderr)
+        self.assertIn(f'== {good}: Vale ==', result.stdout)
 
-    @unittest.skipUnless(shutil.which("vale"), "Vale is required")
-    def test_real_vale_checks_stdin_after_ste100_passes(self) -> None:
-        tools_dir = self.directory / "real-vale"
-        tools_dir.mkdir()
-        (tools_dir / "ste100").symlink_to(self.directory / "ste100")
-        self.env["PATH"] = f"{tools_dir}:{os.environ['PATH']}"
-
-        result = self.run_tool(input_text="Use the relevant file.\n")
-        self.assertEqual(result.returncode, 1, result.stderr)
-        self.assertIn("Empty qualifier", result.stdout)
-
-    def test_multiple_files_return_failure_if_one_fails(self) -> None:
-        first = self.directory / "first.md"
-        second = self.directory / "second.md"
-        first.write_text("BAD prose.\n", encoding="utf-8")
-        second.write_text("Use the file.\n", encoding="utf-8")
-
-        result = self.run_tool(str(first), str(second))
-        self.assertEqual(result.returncode, 1, result.stderr)
-        self.assertIn(f"== {first}: STE100 ==", result.stdout)
-        self.assertNotIn(f"== {first}: Vale ==", result.stdout)
-        self.assertIn(f"== {second}: STE100 ==", result.stdout)
-        self.assertIn(f"== {second}: Vale ==", result.stdout)
-        self.assertLess(result.stdout.index(f"== {first}: STE100 =="), result.stdout.index(f"== {second}: Vale =="))
-
-    def test_vocabulary_report_counts_across_recursive_glob_without_code(self) -> None:
-        docs = self.directory / "docs"
-        nested = docs / "nested"
-        nested.mkdir(parents=True)
-        (docs / "first.md").write_text("Storage storage room. `storage`\n")
-        (nested / "second.md").write_text("storage requirement requirement room.\n")
-        self.env["FAKE_STE_REPORT"] = "1"
-
-        result = self.run_tool("--vocabulary-report", str(docs / "**" / "*.md"))
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(
-            result.stdout,
-            "Unknown vocabulary\n\n"
-            " 3 occurrences  storage\n"
-            " 2 occurrences  requirement\n"
-            " 2 occurrences  room\n",
-        )
-        self.assertNotIn("VALE RAN", result.stdout)
-
-    def test_vocabulary_report_merges_observed_forms(self) -> None:
-        self.env["FAKE_STE_REPORT"] = "1"
-        result = self.run_tool("--vocabulary-report", input_text="meal meals meals.\n")
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("3 occurrences  meal (forms: meal, meals)", result.stdout)
-        self.assertNotIn("occurrences  meals\n", result.stdout)
-
-    def test_exact_name_does_not_create_fragment_candidates(self) -> None:
-        project = self.directory / "project"
-        workflow = project / ".workflow"
-        workflow.mkdir(parents=True)
-        (workflow / "ste-glossary.json").write_text(json.dumps({
-            "exact_names": ["Farmer's Delight"],
-        }))
-        source = project / "brief.md"
-        source.write_text("Farmer's Delight supplies meals.\n")
-        self.env["FAKE_STE_REPORT"] = "1"
-
-        result = self.run_tool("--vocabulary-report", str(source))
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("meals", result.stdout)
-        self.assertNotIn("farmer", result.stdout.casefold())
-        self.assertNotIn("delight", result.stdout.casefold())
-
-        checked = self.run_tool(str(source))
-        self.assertEqual(checked.returncode, 1, checked.stderr)
-        self.assertIn("STE-SENTENCE-LENGTH", checked.stdout)
-        self.assertNotIn("Vale ==", checked.stdout)
-
-    def test_context_phrase_approves_words_only_inside_phrase(self) -> None:
-        project = self.directory / "project"
-        workflow = project / ".workflow"
-        workflow.mkdir(parents=True)
-        (workflow / "context.md").write_text(
-            "# Context\n\n## Job reservation\n"
-            "- Meaning: A Job reservation holds work for one task.\n"
-            "- STE class: Technical name\n"
-        )
-        source = project / "brief.md"
-        source.write_text("A Job reservation is saved. A reservation remains.\n")
-        self.env["FAKE_STE_REPORT"] = "1"
-        result = self.run_tool("--vocabulary-report", str(source))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("reservation", result.stdout)
-        self.assertNotIn("job", result.stdout.casefold())
-
-    @unittest.skipUnless(shutil.which("ste100"), "STE100 is required")
-    def test_exact_name_does_not_hide_sentence_length(self) -> None:
-        real_tool = self.directory / "real-ste100"
-        real_tool.mkdir()
-        (real_tool / "ste100").symlink_to(shutil.which("ste100"))
-        self.env["PATH"] = f"{real_tool}:{os.environ['PATH']}"
-        project = self.directory / "project"
-        workflow = project / ".workflow"
-        workflow.mkdir(parents=True)
-        (workflow / "ste-glossary.json").write_text(json.dumps({
-            "exact_names": ["Farmer's Delight"],
-        }))
-        source = project / "brief.md"
-        source.write_text(
-            "Farmer's Delight can make a meal after the player puts the correct items "
-            "in the cabin, but the player must also make sure that the cabin has enough space.\n"
-        )
-        result = self.run_tool(str(source))
-        self.assertEqual(result.returncode, 1, result.stderr)
-        self.assertIn("STE-SENTENCE-LENGTH", result.stdout)
-        self.assertNotIn("Word 'Farmer'", result.stdout)
-        self.assertNotIn("Word 'Delight'", result.stdout)
-        self.assertNotIn("Vale ==", result.stdout)
-
-    def test_vocabulary_report_rejects_missing_files_and_checker_failures(self) -> None:
-        self.env["FAKE_STE_REPORT"] = "1"
-        missing = self.run_tool("--vocabulary-report", str(self.directory / "*.md"))
-        self.assertEqual(missing.returncode, 2)
-        self.assertIn("no Markdown files match", missing.stderr)
-
-        source = self.directory / "source.md"
-        source.write_text("Storage room.\n")
-        self.env["FAKE_STE_REPORT_ERROR"] = "1"
-        failed = self.run_tool("--vocabulary-report", str(source))
-        self.assertEqual(failed.returncode, 2)
-        self.assertIn("STE100 failed", failed.stderr)
-        self.assertNotIn("Unknown vocabulary", failed.stdout)
-
-    def test_project_context_adds_noun_and_verb_to_shared_vocabulary(self) -> None:
-        project = self.directory / "project"
-        context = project / ".workflow" / "context.md"
-        source = project / "docs" / "guide.md"
-        context.parent.mkdir(parents=True)
-        source.parent.mkdir(parents=True)
-        context.write_text(
-            "# Context\n\n"
-            "## Signal\n\n- Meaning: A project event that informs a decision.\n"
-            "- STE class: Technical name\n- Forms: Signals\n\n"
-            "## Escrow\n\n- Meaning: To hold a project amount until release.\n"
-            "- STE class: Technical verb\n- Forms: Escrows, Escrowed\n"
-        )
-        (context.parent / "ste-glossary.json").write_text(
-            json.dumps({"technical_nouns": ["redstone"]})
-        )
-        source.write_text("Use Signal and Escrow.\n")
-        self.env["PRINT_GLOSSARY"] = "1"
-
-        result = self.run_tool(str(source))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn('"technical_nouns":', result.stdout)
-        self.assertIn('"technical_verbs":', result.stdout)
-        self.assertIn('"word": "Signal"', result.stdout)
-        self.assertIn('"word": "Escrow"', result.stdout)
-        self.assertIn('"word": "redstone"', result.stdout)
-        self.assertIn('"word": "file"', result.stdout)
-
-    def test_project_glossary_alone_is_found_for_file_and_stdin(self) -> None:
-        project = self.directory / "project"
-        workflow = project / ".workflow"
-        source = project / "docs" / "guide.md"
-        workflow.mkdir(parents=True)
-        source.parent.mkdir(parents=True)
-        (workflow / "ste-glossary.json").write_text(json.dumps({"technical_nouns": ["redstone"]}))
-        source.write_text("Use redstone.\n")
-        self.env["PRINT_GLOSSARY"] = "1"
-
-        file_result = self.run_tool(str(source))
-        self.assertEqual(file_result.returncode, 0, file_result.stderr)
-        self.assertIn('"word": "redstone"', file_result.stdout)
-        self.assertIn('"word": "file"', file_result.stdout)
-
-        stdin_result = self.run_tool("--project-root", str(project), input_text="Use redstone.\n")
-        self.assertEqual(stdin_result.returncode, 0, stdin_result.stderr)
-        self.assertIn('"word": "redstone"', stdin_result.stdout)
-
-    def test_malformed_project_glossary_stops_before_ste_check(self) -> None:
-        project = self.directory / "project"
-        workflow = project / ".workflow"
-        workflow.mkdir(parents=True)
-        (workflow / "ste-glossary.json").write_text("{bad JSON")
-        result = self.run_tool("--project-root", str(project), input_text="Use the file.\n")
+    def test_tool_failures_are_not_clean_checks(self) -> None:
+        self.env['FAKE_VALE_STATUS'] = '2'
+        result = self.run_tool(input_text='Use the file.\n')
         self.assertEqual(result.returncode, 2)
-        self.assertIn("Project vocabulary", result.stderr)
-        self.assertNotIn("STE text:", result.stdout)
+        (self.directory / 'tools' / 'vale').unlink()
+        result = self.run_tool(input_text='Use the file.\n')
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('missing command: vale', result.stderr)
 
-    def test_installed_prose_skill_keeps_context_derivation(self) -> None:
-        installed = self.directory / "installed-prose"
+    def test_installed_copy_uses_its_own_configuration(self) -> None:
+        installed = self.directory / 'installed-prose'
         shutil.copytree(SKILL_DIR, installed)
-        shared_before = (installed / "shared-terms.json").read_bytes()
-        isolated = self.directory / "isolated-python"
-        isolated.mkdir()
-        python = isolated / "python3"
-        python.write_text("#!/bin/sh\nexec /usr/bin/python3 -S \"$@\"\n")
-        python.chmod(0o755)
-        self.env["PATH"] = f"{isolated}:{self.env['PATH']}"
-        project = self.directory / "project"
-        context = project / ".workflow" / "context.md"
-        context.parent.mkdir(parents=True)
-        context.write_text(
-            "# Context\n\n## Signal\n- Meaning: A project event.\n"
-            "- STE class: Technical name\n"
-        )
-        (context.parent / "ste-glossary.json").write_text(
-            json.dumps({"technical_nouns": ["redstone"]})
-        )
-        self.env["PRINT_GLOSSARY"] = "1"
-        result = self.run_tool(
-            "--project-root", str(project), input_text="Use Signal.\n", skill_dir=installed
-        )
+        result = self.run_tool(input_text='Use the file.\n', skill_dir=installed)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn('"word": "Signal"', result.stdout)
-        self.assertIn('"word": "redstone"', result.stdout)
-        self.assertEqual((installed / "shared-terms.json").read_bytes(), shared_before)
+        report = json.loads(result.stdout.splitlines()[1])
+        self.assertEqual(report['args'][1], str(installed / '.vale.ini'))
 
-    def test_explicit_project_root_works_for_stdin(self) -> None:
-        project = self.directory / "project"
-        context = project / ".workflow" / "context.md"
-        context.parent.mkdir(parents=True)
-        context.write_text(
-            "# Context\n\n## Signal\n\n- Meaning: A project event.\n"
-            "- STE class: Technical name\n"
+
+@unittest.skipUnless(REAL_VALE, 'Vale is required')
+class ValeTests(unittest.TestCase):
+    def run_tool(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [str(SKILL_DIR / 'prose-check'), *args],
+            input=input_text, text=True, capture_output=True, check=False,
         )
-        self.env["PRINT_GLOSSARY"] = "1"
-        result = self.run_tool("--project-root", str(project), input_text="Use Signal.\n")
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn('"word": "Signal"', result.stdout)
 
-    def test_malformed_context_fails_before_ste_check(self) -> None:
-        project = self.directory / "project"
-        context = project / ".workflow" / "context.md"
-        context.parent.mkdir(parents=True)
-        context.write_text("# Context\n\n## Candidate\n\n- Meaning: A tentative idea.\n")
-        result = self.run_tool("--project-root", str(project), input_text="Use the file.\n")
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("Project vocabulary", result.stderr)
-        self.assertNotIn("STE text:", result.stdout)
+    def test_real_vale_checks_stdin_and_ignores_markdown_code(self) -> None:
+        source = (
+            'Use the file.\n\n'
+            '`Note that the relevant file exists.`\n\n'
+            '```text\nNote that the relevant file exists.\n```\n'
+        )
+        passed = self.run_tool(input_text=source)
+        self.assertEqual(passed.returncode, 0, passed.stdout + passed.stderr)
+        failed = self.run_tool('-', input_text='Use the relevant file.\n')
+        self.assertEqual(failed.returncode, 1, failed.stderr)
+        self.assertIn('Empty qualifier', failed.stdout)
 
-    def test_missing_checker_is_a_tool_failure(self) -> None:
-        without_checker = self.directory / "without-checker"
-        without_checker.mkdir()
-        (without_checker / "cmark").symlink_to(shutil.which("cmark"))
-        (without_checker / "vale").symlink_to(self.directory / "vale")
-        (without_checker / "python3").symlink_to("/usr/bin/python3")
-        self.env["PATH"] = str(without_checker)
+    def test_real_vale_keeps_mechanical_rules_and_source_locations(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary) / 'guide.md'
+            source.write_text('# Guide\n\nNote that the file exists.\n')
+            result = self.run_tool(str(source))
+            self.assertEqual(result.returncode, 1, result.stderr)
+            self.assertIn('Throat-clearing', result.stdout)
+            self.assertIn('3:1', result.stdout)
 
-        result = self.run_tool(input_text="Use the file.\n")
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("missing command: ste100", result.stderr)
+        for text, message in (
+            ('It could be argued that the file exists.', 'Hedge'),
+            ('The file exists for various reasons.', 'Non-reason'),
+            ('Furthermore, the file exists.', 'Stock connective'),
+            ('The code handles this gracefully.', 'Self-praise'),
+            ('This function returns the file.', 'Restates the code'),
+        ):
+            with self.subTest(text=text):
+                result = self.run_tool(input_text=text + '\n')
+                self.assertEqual(result.returncode, 1, result.stderr)
+                self.assertIn(message, result.stdout)
+
+    def test_technical_terms_and_long_sentences_need_no_glossary(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            workflow = project / '.workflow'
+            workflow.mkdir()
+            (workflow / 'context.md').write_text('# Context\n\n## Incomplete\n')
+            source = project / 'guide.md'
+            source.write_text(
+                'The scheduler saves a reservation for each pending task so that '
+                'the worker can resume processing after a restart without losing '
+                'the task identifier or its original position in the queue.\n'
+            )
+            result = self.run_tool(str(source))
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

@@ -92,8 +92,8 @@ Feature Brief requirements, stories, acceptance criteria, implementation plans,
 or discussion transcripts into an item. For a `Ready for Shape` item, create
 a draft Feature Brief when useful behavioural understanding needs a durable home.
 
-Invoke `concise-prose` before writing or revising the Backlog. Follow its STE100
-and Vale repair loop until `prose-check` passes. Install
+Invoke `concise-prose` before writing or revising the Backlog. Apply its
+principles and run `prose-check` as described there. Install
 `workflow-document-check` alongside this skill and use it after the edit.
 Prune or restructure after a hard-limit failure. Check that every item has a
 stable ID, one status, and a clear reason to retain the work.

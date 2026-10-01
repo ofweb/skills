@@ -1,172 +1,16 @@
 #!/usr/bin/env python3
-"""Check Markdown prose or report unknown STE100 words."""
+"""Check Markdown prose with Vale."""
 
 from __future__ import annotations
 
 import argparse
-from collections import Counter
-import glob
-import json
-import re
 import shutil
 import subprocess
 import sys
-import tempfile
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
 CONFIG = Path(__file__).resolve().with_name(".vale.ini")
-GLOSSARY = Path(__file__).resolve().with_name("shared-terms.json")
-SOURCEPOS = re.compile(r"^(\d+):(\d+)-(\d+):(\d+)$")
-# Guard common 's contractions without parsing English grammar.
-CONTRACTION_BASES = {"it", "that", "there", "what", "who", "he", "she", "let"}
-
-
-def project_root(name: str, explicit: Path | None) -> Path | None:
-    if explicit is not None:
-        return explicit.resolve()
-    start = Path.cwd() if name == "-" else Path(name).resolve().parent
-    for parent in (start, *start.parents):
-        workflow = parent / ".workflow"
-        if (workflow / "context.md").is_file() or (workflow / "ste-glossary.json").is_file():
-            return parent
-    return None
-
-
-def prose_only(markdown: str) -> str:
-    parsed = subprocess.run(
-        ["cmark", "--to", "xml", "--sourcepos"],
-        input=markdown,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if parsed.returncode:
-        raise RuntimeError(parsed.stderr.strip() or "cmark failed")
-
-    root = ET.fromstring(parsed.stdout)
-    lines = markdown.splitlines(keepends=True)
-    line_bytes = []
-    offset = 0
-    for line in lines:
-        line_bytes.append(offset)
-        offset += len(line.encode("utf-8"))
-
-    byte_to_char = []
-    for index, char in enumerate(markdown):
-        byte_to_char.extend([index] * len(char.encode("utf-8")))
-    byte_to_char.append(len(markdown))
-
-    keep = [False] * len(markdown)
-    for node in root.iter():
-        if node.tag.rsplit("}", 1)[-1] != "text":
-            continue
-        match = SOURCEPOS.fullmatch(node.attrib.get("sourcepos", ""))
-        if not match:
-            raise RuntimeError("cmark text node has no source position")
-        start_line, start_column, end_line, end_column = map(int, match.groups())
-        start_byte = line_bytes[start_line - 1] + start_column - 1
-        end_byte = line_bytes[end_line - 1] + end_column
-        for index in range(byte_to_char[start_byte], byte_to_char[end_byte]):
-            keep[index] = True
-
-    prose = list(
-        char if selected or char in "\r\n" else " "
-        for char, selected in zip(markdown, keep)
-    )
-    # A heading has no sentence punctuation. Use its line break as a boundary
-    # so STE100 does not join the heading to the next text block.
-    for node in root.iter():
-        if node.tag.rsplit("}", 1)[-1] != "heading":
-            continue
-        match = SOURCEPOS.fullmatch(node.attrib.get("sourcepos", ""))
-        if not match:
-            continue
-        end_line = int(match.group(3))
-        line_end = markdown.find("\n", byte_to_char[line_bytes[end_line - 1]])
-        if line_end != -1:
-            boundary = line_end - 1 if line_end and markdown[line_end - 1] == "\r" else line_end
-            prose[boundary] = "."
-    return "".join(prose)
-
-
-def phrase_spans(prose: str, phrases: list[str], *, ignore_case: bool = False) -> list[tuple[int, int]]:
-    """Locate complete approved phrases without changing sentence text."""
-    spans = []
-    flags = re.IGNORECASE if ignore_case else 0
-    for phrase in phrases:
-        pattern = re.compile(rf"(?<!\w){re.escape(phrase)}(?!\w)", flags)
-        spans.extend(match.span() for match in pattern.finditer(prose))
-    return spans
-
-
-def in_phrase(finding: dict, spans: list[tuple[int, int]]) -> bool:
-    """True only when a checker finding lies wholly inside an approved phrase."""
-    start, end = finding.get("start"), finding.get("end")
-    return isinstance(start, int) and isinstance(end, int) and any(
-        phrase_start <= start < end <= phrase_end for phrase_start, phrase_end in spans
-    )
-
-
-def is_possessive_suffix(finding: dict, prose: str) -> bool:
-    """Filter the pinned checker's false unknown word for a possessive suffix."""
-    # STE100 permits owner's. The pinned asd-ste100-checker revision
-    # e193ecdd66b09ce81b7c611f1c841efd8ba84cc7 tokenizes 's as unknown.
-    # This compatibility filter is not an STE100 rule. Contractions still fail.
-    if finding.get("rule_id") != "STE-VOCAB-UNAPPROVED":
-        return False
-    evidence = finding.get("evidence")
-    if not isinstance(evidence, dict) or evidence.get("word") not in ("'s", "’s"):
-        return False
-    start = finding.get("start")
-    end = finding.get("end")
-    if not isinstance(start, int) or not isinstance(end, int) or start <= 0 or end != start + 2:
-        return False
-    token = re.search(r"[A-Za-z]+$", prose[:start])
-    if token and token.group().casefold() in CONTRACTION_BASES:
-        return False
-    return (
-        end <= len(prose)
-        and prose[start:end] == evidence["word"]
-        and prose[start - 1].isalpha()
-        and (end == len(prose) or not prose[end].isalpha())
-    )
-
-
-def ste_result(
-    command: list[str], prose: str, *, exact_spans: list[tuple[int, int]] | None = None,
-    context_spans: list[tuple[int, int]] | None = None,
-) -> tuple[int, dict | None, str]:
-    """Run STE100 and remove only verified possessive token findings."""
-    result = subprocess.run(command, input=prose, text=True, capture_output=True)
-    if result.returncode not in (0, 1):
-        return result.returncode, None, result.stderr
-    try:
-        report = json.loads(result.stdout)
-        findings = report["findings"]
-        if not isinstance(findings, list) or any(not isinstance(item, dict) for item in findings):
-            raise ValueError("findings must be a list of objects")
-        exact_spans = exact_spans or []
-        context_spans = context_spans or []
-        kept = [
-            item for item in findings
-            if not is_possessive_suffix(item, prose)
-            and not (
-                item.get("rule_id") in {"STE-VOCAB-UNAPPROVED", "STE-POS-MISMATCH"}
-                and in_phrase(item, exact_spans)
-            )
-            and not (
-                item.get("rule_id") == "STE-VOCAB-UNAPPROVED"
-                and in_phrase(item, context_spans)
-            )
-        ]
-        report["findings"] = kept
-        status = 0 if result.returncode == 1 and findings and not kept else result.returncode
-        report["compliant"] = status == 0
-        return status, report, result.stderr
-    except (ValueError, KeyError, TypeError) as exc:
-        return 2, None, f"invalid STE100 report: {exc}\n"
 
 
 def run_check(command: list[str], content: str | None = None) -> int:
@@ -186,188 +30,36 @@ def run_check(command: list[str], content: str | None = None) -> int:
     return result.returncode
 
 
-def report_inputs(names: list[str]) -> list[str]:
-    """Expand report globs and read each file once."""
-    selected = []
-    seen = set()
-    for name in names or ["-"]:
-        matches = glob.glob(name, recursive=True) if glob.has_magic(name) else [name]
-        files = [match for match in matches if match == "-" or Path(match).is_file()]
-        if not files:
-            raise ValueError(f"no Markdown files match: {name}")
-        for match in sorted(files):
-            key = match if match == "-" else str(Path(match).resolve())
-            if key not in seen:
-                selected.append(match)
-                seen.add(key)
-    return selected
-
-
-def vocabulary_groups(unknown: Counter[str]) -> list[tuple[str, list[str], int]]:
-    """Group only clear forms whose base word also appears in the report."""
-    observed = set(unknown)
-
-    def base_for(word: str) -> str:
-        candidates = []
-        if word.endswith("ies"):
-            candidates.append(word[:-3] + "y")
-        if word.endswith("es"):
-            candidates.append(word[:-2])
-        if word.endswith("s") and not word.endswith("ss"):
-            candidates.append(word[:-1])
-        if word.endswith("ied"):
-            candidates.append(word[:-3] + "y")
-        if word.endswith("ed"):
-            candidates.extend((word[:-2], word[:-1]))
-        if word.endswith("ing"):
-            candidates.extend((word[:-3], word[:-3] + "e"))
-        return next((base for base in candidates if base in observed), word)
-
-    grouped: dict[str, list[str]] = {}
-    for word in sorted(observed):
-        grouped.setdefault(base_for(word), []).append(word)
-    return sorted(
-        ((base, forms, sum(unknown[form] for form in forms)) for base, forms in grouped.items()),
-        key=lambda item: (-item[2], item[0]),
-    )
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--project-root", type=Path, help="Project root for vocabulary")
     parser.add_argument(
-        "--vocabulary-report", action="store_true", help="Count unknown STE100 words"
-    )
-    parser.add_argument(
-        "files", nargs="*", metavar="FILE", help="Markdown files, report globs, or - for stdin"
+        "files", nargs="*", metavar="FILE", help="Markdown files or - for stdin"
     )
     args = parser.parse_args()
-
-    if args.project_root is not None and not args.project_root.is_dir():
-        parser.error(f"not a directory: {args.project_root}")
-
-    commands = ("cmark", "ste100") if args.vocabulary_report else ("cmark", "vale", "ste100")
-    missing = [name for name in commands if shutil.which(name) is None]
-    if missing:
-        parser.exit(2, f"prose-check: missing command: {', '.join(missing)}\n")
-
-    try:
-        names = report_inputs(args.files) if args.vocabulary_report else args.files or ["-"]
-    except ValueError as exc:
-        parser.exit(2, f"prose-check: {exc}\n")
+    if shutil.which("vale") is None:
+        parser.exit(2, "prose-check: missing command: vale\n")
 
     status = 0
-    unknown: Counter[str] = Counter()
-    for name in names:
+    for name in args.files or ["-"]:
         try:
-            markdown = sys.stdin.read() if name == "-" else Path(name).read_text(encoding="utf-8")
-            prose = prose_only(markdown)
-        except (OSError, RuntimeError, ET.ParseError, IndexError) as exc:
+            if name != "-":
+                Path(name).read_text(encoding="utf-8")
+            print(f"== {name}: Vale ==", flush=True)
+            command = ["vale", "--config", str(CONFIG)]
+            if name == "-":
+                result = run_check(
+                    command + ["--ext=.md", "--path=stdin.md"], sys.stdin.read()
+                )
+            else:
+                result = run_check(command + [name])
+        except (OSError, UnicodeError) as exc:
             print(f"prose-check: {name}: {exc}", file=sys.stderr)
             status = 2
             continue
-
-        if not args.vocabulary_report:
-            print(f"== {name}: STE100 ==", flush=True)
-        with tempfile.TemporaryDirectory(prefix="prose-check-") as temporary:
-            root = project_root(name, args.project_root)
-            context = root / ".workflow" / "context.md" if root else None
-            project_glossary = root / ".workflow" / "ste-glossary.json" if root else None
-            context = context if context and context.is_file() else None
-            project_glossary = (
-                project_glossary if project_glossary and project_glossary.is_file() else None
-            )
-            exact_names = []
-            context_phrases = []
-            try:
-                sys.path.insert(0, str(Path(__file__).resolve().parent))
-                from context_glossary import combined_glossary, context_entries, project_data
-
-                merged = combined_glossary(GLOSSARY, context, project_glossary)
-                if project_glossary:
-                    _, exact_names = project_data(project_glossary)
-                if context:
-                    context_phrases = [
-                        phrase
-                        for term, _, _, forms in context_entries(
-                            context.read_text(encoding="utf-8")
-                        )
-                        for phrase in (term, *forms)
-                        if " " in phrase
-                    ]
-                glossary = Path(temporary) / "glossary.json"
-                glossary.write_text(json.dumps(merged, ensure_ascii=False), encoding="utf-8")
-            except Exception as exc:
-                print(f"prose-check: {name}: Project vocabulary: {exc}", file=sys.stderr)
-                status = 2
-                continue
-            exact_spans = phrase_spans(prose, exact_names)
-            context_spans = phrase_spans(prose, context_phrases, ignore_case=True)
-            command = ["ste100", "check", "--glossary", str(glossary)]
-            if args.vocabulary_report:
-                check_status, report, error = ste_result(
-                    command, prose, exact_spans=exact_spans, context_spans=context_spans
-                )
-                if check_status not in (0, 1) or report is None:
-                    print(f"prose-check: {name}: STE100 failed: {error.strip()}", file=sys.stderr)
-                    status = 2
-                    continue
-                try:
-                    findings = report["findings"]
-                    if not isinstance(findings, list):
-                        raise ValueError("findings must be a list")
-                    for finding in findings:
-                        if not isinstance(finding, dict):
-                            raise ValueError("a finding must be an object")
-                        if finding.get("rule_id") == "STE-VOCAB-UNAPPROVED":
-                            evidence = finding.get("evidence")
-                            if not isinstance(evidence, dict):
-                                raise ValueError("a vocabulary finding needs evidence")
-                            word = evidence.get("word")
-                            if not isinstance(word, str) or not word.strip():
-                                raise ValueError("a vocabulary finding has no word")
-                            unknown[word.casefold()] += 1
-                except (ValueError, KeyError, TypeError) as exc:
-                    print(f"prose-check: {name}: invalid STE100 report: {exc}", file=sys.stderr)
-                    status = 2
-                continue
-            ste_status, report, output = ste_result(
-                command, prose, exact_spans=exact_spans, context_spans=context_spans
-            )
-            if report is None:
-                sys.stdout.write(output)
-            else:
-                print(json.dumps(report, indent=2, ensure_ascii=False))
-                if output:
-                    sys.stderr.write(output)
-        if ste_status:
-            status = max(status, 1 if ste_status == 1 else 2)
-            continue
-
-        print(f"== {name}: Vale ==", flush=True)
-        vale_cmd = ["vale", "--config", str(CONFIG)]
-        if name == "-":
-            vale_cmd += ["--ext=.md", "--path=stdin.md"]
-            vale_status = run_check(vale_cmd, markdown)
-        else:
-            vale_status = run_check(vale_cmd + [name])
-        if vale_status:
-            status = max(status, 1 if vale_status == 1 else 2)
-
-    if args.vocabulary_report and status == 0:
-        print("Unknown vocabulary")
-        if unknown:
-            groups = vocabulary_groups(unknown)
-            print()
-            width = max(2, len(str(max(count for _, _, count in groups))))
-            for word, forms, count in groups:
-                label = "occurrence" if count == 1 else "occurrences"
-                detail = f" (forms: {', '.join(forms)})" if len(forms) > 1 else ""
-                print(f"{count:>{width}} {label}  {word}{detail}")
-        else:
-            print("\nNone.")
+        if result:
+            status = max(status, 1 if result == 1 else 2)
     return status
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

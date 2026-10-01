@@ -109,8 +109,8 @@ is 1,000 words per brief. Near that limit, remove copied decisions, history,
 and implementation detail. Question whether separate features are hidden in
 the brief. Split unrelated behaviour and update the Backlog relationship.
 
-Invoke `concise-prose` before writing or revising the Feature Brief. Follow its
-STE100 and Vale repair loop until `prose-check` passes. Install
+Invoke `concise-prose` before writing or revising the Feature Brief. Apply its
+principles and run `prose-check` as described there. Install
 `workflow-document-check` alongside this skill and run it after edits. Check
 status, feature identity, and links after edits. Check story coverage, criterion
 trace, and unresolved material questions when reviewing readiness.
