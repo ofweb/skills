@@ -15,9 +15,10 @@ Apply these principles while writing:
 - Prefer short, direct sentences.
 - Prefer one idea or instruction per sentence.
 - Prefer direct verbs and active voice.
+- Prefer simple wording when it does not reduce precision.
+- Consult CONTEXT.md for establisted project terms.
 - Use one term consistently for one concept.
 - Preserve established technical terminology.
-- Prefer simple wording when it does not reduce precision.
 - Preserve meaning over satisfying a prose rule.
 
 Split a long sentence when it improves clarity. There is no fixed sentence
