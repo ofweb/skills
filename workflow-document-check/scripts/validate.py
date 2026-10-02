@@ -25,7 +25,7 @@ LIMITS = {
     "direction_topic": 2000,
     "backlog": 1800,
     "backlog_item": 80,
-    "context": 1500,
+    "context": 5000,
     "context_entry": 80,
     "feature_brief": 1000,
     "acceptance_report": 800,

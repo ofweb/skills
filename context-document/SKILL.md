@@ -71,7 +71,7 @@ explanations. Git preserves earlier definitions. Do not add conversation
 history or generic project documentation.
 
 Aim for 20–50 words per concept. The hard limit is 80 words per concept and
-1,500 words for the whole file. Near a limit, look for terms that no longer
+5,000 words for the whole file. Near a limit, look for terms that no longer
 need a project-specific definition, duplicate concepts, distinctions that can
 be simpler, and implementation vocabulary. Do not split Context just to meet
 the limit; growth may mean it has become general project memory.

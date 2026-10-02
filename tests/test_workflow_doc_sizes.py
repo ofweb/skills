@@ -27,7 +27,7 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
                 "direction.md": (4000, "Direction"),
                 "direction/topic.md": (2000, "Direction topic"),
                 "backlog.md": (1800, "Backlog"),
-                "context.md": (1500, "Context"),
+                "context.md": (5000, "Context"),
                 "decisions/pdr/0001-choice.md": (500, "PDR"),
                 "decisions/adr/0001-choice.md": (700, "ADR"),
                 "features/B-0001/acceptance-2026-09-24-abcdef0.md": (800, "Acceptance Report"),
@@ -40,6 +40,28 @@ class WorkflowDocumentSizeTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1, result.stderr)
             for _, label in documents.values():
                 self.assertIn(label, result.stdout)
+
+    def test_context_document_limit_boundary(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            workflow = root / ".workflow"
+            workflow.mkdir()
+            context = workflow / "context.md"
+            source = "# Context\n\n" + "\n\n".join(
+                f"## Term{index}\n\n- Meaning: " + "word " * 46
+                for index in range(100)
+            )
+            self.assertEqual(len(source.split()), 5002)
+            context.write_text(source.replace("word word ", "", 1))
+            result = self.run_checker(root)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            context.write_text(context.read_text() + "extra ")
+            result = self.run_checker(root)
+            self.assertEqual(result.returncode, 1, result.stderr)
+            self.assertIn("Context", result.stdout)
+            self.assertIn("5001", result.stdout)
+            self.assertNotIn("Context entry", result.stdout)
 
     def test_record_limits(self):
         with tempfile.TemporaryDirectory() as temporary:

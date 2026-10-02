@@ -67,7 +67,7 @@ without a matching backlog item fail.
 
 The checker counts whitespace-separated source words. It preserves
 the existing limits: Direction 4,000; each Direction topic 2,000;
-Backlog 1,800; each backlog item 80; Context 1,500; each Context entry
+Backlog 1,800; each backlog item 80; Context 5,000; each Context entry
 80; each Feature Brief 1,000; each Acceptance Report 800; each PDR
 500; and each ADR 700.
 
