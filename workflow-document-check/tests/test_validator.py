@@ -75,9 +75,21 @@ class ValidatorTests(unittest.TestCase):
             check=False,
         )
 
-    def test_valid_ready_brief(self):
-        result = self.run_check()
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    def test_valid_brief_statuses(self):
+        for status in ("Draft", "Ready", "Designed", "Implemented", "Reviewed", "Accepted"):
+            with self.subTest(status=status):
+                self.put(".workflow/features/B-0001/brief.md", BRIEF.format(status=status))
+                result = self.run_check()
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_invalid_status_fields(self):
+        source = BRIEF.format(status="Ready")
+        for field in ("", "Status: Finished", "Status: ready", "Status: Ready\nStatus: Designed"):
+            with self.subTest(field=field):
+                self.put(".workflow/features/B-0001/brief.md", source.replace("Status: Ready", field))
+                result = self.run_check()
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn("FB002", result.stdout)
 
     def test_misplaced_briefs_report_fb017_without_crashing(self):
         canonical = self.root / ".workflow/features/B-0001/brief.md"
@@ -101,7 +113,7 @@ class ValidatorTests(unittest.TestCase):
         with zipfile.ZipFile(SKILL / "dist" / "check_workflow_docs.pyz") as bundle:
             self.assertEqual(bundle.read("__main__.py"), source)
 
-    def test_draft_omissions_warn_and_ready_omissions_fail(self):
+    def test_draft_omissions_warn_and_later_status_omissions_fail(self):
         incomplete = """# First
 
 Status: {status}
@@ -123,7 +135,10 @@ Acceptance:
 
 ## Non-goals
 """
-        for status, result_code in (("Draft", 0), ("Ready", 1)):
+        for status, result_code in (
+            ("Draft", 0), ("Ready", 1), ("Designed", 1),
+            ("Implemented", 1), ("Reviewed", 1), ("Accepted", 1),
+        ):
             with self.subTest(status=status):
                 self.put(
                     ".workflow/features/B-0001/brief.md",

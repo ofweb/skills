@@ -33,6 +33,7 @@ LIMITS = {
     "adr": 700,
 }
 REQUIRED = ("Goal", "Stories and acceptance", "Scope", "Non-goals")
+STATUSES = ("Draft", "Ready", "Designed", "Implemented", "Reviewed", "Accepted")
 NAMED_SECTIONS = set(REQUIRED) | {
     "Feature-wide constraints and acceptance",
     "Related records",
@@ -130,7 +131,7 @@ def complete(
     at: int,
     message: str,
 ) -> None:
-    add(findings, code, path, at, message, status != "Ready")
+    add(findings, code, path, at, message, status == "Draft")
 
 
 def word_count(source: str) -> int:
@@ -311,13 +312,13 @@ def check_brief(doc: Document, findings: list[Finding]) -> tuple[str | None, int
     fields = preamble_fields(doc)
     statuses = fields.get("Status", [])
     ids = fields.get("Feature ID", [])
-    if len(statuses) != 1 or statuses[0][0] not in {"Draft", "Ready"}:
+    if len(statuses) != 1 or statuses[0][0] not in STATUSES:
         add(
             findings, "FB002", doc.path,
             statuses[1][1] if len(statuses) > 1 else statuses[0][1] if statuses else 1,
-            "Status must occur once and be Draft or Ready",
+            "Status must occur once and be one of: " + ", ".join(STATUSES),
         )
-    status = "Ready" if statuses and statuses[0][0] == "Ready" else "Draft"
+    status = statuses[0][0] if statuses and statuses[0][0] in STATUSES else "Draft"
     if len(ids) != 1 or not FEATURE_ID.fullmatch(ids[0][0]):
         add(
             findings, "FB003", doc.path,

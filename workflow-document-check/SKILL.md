@@ -18,8 +18,9 @@ backlog relationships, and all existing hard word limits. Read
 [rules.md](references/rules.md) when a finding needs interpretation.
 
 A Draft Feature Brief must have valid structure and links. Missing
-content is a warning. A Ready Feature Brief must also be mechanically
-complete. Semantic readiness remains a user and reviewer decision.
+content is a warning. A Feature Brief with status Ready, Designed, Implemented,
+Reviewed, or Accepted must also be mechanically complete. Semantic readiness
+and stage completion remain user and reviewer decisions.
 The checker cannot decide whether scope, acceptance coverage, or open
 questions are good enough.
 

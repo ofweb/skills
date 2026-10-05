@@ -47,7 +47,7 @@ Run compile or type checks, existing tests, formatting, lint, and prose checks a
 
 Review important types, valid states, errors, ownership, and effect boundaries with the user. Explain how they express the agreed behaviour. Present the code baseline, ADRs, check results, and remaining constraints. Ask the user to accept the proposed Design or request changes. A change belongs back in Design when it would have mattered during this review.
 
-After acceptance and passing checks, commit the accepted Design state. Verify that the commit contains only accepted artifacts and record its SHA as the Implementation baseline. Do not hand off until the commit succeeds. The commit marks the implementation diff boundary; durable project decisions and the Feature Brief govern Review. Implementation starts in a fresh context from this commit. If implementation disproves a material design premise, reopen Design and accept a revised baseline before continuing.
+After acceptance and passing checks, set the Feature Brief status to Designed through `feature-brief-document`. Commit the accepted Design state. Verify that the commit contains only accepted artifacts and record its SHA as the Implementation baseline. Do not hand off until the commit succeeds. The commit marks the implementation diff boundary; durable project decisions and the Feature Brief govern Review. Implementation starts in a fresh context from this commit. If implementation disproves a material design premise, reopen Design and accept a revised baseline before continuing.
 
 ## End-of-step report
 

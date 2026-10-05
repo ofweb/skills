@@ -1,11 +1,11 @@
 ---
 name: implement
-description: Implement one accepted Design from a ready Feature Brief. Complete behaviour in small tested chunks while preserving the reviewed code contracts.
+description: Implement one accepted Design from a Designed Feature Brief. Complete behaviour in small tested chunks while preserving the reviewed code contracts.
 ---
 
 # Implement
 
-Implement one accepted Design in a fresh context. Read the ready Feature Brief, accepted code structure, linked decisions, nearby code and tests, and repository checks. The Design conversation is not an input.
+Implement one accepted Design in a fresh context. Read the Designed Feature Brief, accepted code structure, linked decisions, nearby code and tests, and repository checks. The Design conversation is not an input.
 
 ## Reconstruct the target
 
@@ -23,7 +23,7 @@ Choose one coherent piece of feature behaviour that can be implemented and check
 
 For each chunk:
 
-1. Write or update the relevant test. Confirm its intended failure when practical. If it already passes, explain why it still protects the new behaviour.
+1. Write or update the test for the chosen behaviour. Confirm its intended failure when practical. If it already passes, explain why it still protects the new behaviour.
 2. Implement the smallest complete behaviour within the accepted Design.
 3. Run the focused test, compile or type-check, lint, and format. Fix failures before starting another chunk.
 4. Simplify the code just changed without adding speculative abstractions. Check it against the Feature Brief and reviewed contracts.
@@ -40,7 +40,7 @@ change.
 
 Implement every designed stub and target. Run the complete test suite, compile or type-check, and pass configured lint and formatting checks. Inspect the designed area for unfinished code. Passing mechanical checks establishes readiness for Review; it does not prove feature correctness or test adequacy.
 
-Inspect the complete working tree. Confirm that it contains only the intended feature implementation, tests, and permitted artifacts. Commit the completed implementation after all required checks pass. Record the Implementation commit SHA. Do not transition if the commit fails or unrelated changes remain.
+Set the Feature Brief status to Implemented through `feature-brief-document` after implementation is complete and required checks pass. Inspect the complete working tree. Confirm that it contains only the intended feature implementation, tests, and permitted artifacts. Commit the completed implementation after all required checks pass. Record the Implementation commit SHA. Do not transition if the commit fails or unrelated changes remain.
 
 Record both the Design and Implementation commit SHAs. Request the Implement to Review transition when a workflow controller is available. Otherwise tell the user to start Review in a fresh context from these commits and durable project artifacts. Do not carry a prose handoff or continue into Review in this context.
 

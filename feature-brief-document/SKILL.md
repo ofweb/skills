@@ -7,7 +7,7 @@ description: Preserve agreed feature behaviour in a Feature Brief as Shape devel
 
 Shape owns one Feature Brief for each substantial feature. The brief records
 useful behavioural understanding that survives discussion. It is working memory
-while Draft and the behavioural contract for Design while Ready. Writing the
+while Draft and the behavioural contract from Ready onward. Writing the
 brief does not drive the discussion. Design may correct non-material wording
 or links, with those changes included in Design acceptance. Material changes
 return to Shape through the status rules below.
@@ -88,11 +88,31 @@ item boundaries and durable relationships.
 
 ## Status changes
 
-Keep `Status: Draft` or `Status: Ready` near the title. Create a brief as Draft.
-Do not present a Draft brief as accepted behaviour. Shape owns the readiness
-review and acceptance request. Set Ready only after explicit user agreement.
+Keep one `Status` field near the title. Use these values:
+
+| Status | Meaning |
+| --- | --- |
+| Draft | Shape in progress. |
+| Ready | Shape accepted, ready for Design. |
+| Designed | Design accepted. |
+| Implemented | Implementation complete and checks pass. |
+| Reviewed | Independent Review complete. |
+| Accepted | Feature accepted as finished. |
+
+Create a brief as Draft. Do not present a Draft brief as accepted behaviour.
+Shape owns the readiness review and acceptance request. Set Ready only after
+explicit user agreement.
 This document skill does not start Design after approval. Ready briefs that
 are not selected remain available for later work.
+
+Design sets Designed after the user accepts the Design. Implement sets
+Implemented after implementation is complete and required checks pass.
+Review sets Reviewed after independent checks, specialist coverage, and the
+review report are complete. Reviewed may still have findings for Acceptance.
+Acceptance sets Accepted only when the agreed stories, acceptance criteria,
+and applicable constraints are satisfied with sufficient evidence. It returns
+unresolved intent decisions to the user. Update the same brief as each stage
+completes.
 
 If later evidence requires a material change to behaviour, scope, stories, or
 acceptance criteria, return it to Shape. Propose the behaviour and explain why.

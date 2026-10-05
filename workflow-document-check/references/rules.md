@@ -28,7 +28,7 @@ build requirements remain in `scripts/` and `requirements-build.txt`.
 | ID | Check |
 | --- | --- |
 | FB001 | A brief has exactly one nonempty H1. |
-| FB002 | `Status` occurs once and is `Draft` or `Ready`. |
+| FB002 | `Status` occurs once and is `Draft`, `Ready`, `Designed`, `Implemented`, `Reviewed`, or `Accepted`. |
 | FB003 | `Feature ID` occurs once, has form `B-xxxx`, and matches its directory. |
 | FB004 | A named section occurs twice, or a required section is missing. |
 | FB005 | A required section is empty or the stories section has no stories. |
@@ -56,8 +56,8 @@ organize content.
 For Draft, FB004 and FB005 findings for missing or empty required
 content are warnings. FB007 through FB010 are warnings when content
 is missing or story numbers have gaps. Duplicate statements and
-blocks are errors for every status. Ready makes all completeness
-findings errors. Identity, location, duplicate, link, and size findings
+blocks are errors for every status. Ready and every later status make all
+completeness findings errors. Identity, location, duplicate, link, and size findings
 are always errors.
 
 A backlog item needs exactly one local link to its canonical brief when

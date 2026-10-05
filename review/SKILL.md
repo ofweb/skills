@@ -80,6 +80,11 @@ SHAs, check results, specialist coverage, and retained candidates. The report
 is workflow state, not permanent project documentation. Acceptance transfers
 relevant evidence and deletes it.
 
+After independent checks, specialist coverage, and the report are complete,
+set the Feature Brief status to Reviewed through `feature-brief-document`.
+Make this status update after reviewing the immutable Implementation commit.
+Reviewed records completed Review even when findings remain for Acceptance.
+
 Use the end-of-step report to give its path for a fresh Acceptance context.
 Do not continue into Acceptance here.
 
@@ -89,4 +94,5 @@ List the report path and any documents changed, or state that none changed.
 State that Review is complete, identify the Implementation commit, and summarize
 which checks passed, failed, or could not run. Name Acceptance as the next step
 for the feature ID. Give a copyable `/clear` command and a separate copyable
-prompt that asks for Acceptance using the report path.
+prompt that invokes `$acceptance` with the feature ID, Implementation commit,
+and report path.
