@@ -62,9 +62,9 @@ and result.
 
 Keep supported uncertainty visible. Merge duplicates and omit claims that are
 unsupported, contradicted, unrelated, or outside the feature's impact. Do not
-verify findings on Acceptance's behalf, recommend solutions, or decide that the
-feature is complete. Keep unverified candidates in the report for Acceptance;
-do not present them directly to the user.
+recommend solutions or decide that the feature is complete. Keep candidates
+with unresolved uncertainty in the report for Acceptance; do not present them
+directly to the user.
 
 ## Hand off to Acceptance
 
@@ -77,8 +77,9 @@ it. Keep the report blocked until that setup is complete. Do not edit
 Write one temporary report at
 `.workflow/review/<feature-id>-<implementation-sha>.md`. Include both commit
 SHAs, check results, specialist coverage, and retained candidates. The report
-is workflow state, not permanent project documentation. Acceptance transfers
-relevant evidence and deletes it.
+is workflow state, not permanent project documentation. Acceptance uses it as
+the primary technical input for a user report and preserves its evidence links.
+Leave any transfer or cleanup to a subsequent workflow after the user's decision.
 
 After independent checks, specialist coverage, and the report are complete,
 set the Feature Brief status to Reviewed through `feature-brief-document`.

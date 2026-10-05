@@ -109,10 +109,11 @@ Design sets Designed after the user accepts the Design. Implement sets
 Implemented after implementation is complete and required checks pass.
 Review sets Reviewed after independent checks, specialist coverage, and the
 review report are complete. Reviewed may still have findings for Acceptance.
-Acceptance sets Accepted only when the agreed stories, acceptance criteria,
-and applicable constraints are satisfied with sufficient evidence. It returns
-unresolved intent decisions to the user. Update the same brief as each stage
-completes.
+Acceptance reports its recommendation, findings, and unresolved decisions
+without changing the brief. A subsequent workflow sets Accepted after the user
+accepts the feature. Report any unresolved contract violations or evidence gaps
+before requesting that decision. Update the same brief for authorized status
+changes.
 
 If later evidence requires a material change to behaviour, scope, stories, or
 acceptance criteria, return it to Shape. Propose the behaviour and explain why.

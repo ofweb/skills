@@ -1,151 +1,135 @@
 ---
 name: acceptance
-description: Complete one feature after Review by independently verifying retained candidates, fixing defects within agreed intent, resolving evidence gaps, and recording the final acceptance outcome.
+description: Assess Review findings against agreed feature intent and report blockers, decisions, and evidence gaps for the user's acceptance decision. Keep implementation and durable documents unchanged.
 ---
 
 # Acceptance
 
-Acceptance is the final feature-completion step after Review. It owns the
-decision that the feature is done. Review supplies broad inspection and
-evidence-backed candidates; Acceptance verifies those candidates and closes
-the remaining gaps. Do not repeat Review from scratch. Acceptance may change
-implementation code and tests. Review must not.
+Acceptance is a read-only decision and reporting step after Review. Answer:
+Given the agreed feature and the evidence produced by Review, what should the
+user know before deciding whether this feature is done?
 
-## Establish intent and the snapshot
+Review investigates the implementation, runs checks, uses specialists, and
+collects evidence in a temporary report. Acceptance evaluates that evidence
+against agreed intent and presents a recommendation. The user or subsequent
+workflow decides what to fix, defer, clarify, or accept.
 
-Read the Feature Brief, applicable Direction and Context documents, linked
-PDRs and ADRs, the immutable Implementation commit, and the temporary report
-at `.workflow/review/<feature-id>-<implementation-sha>.md`. Confirm that the
-feature ID and commit match the report. The Design commit marks the diff
-boundary; it does not override durable intent.
+## Read the handoff and agreed intent
 
-Start from the reviewed implementation. Preserve Review's brief status update
-and isolate unrelated working-tree changes before fixing code. Keep the
-Implementation commit unchanged. Track Acceptance fixes separately and
-evaluate the resulting revision. When resuming, read the existing acceptance
-record and retained fixes rather than resetting to the Implementation commit.
+Start with the Review report at
+`.workflow/review/<feature-id>-<implementation-sha>.md` and the Feature Brief.
+Confirm that feature ID and Implementation SHA match both the user's request
+and the report.
+Use relevant PDRs, ADRs, Direction, and Context documents when needed to
+interpret a finding. The Design commit marks the implementation diff boundary;
+it does not override durable intent.
 
-## Verify and classify candidates
+Assess the reviewed Implementation revision. Report a missing or mismatched
+handoff as an evidence gap. Do not substitute findings from another revision
+or assume they apply to later changes. Any focused code inspection or check
+must use the reviewed revision without disturbing the working tree.
 
-Verify every retained candidate independently. Read its governing contract and
-affected code, reproduce the behaviour where practical, and inspect or run
-tests that distinguish expected from observed behaviour. Review's conclusion
-and preliminary severity are leads, not proof.
+## Assess retained candidates
 
-Give each candidate a stable reference. Record its classification, evidence,
-acceptance consequence, and disposition:
+Assess every retained Review candidate using its expected and observed
+behaviour, evidence, consequence, preliminary severity, and uncertainty.
+Preserve Review's candidate references; assign stable references if absent.
+Relate each candidate to its governing story, acceptance criterion, PDR,
+ADR, or other durable constraint where relevant.
 
-| Classification | Meaning |
+Use the evidence already collected when it supports a disposition. Inspect
+code or run a focused, read-only check only when a material uncertainty affects
+the acceptance decision. Do not independently reproduce every candidate,
+systematically walk the implementation, or repeat Review investigations.
+
+Record one concise disposition for each candidate:
+
+| Disposition | Meaning |
 | --- | --- |
-| Confirmed defect | Implementation or test behaviour is wrong under settled intent. |
-| Requirement violation | An explicit feature requirement or durable constraint is unmet. |
-| Acceptable behaviour | Observed behaviour satisfies the agreed contract. |
-| Outside feature scope | The concern does not belong to this feature or its affected paths. |
-| Unresolved requirement ambiguity | Conflicting or unclear intent prevents a verdict. |
-| Unverifiable with the available environment | Missing execution capability or evidence prevents verification. |
+| Likely blocking problem | Evidence indicates a problem that prevents satisfying the agreed contract or materially undermines confidence in completion. |
+| Non-blocking problem | Evidence indicates a problem whose consequence does not prevent acceptance under the agreed contract. |
+| Likely acceptable | Evidence indicates that the observed behaviour satisfies agreed intent. |
+| Outside feature scope | The concern falls outside this feature's agreed scope and applicable constraints. |
+| Requires user/product decision | Ambiguous or conflicting intent requires a product, design, or user decision. |
+| Insufficient evidence to decide | Material uncertainty prevents a supported disposition. |
 
-State what remains unknown instead of treating inability to reproduce as
-acceptable behaviour. Reclassify when new evidence changes the verdict.
-Verify newly discovered problems within the feature's affected paths too.
+Explain the consequence for acceptance and any remaining uncertainty. Review
+severity is input, not the decision by itself. An unmet agreed story, criterion,
+or applicable constraint indicates a blocker; deferral alone does not waive
+the contract. Explain why a problem appears non-blocking. Missing evidence
+does not establish acceptable behaviour.
 
-Decide whether each confirmed finding blocks acceptance from its effect on
-stories, acceptance criteria, constraints, and confidence in the evidence.
-Explain that decision; do not copy Review's severity mechanically. An unmet
-agreed story, criterion, or applicable constraint blocks acceptance. Deferral
-does not waive the contract. Other confirmed issues can remain non-blocking
-when their consequences and reasons are explicit.
+Do not search for additional defects or perform another broad review. If a new
+problem becomes obvious while evaluating a candidate, include it in the report
+with its source and uncertainty. Do not broaden the investigation around it.
 
-## Fix within agreed intent
+## Assess coverage gaps
 
-Fix confirmed implementation defects and requirement violations when the
-correction follows unambiguous, already-agreed behaviour and architecture.
-Apply [simple-code](../simple-code/SKILL.md) to the correction. Keep changes
-within the affected responsibilities and avoid unrelated cleanup.
+Read Review's failed or incomplete checks and missing specialist coverage.
+Determine whether each important gap materially prevents an acceptance
+decision. Identify which stories, criteria, or constraints depend on that
+evidence. A missing check is not automatically blocking; explain whether
+available evidence is sufficient and why.
 
-Add or strengthen tests when needed to demonstrate the failure and prevent
-regression. Confirm that the test detects the original defect where practical.
-Fix the implementation, run focused tests and checks, then independently
-re-evaluate the finding and affected behaviour. Continue this verify, fix,
-test, and verify loop until no blocking implementation defects remain.
-Straightforward defects normally belong in this loop.
+A focused check may clarify a material uncertainty using existing tooling.
+Do not provision tooling, construct test infrastructure, or spend substantial
+effort closing evidence gaps. Report an important gap that prevents a decision
+and identify the investigation needed from a subsequent workflow. Do not rerun
+all checks or create a new coverage audit.
 
-Do not rewrite requirements or weaken tests to make a defect disappear. When
-a correction requires interpreting ambiguous intent, choosing between
-conflicting documents, or changing a product or architectural decision,
-explain the evidence and the decision required. Recommend a next step and ask
-the user to approve or change it through the owning workflow: Direction for
-end-state decisions, Shape for feature behaviour, and Design for architecture.
-Keep the affected correction and acceptance decision blocked until settled.
-Continue independent work that does not depend on that decision.
+## Preserve the decision boundary
 
-After the decision, update canonical documents through their document skills
-in the owning workflow. Re-evaluate affected findings against the agreed
-contract. Material contract changes return through Shape; do not silently
-preserve an obsolete readiness or acceptance claim.
+Report confirmed problems to the user. Do not modify implementation code or
+tests, add regression tests, commit fixes, run a fix/test/reverify loop, or
+cherry-pick or port fixes between revisions. Acceptance does not complete the
+feature itself.
 
-## Establish sufficient evidence
+The Acceptance report is the normal artifact. Keep Feature Briefs, PDRs, ADRs,
+Direction, Context, and Backlog unchanged. Report conflicts between durable
+documents instead of resolving them. Recommend the owning workflow for any
+needed clarification or change.
 
-Assess failed or incomplete Review checks and missing specialist coverage.
-Identify which stories, criteria, or constraints depend on that evidence.
-Fill important gaps with focused inspection, tests, or execution where
-practical. A missing check or specialist is not automatically blocking; decide
-whether available evidence supports a credible completion decision and record
-the reason. Critical unverified behaviour prevents acceptance.
+Do not set the Feature Brief to Accepted automatically, including when the
+recommendation is favourable. Unresolved material findings require the user's
+final call. Any later status update or durable document change belongs to the
+subsequent workflow after the user's decision. Preserve the Review report and
+its evidence links; do not transfer evidence into other documents or delete
+the handoff during Acceptance.
 
-Use Review evidence that still applies to unchanged code. After fixes, rerun
-checks that cover the changes and their integration effects, including
-configured compile, test, lint, format, and prose checks. Broaden verification
-when the change invalidates earlier evidence. Re-evaluate affected findings
-and check for regressions introduced by the fixes. Do not start another broad
-review merely because Acceptance changed code.
+## Produce the user report
 
-Before accepting, trace every agreed story, acceptance criterion, and
-applicable constraint to sufficient evidence at the final code revision.
-Passing checks or having no retained candidates alone does not establish
-acceptance.
-
-## Record the outcome and close the loop
-
-Maintain one compact acceptance record at
+Write one concise, human-readable report at
 `.workflow/features/<feature-id>/acceptance-<YYYY-MM-DD>-<implementation-sha>.md`.
-Reuse it when resuming. Record the feature ID, reviewed Implementation SHA,
-final verified code revision, outcome and rationale, candidate dispositions,
-evidence and coverage gaps, and links to remaining issues or decisions. Keep
-it under 800 words. Summarize evidence and link its canonical sources instead
-of copying Review prose or keeping a second specification.
+Reuse it when resuming the same assessment. Keep it under 800 words. Link the
+Review report and relevant contract sources rather than copying technical
+investigations or creating a second specification.
 
-Commit verified code and test fixes, if any, and record the resulting revision.
-Choose the outcome from the evidence:
+Include these sections in order. State `None` where a section has no items:
 
-| Outcome | Condition |
-| --- | --- |
-| Accepted | Blocking findings are resolved, remaining findings are explicitly non-blocking or deferred, and sufficient evidence shows that the agreed contract is satisfied. |
-| Needs decision | Acceptance depends on an unresolved product, architecture, or requirement decision. |
-| Cannot establish acceptance | Critical behaviour cannot be verified with the available environment or evidence. |
+1. **Feature and reviewed Implementation revision:** Feature ID, title, SHA,
+   and links to the Feature Brief and Review report.
+2. **Overall assessment:** Recommend acceptance, implementation follow-up,
+   a user decision, or more investigation, with a brief rationale.
+3. **Blocking findings:** Candidate references, dispositions, contract links,
+   and concise consequences.
+4. **Non-blocking findings:** Candidate references, dispositions, and reasons
+   they do not prevent acceptance.
+5. **Findings that appear acceptable or outside scope:** Candidate references,
+   dispositions, and brief reasons.
+6. **Decisions required from the user:** Unresolved intent or document conflicts,
+   affected candidates, and the choice needed.
+7. **Important evidence gaps:** Candidates with insufficient evidence,
+   incomplete coverage, and how uncertainty affects the decision.
+8. **Recommendation for what happens next:** Accept the feature, send specific
+   findings back for implementation, settle a product/design decision, or
+   request a bounded investigation. Name specific findings and the workflow.
 
-For Accepted, set the Feature Brief to Accepted through
-`feature-brief-document`. For either other outcome, do not mark it Accepted;
-record the exact decision or missing evidence and the next step. These
-outcomes are acceptance decisions, not additional Feature Brief statuses.
+Stop once retained candidates have dispositions and material decisions and
+gaps are reported. Uncertainty is a valid report outcome, not a reason to
+continue investigating indefinitely.
 
-Transfer information that should survive the workflow to its canonical home.
-Keep agreed behaviour in the Brief, product decisions in PDRs, architecture in
-ADRs, and project terminology in Context. Record non-blocking confirmed issues
-in an existing issue record or the acceptance record, with consequence and
-deferral rationale. Use Direction and `backlog-document` only for agreed
-future features; do not turn internal repair tasks into Backlog items.
-Record unresolved candidates and evidence gaps for resumption when acceptance
-cannot finish. Do not invent decisions while transferring information.
-
-Apply `concise-prose` and run `workflow-document-check` after document edits.
-Verify that transferred information and links survive without the temporary
-report, then delete that report. Preserve any untransferred evidence until it
-has a durable home. Commit the final workflow state without unrelated changes.
-
-## End-of-step report
-
-State the outcome and its evidence. For Accepted, say that the feature is
-finished. Name the verified code revision and final commit, summarize fixes
-and checks, and link any non-blocking issues and the acceptance record. For
-other outcomes, name the decision or evidence needed to continue and link the
-record. Do not claim completion while either remains unresolved.
+Apply `concise-prose` and run `workflow-document-check` on the Acceptance
+report. Present the overall assessment, key blockers or decisions, and report
+link to the user. Make clear that the recommendation awaits the user's
+acceptance decision. Do not claim the feature is finished while material
+findings remain unresolved.
